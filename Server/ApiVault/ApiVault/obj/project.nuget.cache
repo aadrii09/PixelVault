@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "dI//n1nfF68=",
+  "dgSpecHash": "UWIeU9YM9LY=",
   "success": true,
-  "projectFilePath": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\Api_Vault\\ApiVault\\ApiVault\\ApiVault.csproj",
+  "projectFilePath": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\ApiVault.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\adrian.castrobeiro\\.nuget\\packages\\asp.versioning.abstractions\\8.1.0\\asp.versioning.abstractions.8.1.0.nupkg.sha512",
     "C:\\Users\\adrian.castrobeiro\\.nuget\\packages\\asp.versioning.http\\8.1.0\\asp.versioning.http.8.1.0.nupkg.sha512",

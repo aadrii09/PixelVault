@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\Api_Vault\\ApiVault\\ApiVault\\ApiVault.csproj": {}
+    "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\ApiVault.csproj": {}
   },
   "projects": {
-    "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\Api_Vault\\ApiVault\\ApiVault\\ApiVault.csproj": {
+    "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\ApiVault.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\Api_Vault\\ApiVault\\ApiVault\\ApiVault.csproj",
+        "projectUniqueName": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\ApiVault.csproj",
         "projectName": "ApiVault",
-        "projectPath": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\Api_Vault\\ApiVault\\ApiVault\\ApiVault.csproj",
+        "projectPath": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\ApiVault.csproj",
         "packagesPath": "C:\\Users\\adrian.castrobeiro\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\Api_Vault\\ApiVault\\ApiVault\\obj\\",
+        "outputPath": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
