@@ -3,16 +3,32 @@
   "WorkspaceRootPath": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|c:\\users\\adrian.castrobeiro\\desktop\\pixelvault\\server\\apivault\\apivault\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|solutionrelative:apivault\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Migrations\\20250424073842_EntidadesCreadasRelaccionadas.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:ApiVault\\Migrations\\20250424073842_EntidadesCreadasRelaccionadas.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|c:\\users\\adrian.castrobeiro\\desktop\\pixelvault\\server\\apivault\\apivault\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|solutionrelative:apivault\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|c:\\users\\adrian.castrobeiro\\desktop\\pixelvault\\server\\apivault\\apivault\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|solutionrelative:apivault\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|c:\\users\\adrian.castrobeiro\\desktop\\pixelvault\\server\\apivault\\apivault\\models\\productoplataforma.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|solutionrelative:apivault\\models\\productoplataforma.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|c:\\users\\adrian.castrobeiro\\desktop\\pixelvault\\server\\apivault\\apivault\\models\\producto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|solutionrelative:apivault\\models\\producto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|c:\\users\\adrian.castrobeiro\\desktop\\pixelvault\\server\\apivault\\apivault\\models\\pedidodetalle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|solutionrelative:apivault\\models\\pedidodetalle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|c:\\users\\adrian.castrobeiro\\desktop\\pixelvault\\server\\apivault\\apivault\\models\\pedido.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|solutionrelative:apivault\\models\\pedido.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|c:\\users\\adrian.castrobeiro\\desktop\\pixelvault\\server\\apivault\\apivault\\models\\precio.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|solutionrelative:apivault\\models\\precio.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|c:\\users\\adrian.castrobeiro\\desktop\\pixelvault\\server\\apivault\\apivault\\models\\carritoproducto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -23,36 +39,32 @@
       "RelativeMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|solutionrelative:apivault\\models\\carrito.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|c:\\users\\adrian.castrobeiro\\desktop\\pixelvault\\server\\apivault\\apivault\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|solutionrelative:apivault\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|c:\\users\\adrian.castrobeiro\\desktop\\pixelvault\\server\\apivault\\apivault\\models\\comentario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|solutionrelative:apivault\\models\\comentario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|c:\\users\\adrian.castrobeiro\\desktop\\pixelvault\\server\\apivault\\apivault\\models\\precio.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|solutionrelative:apivault\\models\\precio.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|c:\\users\\adrian.castrobeiro\\desktop\\pixelvault\\server\\apivault\\apivault\\models\\productoplataforma.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|solutionrelative:apivault\\models\\productoplataforma.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|c:\\users\\adrian.castrobeiro\\desktop\\pixelvault\\server\\apivault\\apivault\\models\\plataforma.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|solutionrelative:apivault\\models\\plataforma.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|c:\\users\\adrian.castrobeiro\\desktop\\pixelvault\\server\\apivault\\apivault\\models\\producto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|solutionrelative:apivault\\models\\producto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|c:\\users\\adrian.castrobeiro\\desktop\\pixelvault\\server\\apivault\\apivault\\models\\historial.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|solutionrelative:apivault\\models\\historial.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|c:\\users\\adrian.castrobeiro\\desktop\\pixelvault\\server\\apivault\\apivault\\models\\marca.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|solutionrelative:apivault\\models\\marca.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|c:\\users\\adrian.castrobeiro\\desktop\\pixelvault\\server\\apivault\\apivault\\models\\tipoproducto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|solutionrelative:apivault\\models\\tipoproducto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|c:\\users\\adrian.castrobeiro\\desktop\\pixelvault\\server\\apivault\\apivault\\models\\pedido.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|solutionrelative:apivault\\models\\pedido.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|c:\\users\\adrian.castrobeiro\\desktop\\pixelvault\\server\\apivault\\apivault\\models\\historial.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|solutionrelative:apivault\\models\\historial.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|c:\\users\\adrian.castrobeiro\\desktop\\pixelvault\\server\\apivault\\apivault\\models\\plataforma.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|solutionrelative:apivault\\models\\plataforma.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|c:\\users\\adrian.castrobeiro\\desktop\\pixelvault\\server\\apivault\\apivault\\models\\tipoproducto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|solutionrelative:apivault\\models\\tipoproducto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|c:\\users\\adrian.castrobeiro\\desktop\\pixelvault\\server\\apivault\\apivault\\models\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -99,79 +111,27 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "ApplicationDbContext.cs",
-              "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Data\\ApplicationDbContext.cs",
-              "RelativeDocumentMoniker": "ApiVault\\Data\\ApplicationDbContext.cs",
-              "ToolTip": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Data\\ApplicationDbContext.cs",
-              "RelativeToolTip": "ApiVault\\Data\\ApplicationDbContext.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
+              "Title": "20250424073842_EntidadesCreadasRelaccionadas.cs",
+              "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Migrations\\20250424073842_EntidadesCreadasRelaccionadas.cs",
+              "RelativeDocumentMoniker": "ApiVault\\Migrations\\20250424073842_EntidadesCreadasRelaccionadas.cs",
+              "ToolTip": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Migrations\\20250424073842_EntidadesCreadasRelaccionadas.cs",
+              "RelativeToolTip": "ApiVault\\Migrations\\20250424073842_EntidadesCreadasRelaccionadas.cs",
+              "ViewState": "AgIAACgAAAAAAAAAAAAQwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-24T07:10:56.199Z",
+              "WhenOpened": "2025-04-24T07:38:42.295Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "PedidoDetalle.cs",
-              "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\PedidoDetalle.cs",
-              "RelativeDocumentMoniker": "ApiVault\\Models\\PedidoDetalle.cs",
-              "ToolTip": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\PedidoDetalle.cs",
-              "RelativeToolTip": "ApiVault\\Models\\PedidoDetalle.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-24T07:09:17.069Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Pedido.cs",
-              "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\Pedido.cs",
-              "RelativeDocumentMoniker": "ApiVault\\Models\\Pedido.cs",
-              "ToolTip": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\Pedido.cs",
-              "RelativeToolTip": "ApiVault\\Models\\Pedido.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-24T07:09:04.663Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "CarritoProducto.cs",
-              "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\CarritoProducto.cs",
-              "RelativeDocumentMoniker": "ApiVault\\Models\\CarritoProducto.cs",
-              "ToolTip": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\CarritoProducto.cs",
-              "RelativeToolTip": "ApiVault\\Models\\CarritoProducto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-24T07:08:54.725Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Carrito.cs",
-              "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\Carrito.cs",
-              "RelativeDocumentMoniker": "ApiVault\\Models\\Carrito.cs",
-              "ToolTip": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\Carrito.cs",
-              "RelativeToolTip": "ApiVault\\Models\\Carrito.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-24T07:08:36.643Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Comentario.cs",
-              "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\Comentario.cs",
-              "RelativeDocumentMoniker": "ApiVault\\Models\\Comentario.cs",
-              "ToolTip": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\Comentario.cs",
-              "RelativeToolTip": "ApiVault\\Models\\Comentario.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-24T07:08:21.852Z",
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\appsettings.json",
+              "RelativeDocumentMoniker": "ApiVault\\appsettings.json",
+              "ToolTip": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\appsettings.json",
+              "RelativeToolTip": "ApiVault\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-04-24T07:24:29.833Z",
               "EditorCaption": ""
             },
             {
@@ -182,59 +142,59 @@
               "RelativeDocumentMoniker": "ApiVault\\Models\\Precio.cs",
               "ToolTip": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\Precio.cs",
               "RelativeToolTip": "ApiVault\\Models\\Precio.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-24T07:08:10.948Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "ProductoPlataforma.cs",
-              "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\ProductoPlataforma.cs",
-              "RelativeDocumentMoniker": "ApiVault\\Models\\ProductoPlataforma.cs",
-              "ToolTip": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\ProductoPlataforma.cs",
-              "RelativeToolTip": "ApiVault\\Models\\ProductoPlataforma.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 5,
+              "Title": "PedidoDetalle.cs",
+              "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\PedidoDetalle.cs",
+              "RelativeDocumentMoniker": "ApiVault\\Models\\PedidoDetalle.cs",
+              "ToolTip": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\PedidoDetalle.cs",
+              "RelativeToolTip": "ApiVault\\Models\\PedidoDetalle.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-24T07:08:01.11Z",
+              "WhenOpened": "2025-04-24T07:09:17.069Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "Plataforma.cs",
-              "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\Plataforma.cs",
-              "RelativeDocumentMoniker": "ApiVault\\Models\\Plataforma.cs",
-              "ToolTip": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\Plataforma.cs",
-              "RelativeToolTip": "ApiVault\\Models\\Plataforma.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-24T07:07:40.032Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 4,
               "Title": "Producto.cs",
               "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\Producto.cs",
               "RelativeDocumentMoniker": "ApiVault\\Models\\Producto.cs",
               "ToolTip": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\Producto.cs",
               "RelativeToolTip": "ApiVault\\Models\\Producto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-24T07:07:21.289Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 14,
+              "Title": "Plataforma.cs",
+              "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\Plataforma.cs",
+              "RelativeDocumentMoniker": "ApiVault\\Models\\Plataforma.cs",
+              "ToolTip": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\Plataforma.cs",
+              "RelativeToolTip": "ApiVault\\Models\\Plataforma.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-24T07:07:40.032Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
               "Title": "Marca.cs",
               "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\Marca.cs",
               "RelativeDocumentMoniker": "ApiVault\\Models\\Marca.cs",
               "ToolTip": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\Marca.cs",
               "RelativeToolTip": "ApiVault\\Models\\Marca.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-24T07:06:57.309Z",
               "EditorCaption": ""
@@ -242,38 +202,129 @@
             {
               "$type": "Document",
               "DocumentIndex": 11,
-              "Title": "TipoProducto.cs",
-              "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\TipoProducto.cs",
-              "RelativeDocumentMoniker": "ApiVault\\Models\\TipoProducto.cs",
-              "ToolTip": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\TipoProducto.cs",
-              "RelativeToolTip": "ApiVault\\Models\\TipoProducto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-24T07:06:39.067Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
               "Title": "Historial.cs",
               "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\Historial.cs",
               "RelativeDocumentMoniker": "ApiVault\\Models\\Historial.cs",
               "ToolTip": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\Historial.cs",
               "RelativeToolTip": "ApiVault\\Models\\Historial.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-24T07:06:21.971Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Comentario.cs",
+              "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\Comentario.cs",
+              "RelativeDocumentMoniker": "ApiVault\\Models\\Comentario.cs",
+              "ToolTip": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\Comentario.cs",
+              "RelativeToolTip": "ApiVault\\Models\\Comentario.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-24T07:08:21.852Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "CarritoProducto.cs",
+              "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\CarritoProducto.cs",
+              "RelativeDocumentMoniker": "ApiVault\\Models\\CarritoProducto.cs",
+              "ToolTip": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\CarritoProducto.cs",
+              "RelativeToolTip": "ApiVault\\Models\\CarritoProducto.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAcwCAAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-24T07:08:54.725Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Carrito.cs",
+              "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\Carrito.cs",
+              "RelativeDocumentMoniker": "ApiVault\\Models\\Carrito.cs",
+              "ToolTip": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\Carrito.cs",
+              "RelativeToolTip": "ApiVault\\Models\\Carrito.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAQwA0AAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-24T07:08:36.643Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ProductoPlataforma.cs",
+              "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\ProductoPlataforma.cs",
+              "RelativeDocumentMoniker": "ApiVault\\Models\\ProductoPlataforma.cs",
+              "ToolTip": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\ProductoPlataforma.cs",
+              "RelativeToolTip": "ApiVault\\Models\\ProductoPlataforma.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-24T07:08:01.11Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Program.cs",
+              "RelativeDocumentMoniker": "ApiVault\\Program.cs",
+              "ToolTip": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Program.cs",
+              "RelativeToolTip": "ApiVault\\Program.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-24T07:22:40.718Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 13,
+              "Title": "Pedido.cs",
+              "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\Pedido.cs",
+              "RelativeDocumentMoniker": "ApiVault\\Models\\Pedido.cs",
+              "ToolTip": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\Pedido.cs",
+              "RelativeToolTip": "ApiVault\\Models\\Pedido.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAADwvwYAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-24T07:09:04.663Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "ApplicationDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Data\\ApplicationDbContext.cs",
+              "RelativeDocumentMoniker": "ApiVault\\Data\\ApplicationDbContext.cs",
+              "ToolTip": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Data\\ApplicationDbContext.cs",
+              "RelativeToolTip": "ApiVault\\Data\\ApplicationDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-24T07:10:56.199Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "TipoProducto.cs",
+              "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\TipoProducto.cs",
+              "RelativeDocumentMoniker": "ApiVault\\Models\\TipoProducto.cs",
+              "ToolTip": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\TipoProducto.cs",
+              "RelativeToolTip": "ApiVault\\Models\\TipoProducto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-24T07:06:39.067Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
               "Title": "Usuario.cs",
               "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\Usuario.cs",
               "RelativeDocumentMoniker": "ApiVault\\Models\\Usuario.cs",
               "ToolTip": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Models\\Usuario.cs",
               "RelativeToolTip": "ApiVault\\Models\\Usuario.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-24T07:06:06.029Z",
               "EditorCaption": ""

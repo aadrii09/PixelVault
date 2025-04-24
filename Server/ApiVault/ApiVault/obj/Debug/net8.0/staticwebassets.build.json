@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "hPlXqeBUuUghjB6KXZ3aDD3r9SPUA8vLcz55xWzkdAM=",
+  "Source": "ApiVault",
+  "BasePath": "_content/ApiVault",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
