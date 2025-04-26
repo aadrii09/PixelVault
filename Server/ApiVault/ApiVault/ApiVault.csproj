@@ -27,8 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="Models\Dtos\" />
+    <Folder Include="Middlewares\" />
     <Folder Include="Repositories\IRepositories\" />
     <Folder Include="VaultMapper\" />
   </ItemGroup>

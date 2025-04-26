@@ -1,4 +1,6 @@
 using ApiVault.Data;
+using ApiVault.Interfaces;
+using ApiVault.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +16,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(opciones =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IAuthService, AuthService>(); // Agregar el servicio de autenticación
 
 var app = builder.Build();
 
