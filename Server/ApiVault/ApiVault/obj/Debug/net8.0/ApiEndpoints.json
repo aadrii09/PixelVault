@@ -1,1 +1,34 @@
-[]
+[
+  {
+    "ContainingType": "ApiVault.Controllers.AuthController",
+    "Method": "Login",
+    "RelativePath": "api/Auth/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "loginDto",
+        "Type": "ApiVault.DTOs.LoginDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiVault.Controllers.AuthController",
+    "Method": "Register",
+    "RelativePath": "api/Auth/register",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "registroDto",
+        "Type": "ApiVault.DTOs.RegistroDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]
