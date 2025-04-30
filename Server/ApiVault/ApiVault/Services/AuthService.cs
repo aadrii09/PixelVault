@@ -17,6 +17,11 @@ namespace ApiVault.Services
 
         public async Task<string> RegisterAsync(RegistroDto registroDto)
         {
+            var yaExiste = await _context.Usuarios
+                .AnyAsync(u => u.Email == registroDto.Email);
+            if (yaExiste)
+                return "Ese email ya está en uso";
+
             var usuario = new Usuario
             {
                 Nombre = registroDto.Nombre,
@@ -25,6 +30,11 @@ namespace ApiVault.Services
                 FechaRegistro = DateTime.Now,
                 EsAdmin = false
             };
+
+            usuario.Direccion = "";
+            usuario.Telefono = "";
+            usuario.EsAdmin = false;
+
             _context.Usuarios.Add(usuario);
             await _context.SaveChangesAsync();
             return "Usuario registrado con éxito";
@@ -38,6 +48,7 @@ namespace ApiVault.Services
             {
                 return "Credenciales inválidas";
             }
+            //validacion de contraseña exitosa
             return "Inicio de sesión exitoso";
         }
     }

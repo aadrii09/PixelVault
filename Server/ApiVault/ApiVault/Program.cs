@@ -1,9 +1,34 @@
+using System.Text;
 using ApiVault.Data;
 using ApiVault.Interfaces;
 using ApiVault.Services;
+using ApiVault.Settings;
+using ApiVault.Utilidades;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings")); // Configurar las opciones de ApiSettings
+
+var claveSecreta = builder.Configuration.GetSection("ApiSettings:Secreta").Value;
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(op =>
+{
+    op.RequireHttpsMetadata = false;
+    op.SaveToken = true;
+    op.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateIssuerSigningKey = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidIssuer = builder.Configuration["ApiSettings:Emisor"],
+        ValidAudience = builder.Configuration["ApiSettings:Audiencia"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(claveSecreta)),
+
+    };
+});
 
 var key = builder.Configuration.GetValue<string>("ApiSettings:Secreta");
 
@@ -11,6 +36,10 @@ var key = builder.Configuration.GetValue<string>("ApiSettings:Secreta");
 // Configurar el contexto de base de datos con SQL Server
 builder.Services.AddDbContext<ApplicationDbContext>(opciones =>
     opciones.UseSqlServer(builder.Configuration.GetConnectionString("ConexionSql")));
+//Inyectando helper JWT
+builder.Services.AddScoped<JwtHelper>();
+
+
 
 // Agregar otros servicios que necesites
 builder.Services.AddControllers();
@@ -26,7 +55,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
