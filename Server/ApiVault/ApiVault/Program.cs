@@ -40,6 +40,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(opciones =>
 builder.Services.AddScoped<JwtHelper>();
 
 
+// Inyectar el servicio de productos
+builder.Services.AddScoped<IProductoService, ProductoService>();
+
+
+
 
 // Agregar otros servicios que necesites
 builder.Services.AddControllers();

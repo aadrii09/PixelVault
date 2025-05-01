@@ -11,7 +11,7 @@ namespace ApiVault.Interfaces
         Task<bool> DeleteAsync(int id);
 
 
-        Task<IEnumerable<ProductoDto>> GetAllProductoAsync();
-        Task<ProductoDto> GetProductoByIdAsync(int id);
+        //Task<IEnumerable<ProductoDto>> GetAllProductoAsync();
+        //Task<ProductoDto> GetProductoByIdAsync(int id);
     }
 }
