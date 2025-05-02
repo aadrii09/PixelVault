@@ -24,8 +24,9 @@ namespace ApiVault.Utilidades
 
                 return $"{Convert.ToBase64String(salt)}.{hashed}";
             }
+        }
 
-            public static bool VerifyPassword(string password, string storeHash)
+        public static bool VerifyPassword(string password, string storeHash)
         {
             var parts = storeHash.Split('.');
             if (parts.Length != 2)
