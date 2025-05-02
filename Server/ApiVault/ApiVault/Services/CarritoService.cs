@@ -14,7 +14,7 @@ namespace ApiVault.Services
             _context = context;
         }
 
-        public async Task<CarritoDto> GetCarritoByUsurioAsync(int usuarioId)
+        public async Task<CarritoDto> GetCarritoByUsuarioAsync(int usuarioId)
         {
             var carrito = await _context.Carritos
                 .Include(c => c.CarritoProductos)
@@ -80,7 +80,7 @@ namespace ApiVault.Services
             carrito.Total = carrito.CarritoProductos.Sum(cp => cp.Subtotal);
             await _context.SaveChangesAsync();
 
-            return await GetCarritoByUsurioAsync(usuarioId);
+            return await GetCarritoByUsuarioAsync(usuarioId);
         }
 
         public async Task<bool> RemoveProductoAsync(int usuarioId, int productoId)
@@ -119,5 +119,7 @@ namespace ApiVault.Services
             await _context.SaveChangesAsync();
             return true;
         }
+
+        
     }
 }
