@@ -1,8 +1,10 @@
 ﻿using ApiVault.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiVault.Controllers
 {
+    [Authorize] //jwt
     [Route("api/[controller]")]
     [ApiController]
     public class PedidosController : ControllerBase
@@ -17,6 +19,11 @@ namespace ApiVault.Controllers
         [HttpPost("{idUsuario}/crear")]
         public async Task<IActionResult> CrearPedido(int idUsuario, [FromBody] string metodoPago = "Tarjeta")
         {
+
+            if (GetUserId() != idUsuario && !IsAdmin())
+            {
+                return Forbid();
+            }
             var pedido = await _pedidoService.CrearPedidoDesdeCarritoAsync(idUsuario, metodoPago);
             if (pedido == null) return BadRequest("No se pudo crear el pedido o el carrito está vacío.");
             return Ok(pedido);
@@ -43,6 +50,16 @@ namespace ApiVault.Controllers
             var pedido = await _pedidoService.GetByIdAsync(id);
             if (pedido == null) return NotFound("Pedido no encontrado.");
             return Ok(pedido);
+        }
+
+        private int GetUserId()
+        {
+            return int.Parse(User.FindFirst("sub")?.Value ?? "0");
+        }
+
+        private bool IsAdmin()
+        {
+            return User.HasClaim(c => c.Type == "esAdmin" && c.Value == "");
         }
     }
 
