@@ -44,6 +44,8 @@ builder.Services.AddScoped<JwtHelper>();
 builder.Services.AddScoped<IProductoService, ProductoService>();
 // Inyectar el servicio de carrito
 builder.Services.AddScoped<ICarritoService, CarritoService>();
+// Inyectar el servicio de pedidos
+builder.Services.AddScoped<IPedidoService, PedidoService>();
 
 
 

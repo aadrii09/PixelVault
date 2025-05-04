@@ -1,5 +1,6 @@
 ﻿using ApiVault.Data;
 using ApiVault.DTOs;
+using ApiVault.Interfaces;
 using ApiVault.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -72,9 +73,39 @@ namespace ApiVault.Services
                     NombreProducto = d.Producto.Nombre,
                     Cantidad = d.Cantidad,
                     PrecioUnitario = d.PrecioUnitario,
-                    Subtotal = d.Subtotal
                 }).ToList()
             };
+        }
+
+        public async Task<IEnumerable<PedidoDto>> GetPedidosByUsuarioAsync(int idUsuario)
+        {
+            return await _context.Pedidos
+                .Where(p => p.IdUsuario == idUsuario)
+                .OrderByDescending(p => p.FechaPedido)
+                .Select(p => new PedidoDto
+                {
+                    IdPedido = p.IdPedido,
+                    FechaPedido = p.FechaPedido,
+                    EstadoPedido = p.EstadoPedido,
+                    Total = p.Total,
+                    MetodoPago = p.MetodoPago,
+                    }).ToListAsync();
+                }
+
+        public async Task<IEnumerable<PedidoDto>> GetTodosAsync()
+        {
+            return await _context.Pedidos
+                .Include(p => p.Usuario)
+                .OrderByDescending(p => p.FechaPedido)
+                .Select(p => new PedidoDto
+                {
+                    IdPedido = p.IdPedido,
+                    IdUsuario = p.IdUsuario,
+                    FechaPedido = p.FechaPedido,
+                    EstadoPedido = p.EstadoPedido,
+                    Total = p.Total,
+                    MetodoPago = p.MetodoPago,
+                }).ToListAsync();
         }
 
     }

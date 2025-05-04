@@ -6,7 +6,7 @@ namespace ApiVault.Interfaces
     {
         Task<IEnumerable<PedidoDto>> GetPedidosByUsuarioAsync(int idUsuario);
         Task<IEnumerable<PedidoDto>> GetTodosAsync(); //solo admins
-        Task<PedidoDto> CrearPedidoCarritoAsync(int idUsuario, string metodoPago);
+        Task<PedidoDto> CrearPedidoDesdeCarritoAsync(int idUsuario, string metodoPago);
         Task<PedidoDto> GetByIdAsync(int id);
     }
 }
