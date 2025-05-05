@@ -33,10 +33,14 @@ namespace ApiVault.Controllers
         [HttpGet("{idUsuario}")]
         public async Task<IActionResult> GetPedidosUsuario(int idUsuario)
         {
+            if (GetUserId() != idUsuario && !IsAdmin())
+            {
+                return Forbid();
+            }
             var pedidos = await _pedidoService.GetPedidosByUsuarioAsync(idUsuario);
             return Ok(pedidos);
         }
-
+        [Authorize(Roles = "Admin")] //jwt
         [HttpGet("todos(admin)")]
         public async Task<IActionResult> GetTodos()
         {

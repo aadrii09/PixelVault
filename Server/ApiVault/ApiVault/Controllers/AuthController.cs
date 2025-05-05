@@ -13,17 +13,19 @@ namespace ApiVault.Controllers
         {
             _authService = authService;
         }
+
+
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegistroDto registroDto)
         {
             var result = await _authService.RegisterAsync(registroDto);
-            return Ok(result);    
+            return Ok(new {message = result});    
         }
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
             var result = await _authService.LoginAsync(loginDto);
-            return Ok(new {message = result});
+            return Ok(new {token = result});
         }
     }
 }

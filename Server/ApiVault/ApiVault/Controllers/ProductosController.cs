@@ -1,5 +1,6 @@
 ﻿using ApiVault.DTOs;
 using ApiVault.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiVault.Controllers
@@ -32,7 +33,7 @@ namespace ApiVault.Controllers
             }
             return Ok(producto);
         }
-
+        [Authorize(Roles = "Admin")] //jwt
         [HttpPost]
         public async Task<ActionResult<ProductoDto>> Create([FromBody] ProductoDto dto)
         {
@@ -40,6 +41,7 @@ namespace ApiVault.Controllers
             return CreatedAtAction(nameof(GetById), new { id = creado.IdProducto }, creado);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, ProductoDto dto)
         {
@@ -51,6 +53,7 @@ namespace ApiVault.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
