@@ -46,6 +46,9 @@ builder.Services.AddScoped<IProductoService, ProductoService>();
 builder.Services.AddScoped<ICarritoService, CarritoService>();
 // Inyectar el servicio de pedidos
 builder.Services.AddScoped<IPedidoService, PedidoService>();
+// Inyectar el servicio de tipos de productos y marcas 
+builder.Services.AddScoped<ITipoProductoService, TipoProductoService>();
+builder.Services.AddScoped<IMarcaService, MarcaService>();
 
 
 
