@@ -16,16 +16,21 @@ namespace ApiVault.Utilidades
             _settings = settings.Value;
         }
 
-        public string GenerateToken(Usuario usuario) 
+        public string GenerateToken(Usuario usuario)
         {
-            var claims = new[]
+            var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, usuario.IdUsuario.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, usuario.Email),
-                new Claim("esAdmin", usuario.EsAdmin.ToString())
+                new Claim(JwtRegisteredClaimNames.Email, usuario.Email)
             };
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Secreta));
 
+            // Agregar el rol "Admin" si el usuario es administrador
+            if (usuario.EsAdmin)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, "Admin"));
+            }
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Secreta));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(

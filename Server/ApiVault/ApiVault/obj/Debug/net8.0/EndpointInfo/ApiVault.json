@@ -869,6 +869,19 @@
         },
         "additionalProperties": false
       }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "apiKey",
+        "description": "JWT Authorization header usando el esquema 'Bearer'. \n\r\n\rIngrese 'Bearer' [espacio] y luego su token en el campo de texto a continuación.\n\r\n\rEjemplo: \"Bearer tutoken\"",
+        "name": "Authorization",
+        "in": "header"
+      }
     }
-  }
+  },
+  "security": [
+    {
+      "Bearer": [ ]
+    }
+  ]
 }

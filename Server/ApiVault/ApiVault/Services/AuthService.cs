@@ -2,6 +2,7 @@
 using ApiVault.DTOs;
 using ApiVault.Interfaces;
 using ApiVault.Models;
+using ApiVault.Utilidades;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApiVault.Services
@@ -9,10 +10,12 @@ namespace ApiVault.Services
     public class AuthService : IAuthService
     {
         private readonly ApplicationDbContext _context;
+        private readonly JwtHelper _jwtHelper;
 
-        public AuthService(ApplicationDbContext context)
+        public AuthService(ApplicationDbContext context, JwtHelper jwtHelper)
         {
             _context = context;
+            _jwtHelper = jwtHelper;
         }
 
         public async Task<string> RegisterAsync(RegistroDto registroDto)
@@ -49,7 +52,8 @@ namespace ApiVault.Services
                 return "Credenciales inválidas";
             }
             //validacion de contraseña exitosa
-            return "Inicio de sesión exitoso";
+            var token = _jwtHelper.GenerateToken(usuario);
+            return token;
         }
     }
 }

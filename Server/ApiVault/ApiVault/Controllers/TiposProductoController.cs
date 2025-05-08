@@ -31,7 +31,7 @@ namespace ApiVault.Controllers
             return Ok(tipo);
         }
 
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Create(TipoProductoDto dto)
         {
@@ -39,7 +39,7 @@ namespace ApiVault.Controllers
             return CreatedAtAction(nameof(GetById), new { id = t.IdTipo }, t);
         }
 
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, TipoProductoDto dto)
         {
@@ -47,7 +47,7 @@ namespace ApiVault.Controllers
             return ok ? NoContent() : NotFound();
         }
 
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
