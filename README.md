@@ -65,7 +65,7 @@ PixelVault es un e-commerce especializado en videojuegos para múltiples platafo
 ### ⚙️ Installation
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/PixelVault.git
+git clone https://github.com/aadrii09/PixelVault.git
 cd PixelVault
 
 # Backend
