@@ -53,6 +53,8 @@ builder.Services.AddScoped<ITipoProductoService, TipoProductoService>();
 builder.Services.AddScoped<IMarcaService, MarcaService>();
 // Inyectar el servicio de usuarios
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+// Inyectar el servicio de PayPal
+builder.Services.Configure<PaypalSettings>(builder.Configuration.GetSection("PayPal"));
 
 
 
@@ -107,3 +109,8 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+
+
+//  AQiepbT5Qot4jIqhxfcUppb - ogD3WfqkZZpRi7IQvoE - eDsjVaO0aOyEnaWjwC5WxJOHyJHNwveYWddr  id
+// EOmLh9CZz5nObmXJ2SuukDxfE5OHZ7mmWgCh3Jgj5uMrggBp3r2tY3EluZChnqkymo9K3oQ0cbM-KlLm   key
