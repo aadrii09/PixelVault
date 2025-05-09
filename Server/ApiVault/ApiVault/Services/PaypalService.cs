@@ -67,9 +67,9 @@ namespace ApiVault.Services
             var token = await ObtenerTokenAsync();
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await _httpClient.GetAsync($"{_settings.BaseUrl}/v2/checkout/orders/{orderId}");
-            var result = await response.Content.ReadAsStringAsync();    
+            var result = await response.Content.ReadAsStringAsync();
 
-            using var jsonDoc = JsonDocument.Parse(result)
+            using var jsonDoc = JsonDocument.Parse(result);
             var status = jsonDoc.RootElement.GetProperty("status").GetString();
 
             return status == "COMPLETED"|| status == "APPROVED";

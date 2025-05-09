@@ -181,3 +181,4 @@ C:\Users\adrian.castrobeiro\Desktop\PixelVault\Server\ApiVault\ApiVault\obj\Debu
 C:\Users\adrian.castrobeiro\Desktop\PixelVault\Server\ApiVault\ApiVault\obj\Debug\net8.0\ApiVault.genruntimeconfig.cache
 C:\Users\adrian.castrobeiro\Desktop\PixelVault\Server\ApiVault\ApiVault\obj\Debug\net8.0\ref\ApiVault.dll
 C:\Users\adrian.castrobeiro\Desktop\PixelVault\Server\ApiVault\ApiVault\bin\Debug\net8.0\Microsoft.AspNet.Identity.Core.dll
+C:\Users\adrian.castrobeiro\Desktop\PixelVault\Server\ApiVault\ApiVault\bin\Debug\net8.0\appSettings.example.json

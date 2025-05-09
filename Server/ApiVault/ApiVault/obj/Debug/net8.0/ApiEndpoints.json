@@ -185,6 +185,38 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "ApiVault.Controllers.PagosController",
+    "Method": "CrearOrden",
+    "RelativePath": "api/Pagos/crear-orden",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "ApiVault.DTOs.MontoDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiVault.Controllers.PagosController",
+    "Method": "VerificarOrden",
+    "RelativePath": "api/Pagos/verificar-orden",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "ApiVault.DTOs.VerificarDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "ApiVault.Controllers.PedidosController",
     "Method": "GetPedidosUsuario",
     "RelativePath": "api/Pedidos/{idUsuario}",
