@@ -51,6 +51,8 @@ builder.Services.AddScoped<IPedidoService, PedidoService>();
 // Inyectar el servicio de tipos de productos y marcas 
 builder.Services.AddScoped<ITipoProductoService, TipoProductoService>();
 builder.Services.AddScoped<IMarcaService, MarcaService>();
+// Inyectar el servicio de usuarios
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 
 
 

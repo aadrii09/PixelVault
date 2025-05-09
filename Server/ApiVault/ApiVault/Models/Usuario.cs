@@ -24,6 +24,10 @@ namespace ApiVault.Models
         [EmailAddress]
         public string Email { get; set; }
 
+        [Required]
+        [StringLength(255)]
+        public string PasswordHashed { get; set; }
+
         [StringLength(255)]
         public string Direccion { get; set; }
 
@@ -35,6 +39,8 @@ namespace ApiVault.Models
 
         [Required]
         public bool EsAdmin { get; set; }
+
+
 
         // Propiedades de navegación
         public virtual ICollection<Historial> Historiales { get; set; }

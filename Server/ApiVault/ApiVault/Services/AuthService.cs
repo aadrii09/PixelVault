@@ -18,21 +18,25 @@ namespace ApiVault.Services
             _jwtHelper = jwtHelper;
         }
 
-        public async Task<string> RegisterAsync(RegistroDto registroDto)
+        public async Task<string> RegisterAsync(RegistroDto registerDto)
         {
-            var yaExiste = await _context.Usuarios
-                .AnyAsync(u => u.Email == registroDto.Email);
-            if (yaExiste)
-                return "Ese email ya está en uso";
+            var yaExiste = await _context.Usuarios.AnyAsync(u => u.Email == registerDto.Email);
+            if (yaExiste) return "El usuario ya está registrado";
+
 
             var usuario = new Usuario
             {
-                Nombre = registroDto.Nombre,
-                Apellidos = registroDto.Apellidos,
-                Email = registroDto.Email,
+                Nombre = registerDto.Nombre,
+                Apellidos = registerDto.Apellidos,
+                Email = registerDto.Email,
                 FechaRegistro = DateTime.Now,
-                EsAdmin = false
+                EsAdmin = false,
+                Direccion = "",
+                Telefono = "",
+                PasswordHashed = PasswordHashed.HashPassword(registerDto.Password),
             };
+
+            // password hasher here
 
             usuario.Direccion = "";
             usuario.Telefono = "";
@@ -40,18 +44,20 @@ namespace ApiVault.Services
 
             _context.Usuarios.Add(usuario);
             await _context.SaveChangesAsync();
-            return "Usuario registrado con éxito";
+
+            return "Usuario registrado exitosamente";
         }
 
         public async Task<string> LoginAsync(LoginDto loginDto)
         {
-            var usuario = await _context.Usuarios
-                .FirstOrDefaultAsync(u => u.Email == loginDto.Email);
-            if (usuario == null)
-            {
-                return "Credenciales inválidas";
-            }
-            //validacion de contraseña exitosa
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == loginDto.Email);
+
+            if (usuario == null) return "Usuario no encontrado";
+
+            if (!PasswordHashed.VerifyPassword(loginDto.Password, usuario.PasswordHashed))
+                return "Contraseña incorrecta";
+
+            // validación de contraseña pendiente aquí
             var token = _jwtHelper.GenerateToken(usuario);
             return token;
         }

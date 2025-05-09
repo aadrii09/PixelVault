@@ -1,12 +1,75 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ApiVault.DTOs;
+using ApiVault.Interfaces;
+using ApiVault.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ApiVault.Controllers
 {
-    public class UsuariosController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class UsuariosController : ControllerBase
     {
-        public IActionResult Index()
+        private readonly IUsuarioService _usuarioService;
+
+        public UsuariosController(IUsuarioService usuarioService)
         {
-            return View();
+            _usuarioService = usuarioService;
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetUsuarios()
+        {
+            var listaUsuarios = await _usuarioService.GetUsuariosAsync();
+            return Ok(listaUsuarios);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("{usuarioId:int}")]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetUsuario(int usuarioId)
+        {
+            var usuario = await _usuarioService.GetUsuarioAsync(usuarioId);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+            return Ok(usuario);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("{usuarioId:int}")]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> EliminarUsuario(int usuarioId)
+        {
+            var resultado = await _usuarioService.EliminarAsync(usuarioId);
+            if (!resultado)
+            {
+                return NotFound();
+            }
+            return NoContent();
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut("actualizarRol/{usuarioId:int}")]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> ActualizarRolUsuario(int usuarioId, [FromBody] bool esAdmin)
+        {
+            var resultado = await _usuarioService.ActualizarRolAsync(usuarioId, esAdmin);
+            if (!resultado)
+            {
+                return NotFound();
+            }
+            return NoContent();
         }
     }
 }
