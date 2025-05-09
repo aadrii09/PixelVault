@@ -53,8 +53,10 @@ builder.Services.AddScoped<ITipoProductoService, TipoProductoService>();
 builder.Services.AddScoped<IMarcaService, MarcaService>();
 // Inyectar el servicio de usuarios
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
-// Inyectar el servicio de PayPal
+// Inyectar la configuracion de PayPal
 builder.Services.Configure<PaypalSettings>(builder.Configuration.GetSection("PayPal"));
+// Inyectar servicio de PayPal
+builder.Services.AddScoped<PaypalService>();
 
 
 

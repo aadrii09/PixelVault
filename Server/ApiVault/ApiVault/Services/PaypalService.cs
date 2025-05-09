@@ -59,10 +59,20 @@ namespace ApiVault.Services
             var result = await response.Content.ReadAsStringAsync();
 
             using var jsonDoc = JsonDocument.Parse(result);
-            var orderId = jsonDoc.RootElement.GetProperty("id").GetString();
-            return orderId;
+            return jsonDoc.RootElement.GetProperty("id").GetString();
+        }
 
+        public async Task<bool> VerificarOrdenAsync(string orderId)
+        {
+            var token = await ObtenerTokenAsync();
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var response = await _httpClient.GetAsync($"{_settings.BaseUrl}/v2/checkout/orders/{orderId}");
+            var result = await response.Content.ReadAsStringAsync();    
 
+            using var jsonDoc = JsonDocument.Parse(result)
+            var status = jsonDoc.RootElement.GetProperty("status").GetString();
+
+            return status == "COMPLETED"|| status == "APPROVED";
         }
     }
 }
