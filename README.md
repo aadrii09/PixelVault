@@ -11,11 +11,11 @@ PixelVault es un e-commerce especializado en videojuegos para múltiples platafo
   - Framework: .NET 8
   - Base de datos: SQL Server
 - **Frontend**: 
-  - Framework: Vue 3 con TypeScript
+  - Framework: Vue 3 con JavaScript
   - Estilos: Tailwind CSS 
 - **Otros**:
   - Autenticación: JWT
-  - Pasarelas de pago: PayPal y Stripe
+  - Pasarelas de pago: PayPal 
   - Envío de emails: SendGrid o similar (para confirmación de registro)
 
 ## 🔗 Estructura del Proyecto
