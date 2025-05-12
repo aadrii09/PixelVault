@@ -46,8 +46,8 @@ const handleLogin = async () => {
         <h2 class="text-xl font-bold mb-4">Inicar Sesión</h2>
         <!-- Formulario -->
          <form @submit.prevent="handleLogin" class="space-y-4">
-            <input v-model="email" type="email" placeholder="Escriba su email" class="w-full px-4 py-2 border rounded" required>
-            <input v-model="password" type="password" placeholder="Escriba su contraseña" class="w-full px-4 py-2 border rounded" required>
+            <input v-model="email" type="email" placeholder="Escriba su email" class="w-full px-4 py-2 border rounded" required />
+            <input v-model="password" type="password" placeholder="Escriba su contraseña" class="w-full px-4 py-2 border rounded" required />
             <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-800">Entrar</button>
          </form>
          <p v-if="error" class="text-red-500 mt-4">{{ error }}</p>
