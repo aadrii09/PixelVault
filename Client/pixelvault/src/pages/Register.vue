@@ -14,11 +14,9 @@ const router = useRouter();
 
 const handleRegister = async () => {
     try {
-        wait register(nombre:nombre.value, apellidos:apellidos.value, email:email.value, password:password.value);
+        await register(nombre.value, apellidos.value, email.value, password.value);
         mensaje.value = 'Registro exitoso. Ahora puedes iniciar sesión.';
-        setTimeout(() => {
-            router.push('/login');
-        }, 1500);
+        setTimeout(() => router.push('/login'), 1500);
     } catch (error) {
         console.error('Error al registrar:', error);
         mensaje.value = 'Error al registrar';

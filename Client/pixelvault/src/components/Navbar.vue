@@ -27,8 +27,8 @@ import { useRoute } from 'vue-router'
         <div class="space-x-4">
             <router-link to="/" class="text-gray-700 hover:text-blue-600">Home</router-link>
             <template v-if="!isLoggedIn">
-            <router-link to="/" class="text-gray-700 hover:text-blue-600">Login</router-link>
-            <router-link to="/" class="text-gray-700 hover:text-blue-600">Registro</router-link>
+            <router-link to="/login" class="text-gray-700 hover:text-blue-600">Login</router-link>
+            <router-link to="/register" class="text-gray-700 hover:text-blue-600">Registro</router-link>
             </template>
             <template v-else>
                 <span class="text-gray-700">Hola, {{ userStore?.nombre }}</span>

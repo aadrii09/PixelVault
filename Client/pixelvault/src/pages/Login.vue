@@ -2,7 +2,7 @@
 
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useUserStore } from '../store/auth';
+import { useUserStore } from '../store/user';
 import {login} from '../api/auth';
 
 
@@ -22,7 +22,7 @@ const handleLogin = async () => {
         const decoded = JSON.parse(atob(response.token.split('.')[1]));
 
         userStore.login({
-            nombre: decoded.?email?.split('@')[0],
+            nombre: decoded?.email?.split('@')[0],
             email: decoded.email,
             esAdmin: decoded.esAdmin == 'True',
             id: parseInt(decoded.sub),
