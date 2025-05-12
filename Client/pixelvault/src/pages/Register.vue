@@ -3,6 +3,7 @@
 import { ref } from 'vue';
 import { register } from '../api/auth';
 import { useRouter } from 'vue-router';
+import axios from 'axios';
 
 
 const nombre = ref('');
@@ -12,11 +13,23 @@ const password = ref('');
 const mensaje = ref('');
 const router = useRouter();
 
-const handleRegister = async () => {
+const userDates ={
+    nombre: nombre.value,
+    apellidos: apellidos.value,
+    email: email.value,
+    password: password.value
+
+};
+const handleRegister = async (userDates) => {
     try {
-        await register(nombre.value, apellidos.value, email.value, password.value);
-        mensaje.value = 'Registro exitoso. Ahora puedes iniciar sesión.';
-        setTimeout(() => router.push('/login'), 1500);
+        const response = await axios.post('http://localhost:5225/api/auth/register', {
+            nombre: nombre.value,
+            apellidos: apellidos.value,
+            email: email.value,
+            password: password.value
+        });
+        console.log('Registro exitoso:', response.data);
+        mensaje.value = 'Registro exitoso';
     } catch (error) {
         console.error('Error al registrar:', error);
         mensaje.value = 'Error al registrar';
