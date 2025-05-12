@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ApiVault")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0c6b12300f9bdd74e75c294fbd72643ae2e475f4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5e04408f8fdb223db1f6906b4c01a7345e50d284")]
 [assembly: System.Reflection.AssemblyProductAttribute("ApiVault")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ApiVault")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

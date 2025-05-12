@@ -3,6 +3,14 @@
   "WorkspaceRootPath": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|c:\\users\\adrian.castrobeiro\\desktop\\pixelvault\\server\\apivault\\apivault\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|solutionrelative:apivault\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|c:\\users\\adrian.castrobeiro\\desktop\\pixelvault\\server\\apivault\\apivault\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|solutionrelative:apivault\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|c:\\users\\adrian.castrobeiro\\desktop\\pixelvault\\server\\apivault\\apivault\\services\\paypalservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|solutionrelative:apivault\\services\\paypalservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -13,10 +21,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|c:\\users\\adrian.castrobeiro\\desktop\\pixelvault\\server\\apivault\\apivault\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|solutionrelative:apivault\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|c:\\users\\adrian.castrobeiro\\desktop\\pixelvault\\server\\apivault\\apivault\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|solutionrelative:apivault\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|c:\\users\\adrian.castrobeiro\\desktop\\pixelvault\\server\\apivault\\apivault\\dtos\\verificardto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -43,10 +47,6 @@
       "RelativeMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|solutionrelative:apivault\\interfaces\\iusuarioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|c:\\users\\adrian.castrobeiro\\desktop\\pixelvault\\server\\apivault\\apivault\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|solutionrelative:apivault\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|c:\\users\\adrian.castrobeiro\\desktop\\pixelvault\\server\\apivault\\apivault\\utilidades\\passwordhashed.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1A90AA03-A123-4BE0-B1EE-CA3CE7D02889}|ApiVault\\ApiVault.csproj|solutionrelative:apivault\\utilidades\\passwordhashed.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
@@ -58,20 +58,21 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 9,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Program.cs",
               "RelativeDocumentMoniker": "ApiVault\\Program.cs",
               "ToolTip": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Program.cs",
               "RelativeToolTip": "ApiVault\\Program.cs",
-              "ViewState": "AgIAACcAAAAAAAAAAAAAADoAAAAoAAAAAAAAAA==",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAAAEMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-02T07:25:18.267Z",
-              "IsPinned": true
+              "IsPinned": true,
+              "EditorCaption": ""
             },
             {
               "$type": "Bookmark",
@@ -103,33 +104,19 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "PagosController.cs",
-              "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Controllers\\PagosController.cs",
-              "RelativeDocumentMoniker": "ApiVault\\Controllers\\PagosController.cs",
-              "ToolTip": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Controllers\\PagosController.cs",
-              "RelativeToolTip": "ApiVault\\Controllers\\PagosController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-09T13:02:42.765Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "PaypalService.cs",
               "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Services\\PaypalService.cs",
               "RelativeDocumentMoniker": "ApiVault\\Services\\PaypalService.cs",
               "ToolTip": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Services\\PaypalService.cs",
               "RelativeToolTip": "ApiVault\\Services\\PaypalService.cs",
-              "ViewState": "AgIAADUAAAAAAAAAAAAAAEcAAAA7AAAAAAAAAA==",
+              "ViewState": "AgIAAEEAAAAAAAAAAAAcwE4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-09T12:31:57.273Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-09T12:31:57.273Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "VerificarDto.cs",
               "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\DTOs\\VerificarDto.cs",
               "RelativeDocumentMoniker": "ApiVault\\DTOs\\VerificarDto.cs",
@@ -141,7 +128,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "MontoDto.cs",
               "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\DTOs\\MontoDto.cs",
               "RelativeDocumentMoniker": "ApiVault\\DTOs\\MontoDto.cs",
@@ -153,7 +140,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "PaypalSettings.cs",
               "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Settings\\PaypalSettings.cs",
               "RelativeDocumentMoniker": "ApiVault\\Settings\\PaypalSettings.cs",
@@ -165,7 +152,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\appsettings.json",
               "RelativeDocumentMoniker": "ApiVault\\appsettings.json",
@@ -173,12 +160,11 @@
               "RelativeToolTip": "ApiVault\\appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAGAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-05-09T12:17:19.992Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-09T12:17:19.992Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "UsuarioService.cs",
               "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Services\\UsuarioService.cs",
               "RelativeDocumentMoniker": "ApiVault\\Services\\UsuarioService.cs",
@@ -190,7 +176,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "IUsuarioService.cs",
               "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Interfaces\\IUsuarioService.cs",
               "RelativeDocumentMoniker": "ApiVault\\Interfaces\\IUsuarioService.cs",
@@ -202,7 +188,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "UsuariosController.cs",
               "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Controllers\\UsuariosController.cs",
               "RelativeDocumentMoniker": "ApiVault\\Controllers\\UsuariosController.cs",
@@ -211,6 +197,30 @@
               "ViewState": "AgIAAAYAAAAAAAAAAAAAAEsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-09T06:39:51.656Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Services\\AuthService.cs",
+              "RelativeDocumentMoniker": "ApiVault\\Services\\AuthService.cs",
+              "ToolTip": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Services\\AuthService.cs",
+              "RelativeToolTip": "ApiVault\\Services\\AuthService.cs",
+              "ViewState": "AgIAACYAAAAAAAAAAAAgwCsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-08T06:31:35.97Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "PagosController.cs",
+              "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Controllers\\PagosController.cs",
+              "RelativeDocumentMoniker": "ApiVault\\Controllers\\PagosController.cs",
+              "ToolTip": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Controllers\\PagosController.cs",
+              "RelativeToolTip": "ApiVault\\Controllers\\PagosController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-09T13:02:42.765Z"
             },
             {
               "$type": "Document",
@@ -223,18 +233,6 @@
               "ViewState": "AgIAABUAAAAAAAAAAADwvwAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-09T06:05:47.377Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "AuthService.cs",
-              "DocumentMoniker": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Services\\AuthService.cs",
-              "RelativeDocumentMoniker": "ApiVault\\Services\\AuthService.cs",
-              "ToolTip": "C:\\Users\\adrian.castrobeiro\\Desktop\\PixelVault\\Server\\ApiVault\\ApiVault\\Services\\AuthService.cs",
-              "RelativeToolTip": "ApiVault\\Services\\AuthService.cs",
-              "ViewState": "AgIAACYAAAAAAAAAAAAkwDAAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-08T06:31:35.97Z"
             }
           ]
         }

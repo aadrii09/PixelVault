@@ -58,8 +58,13 @@ builder.Services.Configure<PaypalSettings>(builder.Configuration.GetSection("Pay
 // Inyectar servicio de PayPal
 builder.Services.AddScoped<PaypalService>();
 
-
-
+// Configurar CORS
+builder.Services.AddCors(p => p.AddPolicy("PoliticaCors", build =>
+{
+    build.WithOrigins("https://localhost:5173", "https://127.0.0.1:5173")
+         .AllowAnyMethod()
+         .AllowAnyHeader();
+}));
 
 // Agregar otros servicios que necesites
 builder.Services.AddControllers();
@@ -104,6 +109,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// Usar CORS antes de Authentication y Authorization
+app.UseCors("PoliticaCors");
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseHttpsRedirection();
@@ -111,8 +120,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-
-
-//  AQiepbT5Qot4jIqhxfcUppb - ogD3WfqkZZpRi7IQvoE - eDsjVaO0aOyEnaWjwC5WxJOHyJHNwveYWddr  id
-// EOmLh9CZz5nObmXJ2SuukDxfE5OHZ7mmWgCh3Jgj5uMrggBp3r2tY3EluZChnqkymo9K3oQ0cbM-KlLm   key
