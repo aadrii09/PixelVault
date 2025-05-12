@@ -1,5 +1,9 @@
 <script setup>
 import Navbar from './components/Navbar.vue'
+import { useUserStore } from './store/user';
+
+const userStore = useUserStore();
+userStore.cargarDesdeStorage();
 </script>
 
 
