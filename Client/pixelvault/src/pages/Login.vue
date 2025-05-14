@@ -1,17 +1,13 @@
 <script setup>
-
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '../store/user';
-import {login} from '../api/auth';
-
-
-
+import { login } from '../api/auth';
 
 const email = ref('');
 const password = ref('');
 const error = ref('');
-const routerr = useRouter();
+const router = useRouter();
 const userStore = useUserStore();
 
 const handleLogin = async () => {
@@ -28,18 +24,16 @@ const handleLogin = async () => {
             id: parseInt(decoded.sub),
         },
         response.token
-    )
-    reouter.push('/')
+        ); // Corregido: cerrado el paréntesis
+        
+        router.push('/');
 
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
         error.value = 'Error al iniciar sesión';
     }
 };
-
 </script>
-
-
 
 <template>
     <div class="max-w-md mx-auto mt-10 p-6 bg-white shadow rounded">
@@ -54,7 +48,5 @@ const handleLogin = async () => {
     </div>
 </template>
 
-
 <style lang="scss" scoped>
-
 </style>

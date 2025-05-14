@@ -7,20 +7,20 @@ const api = axios.create({
     },
 });
 
-export const login = async (email, password) => {
-    const response = await api.post('/Auth/login', {
-        email, 
-        password,
-    })
-    return response.data;
-}    
+export async function login(email, password) {
+  const response = await axios.post('http://localhost:5225/api/Auth/login', {
+    email,
+    password
+  });
+  return response.data;
+} 
 
-export const register = async (nombre, apellidos, email, password ) => {
-    const response = await api.post('/Auth/register', {
-        nombre,
-        apellidos,
-        email,
-        password,
-    })
-    return response.data;
+export async function register(nombre, apellidos, email, password) {
+  const response = await axios.post('http://localhost:5225/api/auth/register', {
+    nombre,
+    apellidos,
+    email,
+    password
+  });
+  return response.data;
 }
