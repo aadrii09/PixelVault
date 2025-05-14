@@ -1,7 +1,10 @@
 .vs
 .vscode/
 .vscode
-.Server/ApiVault/ApiVault/appsettings.json
+.github
+Server/ApiVault/ApiVault/appsettings.json
+Server/.vs
+
 
 ## A streamlined .gitignore for modern .NET projects
 ## including temporary files, build results, and
