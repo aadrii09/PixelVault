@@ -26,7 +26,8 @@ const logout = async () => {
                 <router-link to="/register" class="text-gray-700 hover:text-blue-600">Registro</router-link>
             </template>
             <template v-else>
-                <span class="text-gray-700">Sobre nosotros {{ userStore?.nombre }}</span>
+                <span class="text-gray-700">Hola, {{ userStore.user?.nombre }}</span>
+                
                 <router-link
                     v-if="userStore.user?.esAdmin"
                     to="/admin"

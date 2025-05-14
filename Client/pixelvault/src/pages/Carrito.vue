@@ -1,10 +1,12 @@
 <script setup>
     import { ref, onMounted } from 'vue';  
-    import { getCarrito, vaciarCarrito } from '../api/carrito';
+    import { getCarrito, vaciarCarrito, agregarAlCarrito } from '../api/carrito';
 
     const carrito = ref(null);
     const cargando = ref(true);
     const error = ref('');
+
+    
 
     const cargarCarrito = async () => {
         try {

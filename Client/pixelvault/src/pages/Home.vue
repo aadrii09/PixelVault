@@ -1,4 +1,4 @@
-<script>
+<script setup>
 
 import {ref, onMounted, computed} from 'vue';
 import {getProductos} from '../api/productos';

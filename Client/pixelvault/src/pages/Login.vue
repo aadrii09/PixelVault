@@ -16,11 +16,12 @@ const handleLogin = async () => {
         //descodificar token con jwt-decode
 
         const decoded = JSON.parse(atob(response.token.split('.')[1]));
+        console.log('Decoded JWT:', decoded); // Para depuración
 
         userStore.login({
             nombre: decoded?.email?.split('@')[0],
             email: decoded.email,
-            esAdmin: decoded.esAdmin == 'True',
+            esAdmin: decoded.esAdmin === true || decoded.esAdmin === 'True' || decoded.esAdmin === 'true' || decoded.esAdmin === 1 || decoded.esAdmin === '1',
             id: parseInt(decoded.sub),
         },
         response.token

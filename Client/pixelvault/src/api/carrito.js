@@ -4,8 +4,10 @@ import { useUserStore } from "../store/user";
 
 const userStore = useUserStore(pinia);
 
+
+
 const api = axios.create({
-  baseURL: "https://localhost:5225/api", // con esa url llamamos a la api
+  baseURL: "http://localhost:5225/api", // con esa url llamamos a la api
 });
 
 api.interceptors.request.use((config) => {
@@ -14,6 +16,16 @@ api.interceptors.request.use((config) => {
   }
   return config;    
 });
+
+export const agregarAlCarrito = async (producto) => {
+  const userId = userStore.user.id;
+  const body = {
+    idProducto: producto.idProducto,
+    cantidad: 1,
+    precioUnitario:49.99
+  }
+  await api.post(`/Carritos/${userId}`, body)
+}
 
 export const getCarrito = async () => {
 const userId = userStore.user.id;

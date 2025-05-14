@@ -2,11 +2,12 @@ import axios from "axios";
 import {useUserStore} from "../store/user";
 import pinia from "../pinia";
 
+
 const userStore = useUserStore(pinia);
 
 
 const api = axios.create({
-  baseURL: "https://localhost:5225/api", // con esa url llamamos a la api
+  baseURL: "http://localhost:5225/api", // con esa url llamamos a la api
 });
 
 api.interceptors.request.use((config) => {
