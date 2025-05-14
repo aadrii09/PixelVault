@@ -29,6 +29,7 @@ namespace ApiVault.Utilidades
             {
                 claims.Add(new Claim(ClaimTypes.Role, "Admin"));
             }
+            claims.Add(new Claim("esAdmin", usuario.EsAdmin.ToString()));
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Secreta));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

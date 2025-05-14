@@ -69,7 +69,8 @@ namespace ApiVault.Controllers
 
         private bool IsAdmin()
         {
-            return User.HasClaim(c => c.Type == "esAdmin" && c.Value == "");
+            return User.IsInRole("Admin") ||
+                   User.HasClaim(c => c.Type == "esAdmin" && c.Value == "True");
         }
 
     }
