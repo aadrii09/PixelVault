@@ -14,7 +14,6 @@ export async function login(email, password) {
   });
   return response.data;
 } 
-
 export async function register(nombre, apellidos, email, password) {
   const response = await axios.post('http://localhost:5225/api/auth/register', {
     nombre,

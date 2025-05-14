@@ -1,10 +1,7 @@
 <script setup>
-
 import { ref } from 'vue';
 import { register } from '../api/auth';
 import { useRouter } from 'vue-router';
-import axios from 'axios';
-
 
 const nombre = ref('');
 const apellidos = ref('');
@@ -13,30 +10,22 @@ const password = ref('');
 const mensaje = ref('');
 const router = useRouter();
 
-const userDates ={
-    nombre: nombre.value,
-    apellidos: apellidos.value,
-    email: email.value,
-    password: password.value
-
-};
-const handleRegister = async (userDates) => {
+const handleRegister = async () => {
     try {
-        const response = await axios.post('http://localhost:5225/api/auth/register', {
-            nombre: nombre.value,
-            apellidos: apellidos.value,
-            email: email.value,
-            password: password.value
-        });
-        console.log('Registro exitoso:', response.data);
-        mensaje.value = 'Registro exitoso';
+        // Usar la función register en lugar de axios.post directamente
+        await register(nombre.value, apellidos.value, email.value, password.value);
+        
+        console.log('Registro exitoso');
+        mensaje.value = 'Registro exitoso. Ahora puedes iniciar sesión.';
+        
+        // Redirección después de 1.5 segundos
+        setTimeout(() => router.push('/login'), 1500);
     } catch (error) {
         console.error('Error al registrar:', error);
         mensaje.value = 'Error al registrar';
     }
 };
 </script>
-
 
 <template>
     <div class="max-w-md max-auto mt-10 p-6 bg-white shadow rounded">
@@ -56,5 +45,4 @@ const handleRegister = async (userDates) => {
 </template>
 
 <style lang="scss" scoped>
-
 </style>
