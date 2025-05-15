@@ -197,7 +197,7 @@ const confirmUpdateRolUsuario = (id, esAdmin) => {
     <aside class="w-64 bg-gray-800 text-gray-100 flex flex-col justify-between py-6 px-4 min-h-screen">
       <div>
         <div class="flex flex-col items-center mb-8">
-          <img src="../images/logo.png" alt="PixelVault Logo" class="w-20 h-20 mb-2 rounded-full shadow-lg" />
+          <img src="/images/logo.png" alt="PixelVault Logo" class="w-40 h-20 mb-2 object-contain shadow-lg" />
           <span class="text-2xl font-bold text-yellow-100 tracking-wide">PixelVault</span>
         </div>
         <nav class="flex flex-col gap-2">
