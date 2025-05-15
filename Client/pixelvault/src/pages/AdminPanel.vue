@@ -171,7 +171,11 @@ const confirmDeleteProducto = (id) => {
 };
 
 const confirmUpdateTipoProducto = (id, data) => {
-  openModal('¿Estás seguro de que quieres actualizar este tipo de producto?', () => actualizarTipoProducto(id, data));
+  openModal('¿Estás seguro de que quieres actualizar este tipo de producto?', async () => {
+    await adminPanel.updateTipoProducto(id, data);
+    tipoProductoEdit.value = null;
+    await cargarTiposProductos();
+  });
 };
 
 const confirmDeleteTipoProducto = (id) => {
@@ -192,6 +196,14 @@ const confirmUpdateUsuario = (id, data) => {
 
 const confirmUpdateRolUsuario = (id, esAdmin) => {
   openModal('¿Estás seguro de que quieres cambiar el rol de este usuario?', () => actualizarRolUsuario(id, esAdmin));
+};
+
+const confirmUpdateMarca = (id, data) => {
+  openModal('¿Estás seguro de que quieres actualizar esta marca?', async () => {
+    await adminPanel.updateMarca(id, data);
+    marcaEdit.value = null;
+    await cargarMarcas();
+  });
 };
 </script>
 
@@ -293,12 +305,33 @@ const confirmUpdateRolUsuario = (id, esAdmin) => {
                   <td class="py-2 px-4 truncate max-w-xs"><a :href="marca.logoUrl" target="_blank" class="text-blue-600 hover:underline">{{ marca.logoUrl }}</a></td>
                   <td class="py-2 px-4 truncate max-w-xs"><a :href="marca.website" target="_blank" class="text-blue-600 hover:underline">{{ marca.website }}</a></td>
                   <td class="py-2 px-4 flex gap-2">
-                    <button @click="marcaEdit = marca" class="text-blue-600 hover:underline">Editar</button>
+                    <button @click="marcaEdit = { ...marca }" class="text-blue-600 hover:underline">Editar</button>
                     <button @click="confirmDeleteMarca(marca.idMarca)" class="text-red-600 hover:underline">Eliminar</button>
                   </td>
                 </tr>
               </tbody>
             </table>
+          </div>
+          <div v-if="marcaEdit" class="mt-6 p-4 bg-gray-50 rounded shadow">
+            <h4 class="font-bold mb-2">Editar Marca</h4>
+            <form @submit.prevent="confirmUpdateMarca(marcaEdit.idMarca, marcaEdit)">
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label class="block text-sm font-semibold mb-1">Nombre</label>
+                  <input v-model="marcaEdit.nombre" class="w-full border-b border-gray-400 focus:outline-none py-1" required>
+                </div>
+                <div>
+                  <label class="block text-sm font-semibold mb-1">Logo URL</label>
+                  <input v-model="marcaEdit.logoUrl" class="w-full border-b border-gray-400 focus:outline-none py-1" required>
+                </div>
+                <div class="col-span-2">
+                  <label class="block text-sm font-semibold mb-1">Website</label>
+                  <input v-model="marcaEdit.website" class="w-full border-b border-gray-400 focus:outline-none py-1" required>
+                </div>
+              </div>
+              <button type="submit" class="px-4 py-1 border border-green-600 rounded-full text-green-700 font-semibold mr-2 hover:bg-green-600 hover:text-white transition">Guardar</button>
+              <button @click="marcaEdit = null" type="button" class="text-red-600 hover:underline">Cancelar</button>
+            </form>
           </div>
         </div>
       </div>
@@ -462,12 +495,29 @@ const confirmUpdateRolUsuario = (id, esAdmin) => {
                   <td class="py-2 px-4">{{ tipo.nombre }}</td>
                   <td class="py-2 px-4">{{ tipo.descripcion }}</td>
                   <td class="py-2 px-4 flex gap-2">
-                    <button @click="tipoProductoEdit = tipo" class="text-blue-600 hover:underline">Editar</button>
+                    <button @click="tipoProductoEdit = { ...tipo }" class="text-blue-600 hover:underline">Editar</button>
                     <button @click="confirmDeleteTipoProducto(tipo.idTipo)" class="text-red-600 hover:underline">Eliminar</button>
                   </td>
                 </tr>
               </tbody>
             </table>
+          </div>
+          <div v-if="tipoProductoEdit" class="mt-6 p-4 bg-gray-50 rounded shadow">
+            <h4 class="font-bold mb-2">Editar Tipo de Producto</h4>
+            <form @submit.prevent="confirmUpdateTipoProducto(tipoProductoEdit.idTipo, tipoProductoEdit)">
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label class="block text-sm font-semibold mb-1">Nombre</label>
+                  <input v-model="tipoProductoEdit.nombre" class="w-full border-b border-gray-400 focus:outline-none py-1" required>
+                </div>
+                <div>
+                  <label class="block text-sm font-semibold mb-1">Descripción</label>
+                  <input v-model="tipoProductoEdit.descripcion" class="w-full border-b border-gray-400 focus:outline-none py-1" required>
+                </div>
+              </div>
+              <button type="submit" class="px-4 py-1 border border-green-600 rounded-full text-green-700 font-semibold mr-2 hover:bg-green-600 hover:text-white transition">Guardar</button>
+              <button @click="tipoProductoEdit = null" type="button" class="text-red-600 hover:underline">Cancelar</button>
+            </form>
           </div>
         </div>
       </div>
