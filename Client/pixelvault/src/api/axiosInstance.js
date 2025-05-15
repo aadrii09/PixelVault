@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { computed } from 'vue'
 
 const api = axios.create({
   baseURL: 'http://localhost:5225/api', // Cambia al puerto real de tu backend
@@ -16,4 +17,6 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-export default api; 
+export default api;
+
+export const updateUsuario = async (id, data) => (await api.put(`/Usuarios/${id}`, data)).data; 

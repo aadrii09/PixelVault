@@ -183,7 +183,11 @@ const confirmDeleteUsuario = (id) => {
 };
 
 const confirmUpdateUsuario = (id, data) => {
-  openModal('¿Estás seguro de que quieres actualizar este usuario?', () => actualizarUsuario(id, data));
+  openModal('¿Estás seguro de que quieres actualizar este usuario?', async () => {
+    await adminPanel.updateUsuario(id, data);
+    usuarioEdit.value = null;
+    await cargarUsuarios();
+  });
 };
 
 const confirmUpdateRolUsuario = (id, esAdmin) => {

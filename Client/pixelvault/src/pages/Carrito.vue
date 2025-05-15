@@ -5,12 +5,16 @@
     const carrito = ref(null);
     const cargando = ref(true);
     const error = ref('');
+    const paypalReady = ref(false);
 
     
 
     const cargarCarrito = async () => {
         try {
             carrito.value = await getCarrito();
+            if (carrito.value && carrito.value.productos && carrito.value.productos.length > 0) {
+                await renderizarPaypal();
+            }
         } catch (err) {
             console.error('Error al cargar el carrito:', err);
             error.value = 'Error al cargar el carrito';
@@ -23,6 +27,30 @@
         await vaciarCarrito();
         await cargarCarrito();
     };
+
+    const renderizarPaypal = async () => {
+        if(!window.paypal || !carrito.value) return
+            
+        window.paypal.Buttons({
+            createOrder: async()=>{
+                return await crearOrder(carrito.value.total);
+            },
+            onApprove: async(data)=>{
+                const respuesta = await verificarOrden(data.orderID);
+                alert('Pago realizado con exito' + respuesta.estado);
+                await vaciarCarrito();
+            },
+            onError: (err)=>{
+                console.error('Error al procesar el pago:', err);
+                alert('Error al procesar el pago');
+            },
+            onCancel: ()=>{
+                alert('Pago cancelado');
+            }
+
+        }).render('#paypal-button-container');
+    }
+
 
     onMounted(cargarCarrito);
 </script>
@@ -56,7 +84,10 @@
                         Vaciar Carrito
                     </button>
 
-                    <button class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800">Ir a pagar</button>
+                    <!-- <button class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800">Ir a pagar</button> -->
+
+                    <!-- boton de paypal -->
+                     <div id="paypal-button-container" class="mt-6" v-show="!cargando && !error && !paypalReady"></div>
 
                 </div>
             </div>
