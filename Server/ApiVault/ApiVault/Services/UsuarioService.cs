@@ -21,12 +21,18 @@ namespace ApiVault.Services
             _jwtHelper = jwtHelper;
         }
 
-        public async Task<bool> ActualizarRolAsync(int usuarioId, bool esAdmin)
+        public async Task<bool?> ActualizarRolAsync(int usuarioId, bool esAdmin)
         {
             var usuario = await _context.Usuarios.FindAsync(usuarioId);
             if (usuario == null)
+                return null;
+
+            // Si se va a quitar el rol de admin, comprobar si es el único
+            if (usuario.EsAdmin && !esAdmin)
             {
-                return false;
+                int adminCount = await _context.Usuarios.CountAsync(u => u.EsAdmin);
+                if (adminCount == 1)
+                    return false; // No permitir quitar el rol al único admin
             }
 
             usuario.EsAdmin = esAdmin;
@@ -34,12 +40,18 @@ namespace ApiVault.Services
             return true;
         }
 
-        public async Task<bool> EliminarAsync(int usuarioId)
+        public async Task<bool?> EliminarAsync(int usuarioId)
         {
             var usuario = await _context.Usuarios.FindAsync(usuarioId);
             if (usuario == null)
+                return null;
+
+            // Si es admin, comprobar si es el único
+            if (usuario.EsAdmin)
             {
-                return false;
+                int adminCount = await _context.Usuarios.CountAsync(u => u.EsAdmin);
+                if (adminCount == 1)
+                    return false; // No permitir eliminar el único admin
             }
 
             _context.Usuarios.Remove(usuario);

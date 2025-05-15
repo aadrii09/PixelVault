@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted, computed } from 'vue';
 import * as adminPanel from '../api/adminPanel';
 import axios from 'axios';
 
@@ -56,14 +56,26 @@ const buscarUsuarioPorId = async () => {
 };
 
 const eliminarUsuario = async (id) => {
-  await adminPanel.deleteUsuario(id);
-  await cargarUsuarios();
+  try {
+    await adminPanel.deleteUsuario(id);
+    await cargarUsuarios();
+  } catch (error) {
+    if (error.response && error.response.status === 400) {
+      showError('¡No puedes eliminarte! Eres el único administrador.');
+    }
+  }
 };
 
 const actualizarRolUsuario = async (id, esAdmin) => {
-  await adminPanel.updateUsuarioRol(id, esAdmin);
-  usuarioRolEdit.value = null;
-  await cargarUsuarios();
+  try {
+    await adminPanel.updateUsuarioRol(id, esAdmin);
+    usuarioRolEdit.value = null;
+    await cargarUsuarios();
+  } catch (error) {
+    if (error.response && error.response.status === 400) {
+      showError('¡No puedes quitarte el permiso de admin! Eres el único administrador.');
+    }
+  }
 };
 
 const actualizarUsuario = async (id, data) => {
@@ -204,6 +216,14 @@ const confirmUpdateMarca = (id, data) => {
     marcaEdit.value = null;
     await cargarMarcas();
   });
+};
+
+const adminCount = computed(() => usuarios.value.filter(u => u.esAdmin).length);
+
+const showError = (message) => {
+  modalMessage.value = message;
+  confirmAction.value = closeModal;
+  showModal.value = true;
 };
 </script>
 
@@ -571,8 +591,24 @@ const confirmUpdateMarca = (id, data) => {
                     </span>
                   </td>
                   <td class="py-2 px-4 flex gap-2">
-                    <button @click="confirmDeleteUsuario(usuario.idUsuario)" class="text-red-600 hover:underline">Eliminar</button>
-                    <button @click="usuarioRolEdit = usuario" class="text-blue-600 hover:underline">Editar Rol</button>
+                    <button
+                      @click="confirmDeleteUsuario(usuario.idUsuario)"
+                      class="text-red-600 hover:underline"
+                      :disabled="usuario.esAdmin && adminCount.value === 1"
+                      :class="usuario.esAdmin && adminCount.value === 1 ? 'opacity-50 cursor-not-allowed' : ''"
+                      :title="usuario.esAdmin && adminCount.value === 1 ? 'Debe haber al menos un administrador' : ''"
+                    >
+                      Eliminar
+                    </button>
+                    <button
+                      @click="usuarioRolEdit = usuario"
+                      class="text-blue-600 hover:underline"
+                      :disabled="usuario.esAdmin && adminCount.value === 1"
+                      :class="usuario.esAdmin && adminCount.value === 1 ? 'opacity-50 cursor-not-allowed' : ''"
+                      :title="usuario.esAdmin && adminCount.value === 1 ? 'Debe haber al menos un administrador' : ''"
+                    >
+                      Editar Rol
+                    </button>
                     <button @click="usuarioEdit = { ...usuario }" class="text-yellow-600 hover:underline">Editar</button>
                   </td>
                 </tr>
@@ -582,7 +618,7 @@ const confirmUpdateMarca = (id, data) => {
           <div v-if="usuarioRolEdit" class="mt-6 p-4 bg-gray-50 rounded shadow">
             <h4 class="font-bold mb-2">Editar Rol de {{ usuarioRolEdit.nombre }}</h4>
             <button @click="confirmUpdateRolUsuario(usuarioRolEdit.idUsuario, true)" class="px-4 py-1 border border-green-600 rounded-full text-green-700 font-semibold mr-2 hover:bg-green-600 hover:text-white transition">Hacer Admin</button>
-            <button @click="confirmUpdateRolUsuario(usuarioRolEdit.idUsuario, false)" class="px-4 py-1 border border-gray-600 rounded-full text-gray-700 font-semibold mr-2 hover:bg-gray-600 hover:text-white transition">Quitar Admin</button>
+            <button @click="confirmUpdateRolUsuario(usuarioRolEdit.idUsuario, false)" class="px-4 py-1 border border-gray-600 rounded-full text-gray-700 font-semibold mr-2 hover:bg-gray-600 hover:text-white transition" :disabled="usuarioRolEdit.esAdmin && adminCount.value === 1" :class="usuarioRolEdit.esAdmin && adminCount.value === 1 ? 'opacity-50 cursor-not-allowed' : ''" :title="usuarioRolEdit.esAdmin && adminCount.value === 1 ? 'Debe haber al menos un administrador' : ''">Quitar Admin</button>
             <button @click="usuarioRolEdit = null" class="text-red-600 hover:underline">Cancelar</button>
           </div>
           <div v-if="usuarioEdit" class="mt-6 p-4 bg-gray-50 rounded shadow">

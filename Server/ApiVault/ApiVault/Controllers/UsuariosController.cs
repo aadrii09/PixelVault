@@ -47,12 +47,17 @@ namespace ApiVault.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> EliminarUsuario(int usuarioId)
         {
             var resultado = await _usuarioService.EliminarAsync(usuarioId);
-            if (!resultado)
+            if (resultado == null)
             {
                 return NotFound();
+            }
+            if (resultado == false)
+            {
+                return BadRequest("No se puede eliminar el único administrador.");
             }
             return NoContent();
         }
@@ -62,12 +67,17 @@ namespace ApiVault.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ActualizarRolUsuario(int usuarioId, [FromBody] bool esAdmin)
         {
             var resultado = await _usuarioService.ActualizarRolAsync(usuarioId, esAdmin);
-            if (!resultado)
+            if (resultado == null)
             {
                 return NotFound();
+            }
+            if (resultado == false)
+            {
+                return BadRequest("No se puede quitar el rol de administrador al único administrador.");
             }
             return NoContent();
         }
@@ -86,6 +96,5 @@ namespace ApiVault.Controllers
             }
             return NoContent();
         }
-
     }
 }
