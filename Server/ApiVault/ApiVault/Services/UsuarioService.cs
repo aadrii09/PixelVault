@@ -61,5 +61,21 @@ namespace ApiVault.Services
         {
             return !await _context.Usuarios.AnyAsync(u => u.Email == email);
         }
+
+        public async Task<bool> ActualizarAsync(int usuarioId, UsuarioDto usuario)
+        {
+            var usuarioDb = await _context.Usuarios.FindAsync(usuarioId);
+            if (usuarioDb == null)
+            {
+                return false;
+            }
+
+            usuarioDb.Nombre = usuario.Nombre;
+            usuarioDb.Apellidos = usuario.Apellidos;
+            usuarioDb.Email = usuario.Email;
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

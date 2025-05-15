@@ -71,5 +71,21 @@ namespace ApiVault.Controllers
             }
             return NoContent();
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut("{usuarioId:int}")]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> ActualizarUsuario(int usuarioId, [FromBody] UsuarioDto usuario)
+        {
+            var resultado = await _usuarioService.ActualizarAsync(usuarioId, usuario);
+            if (!resultado)
+            {
+                return NotFound();
+            }
+            return NoContent();
+        }
+
     }
 }

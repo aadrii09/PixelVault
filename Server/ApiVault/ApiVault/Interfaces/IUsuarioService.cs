@@ -21,5 +21,7 @@ namespace ApiVault.Interfaces
 
         // Cambiar el rol de un usuario (administrador o no)
         Task<bool> ActualizarRolAsync(int usuarioId, bool esAdmin);
+
+        Task<bool> ActualizarAsync(int usuarioId, UsuarioDto usuario);
     }
 }
