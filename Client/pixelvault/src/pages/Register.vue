@@ -28,7 +28,7 @@ const handleRegister = async () => {
 </script>
 
 <template>
-    <div class="max-w-md max-auto mt-10 p-6 bg-white shadow rounded">
+    <div class="max-w-md max-auto mt-10 bg-white  p-6 shadow rounded">
         <h2 class="text-xl font-bold mb-4">Crear Cuenta</h2>
         <!-- formulario -->
          <form @submit.prevent="handleRegister" class="space-y-4">
@@ -44,5 +44,15 @@ const handleRegister = async () => {
     </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
+body {
+    background-image: url('../../public/images/fondoRegistroLogin.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+}
 </style>

@@ -50,4 +50,14 @@ const handleLogin = async () => {
 </template>
 
 <style lang="scss" scoped>
+body {
+    background-image: url('../../public/images/fondoRegistroLogin.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+}
 </style>
