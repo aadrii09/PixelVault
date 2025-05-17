@@ -25,6 +25,7 @@ namespace ApiVault.Services
             {
                 return null;
             }
+
             return new CarritoDto
             {
                 IdCarrito = carrito.IdCarrito,
@@ -41,11 +42,19 @@ namespace ApiVault.Services
             };
         }
 
+        public async Task<Carrito> GetCarritoEntityAsync(int usuarioId)
+        {
+            return await _context.Carritos
+                .Include(c => c.CarritoProductos)
+                .FirstOrDefaultAsync(c => c.IdUsuario == usuarioId && c.Estado == "Abierto");
+        }
+
         public async Task<CarritoDto> AddProductoAsync(int usuarioId, CarritoProductoDto productoDto)
         {
             var carrito = await _context.Carritos
                 .Include(c => c.CarritoProductos)
                 .FirstOrDefaultAsync(c => c.IdUsuario == usuarioId && c.Estado == "Abierto");
+
             if (carrito == null)
             {
                 carrito = new Carrito
@@ -55,6 +64,7 @@ namespace ApiVault.Services
                     Estado = "Abierto",
                     Total = 0m
                 };
+
                 _context.Carritos.Add(carrito);
                 await _context.SaveChangesAsync();
             }
@@ -88,20 +98,18 @@ namespace ApiVault.Services
             var carrito = await _context.Carritos
                 .Include(c => c.CarritoProductos)
                 .FirstOrDefaultAsync(c => c.IdUsuario == usuarioId && c.Estado == "Abierto");
-            if (carrito == null)
-            {
-                return false;
-            }
+
+            if (carrito == null) return false;
+
             var producto = carrito.CarritoProductos.FirstOrDefault(cp => cp.IdProducto == productoId);
-            if (producto == null)
-            {
-                return false;
-            }
+            if (producto == null) return false;
+
             _context.CarritoProductos.Remove(producto);
             await _context.SaveChangesAsync();
 
             carrito.Total = carrito.CarritoProductos.Sum(cp => cp.Subtotal);
             await _context.SaveChangesAsync();
+
             return true;
         }
 
@@ -110,16 +118,14 @@ namespace ApiVault.Services
             var carrito = await _context.Carritos
                 .Include(c => c.CarritoProductos)
                 .FirstOrDefaultAsync(c => c.IdUsuario == usuarioId && c.Estado == "Abierto");
-            if (carrito == null)
-            {
-                return false;
-            }
+
+            if (carrito == null) return false;
+
             _context.CarritoProductos.RemoveRange(carrito.CarritoProductos);
             carrito.Total = 0;
             await _context.SaveChangesAsync();
+
             return true;
         }
-
-        
     }
 }

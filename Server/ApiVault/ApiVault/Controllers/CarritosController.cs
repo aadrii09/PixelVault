@@ -61,7 +61,10 @@ namespace ApiVault.Controllers
             var result = await _carritoService.ClearCarritoAsync(usuarioId);
             return result ? NoContent() : Ok();
         }
-
+        private bool EsPropietario(int usuarioId)
+        {
+            return GetUserId() == usuarioId || IsAdmin();
+        }
         private int GetUserId()
         {
             return int.Parse(User.FindFirst("sub")?.Value ?? "0");
@@ -72,6 +75,6 @@ namespace ApiVault.Controllers
             return User.IsInRole("Admin") ||
                    User.HasClaim(c => c.Type == "esAdmin" && c.Value == "True");
         }
-
+        
     }
 }
