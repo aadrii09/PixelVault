@@ -34,8 +34,12 @@ const handleRegister = async () => {
           <input v-model="apellidos" type="text" placeholder="Escriba sus apellidos" required />
           <input v-model="email" type="email" placeholder="Escriba su email" required />
           <input v-model="password" type="password" placeholder="Escriba su contraseña" required />
+          <div class="not-registered pb-5">
+          <a @click.prevent="router.push('/login')" href="#" style="cursor:pointer;">¿Ya tienes cuenta? Inicia Sesión</a>
+        </div>
           <button type="submit">Registrarse</button>
         </form>
+        
         <p v-if="mensaje" class="mensaje">{{ mensaje }}</p>
       </div>
     </div>
@@ -129,5 +133,12 @@ const handleRegister = async () => {
     font-size: 1rem;
     text-align: center;
   }
+}
+
+.not-registered {
+  margin-top:0.4rem;
+  font-size: 0.85rem;
+  color: #888;
+  text-align: left;
 }
 </style>

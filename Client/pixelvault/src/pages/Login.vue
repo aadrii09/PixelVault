@@ -9,6 +9,8 @@ const password = ref('');
 const error = ref('');
 const router = useRouter();
 const userStore = useUserStore();
+const showModal = ref(false);
+const recoveryEmail = ref('');
 
 const handleLogin = async () => {
     try {
@@ -34,6 +36,18 @@ const handleLogin = async () => {
         error.value = 'Error al iniciar sesión';
     }
 };
+
+const openModal = () => {
+  showModal.value = true;
+  recoveryEmail.value = '';
+};
+const closeModal = () => {
+  showModal.value = false;
+};
+const handleRecovery = () => {
+  closeModal();
+  alert('Revise su Correo electrónico');
+};
 </script>
 
 <template>
@@ -44,16 +58,29 @@ const handleLogin = async () => {
         <form @submit.prevent="handleLogin">
           <input v-model="email" type="email" placeholder="Correo electrónico" required />
           <input v-model="password" type="password" placeholder="Contraseña" required />
-          <a class="forgot" href="#">Recuperar contraseña</a>
+          <a class="forgot" href="#" @click.prevent="openModal">Recuperar contraseña</a>
           <button type="submit">Iniciar Sesión</button>
         </form>
         <div class="not-registered">
-          <span>Not registered?</span>
+          <a @click.prevent="router.push('/register')" href="#" style="cursor:pointer;">¿No tienes cuenta? Regístrate</a>
         </div>
         <p v-if="error" class="error">{{ error }}</p>
       </div>
       <div class="login-image">
         <img src="../../public/images/mandoLogin.png" alt="Gamepad" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Recuperar Contraseña -->
+  <div v-if="showModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full relative">
+      <button @click="closeModal" class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+      <h3 class="text-lg font-bold mb-4">Recuperar Contraseña</h3>
+      <p class="mb-4">Escribe tu Correo Electrónico para recuperar la contraseña</p>
+      <input v-model="recoveryEmail" type="email" placeholder="Correo electrónico" class="w-full border-b border-gray-400 focus:outline-none py-2 mb-6" required />
+      <div class="flex justify-end">
+        <button @click="handleRecovery" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Enviar</button>
       </div>
     </div>
   </div>
