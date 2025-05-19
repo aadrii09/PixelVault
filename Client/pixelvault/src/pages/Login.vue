@@ -184,18 +184,23 @@ const handleRecovery = () => {
 }
 
 .login-image {
-  background: #181c2f;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 320px;
-  border-top-right-radius: 24px;
-  border-bottom-right-radius: 24px;
+  height: 100%;
+  padding: 0;
+  background: none;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+
   img {
-    width: 90%;
-    max-width: 260px;
-    border-radius: 18px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0;
+    box-shadow: none;
+    display: block;
   }
 }
 </style>
