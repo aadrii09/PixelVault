@@ -2,6 +2,7 @@
 import { ref, watch, onMounted, computed } from 'vue';
 import * as adminPanel from '../api/adminPanel';
 import axios from 'axios';
+import { useRouter } from 'vue-router';
 
 // Tabs
 const tab = ref('marcas');
@@ -225,6 +226,8 @@ const showError = (message) => {
   confirmAction.value = closeModal;
   showModal.value = true;
 };
+
+const router = useRouter();
 </script>
 
 <template>
@@ -253,22 +256,18 @@ const showError = (message) => {
           >
             {{ item.label }}
           </button>
+          <!-- Nuevos botones sin funcionalidad -->
+          <button class="w-full text-left px-4 py-2 rounded transition hover:bg-gray-700 hover:text-white text-gray-300">Pedidos</button>
+          <button class="w-full text-left px-4 py-2 rounded transition hover:bg-gray-700 hover:text-white text-gray-300">Pagos</button>
+          <button class="w-full text-left px-4 py-2 rounded transition hover:bg-gray-700 hover:text-white text-gray-300">Historial</button>
         </nav>
       </div>
-      <button class="text-left px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded transition mt-8">Leave</button>
+      <button class="text-left px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded transition mt-8" @click="router.push('/')">Leave</button>
     </aside>
 
     <!-- Main Content -->
     <main class="flex-1 p-6 bg-gray-50 min-h-screen">
       <h1 class="text-2xl font-bold mb-4">Panel de Administración</h1>
-      <div class="flex space-x-4 mb-6">
-        <button v-for="t in ['marcas','productos','tiposProductos','pedidos','pagos','usuarios']"
-                :key="t"
-                :class="['px-4 py-2 rounded', tab === t ? 'bg-blue-600 text-white' : 'bg-gray-200']"
-                @click="tab = t">
-          {{ t.charAt(0).toUpperCase() + t.slice(1) }}
-        </button>
-      </div>
 
       <!-- Modal de Confirmación -->
       <div v-if="showModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">

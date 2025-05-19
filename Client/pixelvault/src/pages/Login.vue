@@ -37,27 +37,138 @@ const handleLogin = async () => {
 </script>
 
 <template>
-    <div class="max-w-md mx-auto mt-10 p-6 bg-white shadow rounded">
-        <h2 class="text-xl font-bold mb-4">Inicar Sesión</h2>
-        <!-- Formulario -->
-         <form @submit.prevent="handleLogin" class="space-y-4">
-            <input v-model="email" type="email" placeholder="Escriba su email" class="w-full px-4 py-2 border rounded" required />
-            <input v-model="password" type="password" placeholder="Escriba su contraseña" class="w-full px-4 py-2 border rounded" required />
-            <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-800">Entrar</button>
-         </form>
-         <p v-if="error" class="text-red-500 mt-4">{{ error }}</p>
+  <div class="login-bg">
+    <div class="login-container">
+      <div class="login-form">
+        <h2>Iniciar Sesión</h2>
+        <form @submit.prevent="handleLogin">
+          <input v-model="email" type="email" placeholder="Correo electrónico" required />
+          <input v-model="password" type="password" placeholder="Contraseña" required />
+          <a class="forgot" href="#">Recuperar contraseña</a>
+          <button type="submit">Iniciar Sesión</button>
+        </form>
+        <div class="not-registered">
+          <span>Not registered?</span>
+        </div>
+        <p v-if="error" class="error">{{ error }}</p>
+      </div>
+      <div class="login-image">
+        <img src="../../public/images/mandoLogin.png" alt="Gamepad" />
+      </div>
     </div>
+  </div>
 </template>
 
 <style lang="scss" scoped>
-body {
-    background-image: url('../../public/images/fondoRegistroLogin.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    min-height: 100vh;
-    margin: 0;
-    width: 100vw;
-    height: 100vh;
+.login-bg {
+  min-height: 100vh;
+  width: 100vw;
+  background: url('../../public/images/fondoRegistroLogin.png') center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-container {
+  display: flex;
+  background: transparent;
+  border-radius: 24px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  overflow: hidden;
+  max-width: 700px;
+  width: 90vw;
+}
+
+.login-form {
+  background: #fff;
+  padding: 40px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 340px;
+  border-top-left-radius: 24px;
+  border-bottom-left-radius: 24px;
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 24px;
+    text-align: left;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  input {
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: border 0.2s;
+    &:focus {
+      border: 1.5px solid #3b82f6;
+    }
+  }
+
+  .forgot {
+    font-size: 0.85rem;
+    color: #888;
+    margin-bottom: 8px;
+    text-align: right;
+    display: block;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  button {
+    background: #3b82f6;
+    color: #fff;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background 0.2s;
+    &:hover {
+      background: #2563eb;
+    }
+  }
+
+  .not-registered {
+    margin-top: 16px;
+    font-size: 0.85rem;
+    color: #888;
+    text-align: left;
+  }
+
+  .error {
+    color: #e53e3e;
+    margin-top: 12px;
+    font-size: 0.95rem;
+  }
+}
+
+.login-image {
+  background: #181c2f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 320px;
+  border-top-right-radius: 24px;
+  border-bottom-right-radius: 24px;
+  img {
+    width: 90%;
+    max-width: 260px;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+  }
 }
 </style>
