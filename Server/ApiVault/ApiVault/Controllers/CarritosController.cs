@@ -2,6 +2,7 @@
 using ApiVault.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ApiVault.Controllers
 {
@@ -31,11 +32,25 @@ namespace ApiVault.Controllers
         [HttpPost("{usuarioId}")]
         public async Task<IActionResult> AddProducto(int usuarioId, CarritoProductoDto productoDto)
         {
-            if (!EsPropietario(usuarioId)) return Forbid();
+            Console.WriteLine("🧩 LISTA COMPLETA DE CLAIMS:");
+            foreach (var claim in User.Claims)
+            {
+                Console.WriteLine($"   ▶ {claim.Type}: {claim.Value}");
+            }
+
+            var actualUserId = GetUserId();
+            Console.WriteLine($"🔵 Solicitud de usuarioId {usuarioId}, autenticado como {actualUserId}");
+
+            if (!EsPropietario(usuarioId))
+            {
+                Console.WriteLine("❌ Usuario no autorizado (403)");
+                return Forbid();
+            }
 
             var result = await _carritoService.AddProductoAsync(usuarioId, productoDto);
             return Ok(result);
         }
+
 
         [HttpDelete("{usuarioId}/{productoId}")]
         public async Task<IActionResult> RemoveProducto(int usuarioId, int productoId)
@@ -54,15 +69,21 @@ namespace ApiVault.Controllers
             var result = await _carritoService.ClearCarritoAsync(usuarioId);
             return result ? NoContent() : Ok();
         }
-
         private bool EsPropietario(int usuarioId)
         {
-            return GetUserId() == usuarioId || IsAdmin();
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (int.TryParse(claim, out var userId))
+            {
+                return userId == usuarioId || IsAdmin();
+            }
+            return false;
         }
 
         private int GetUserId()
         {
-            return int.Parse(User.FindFirst("sub")?.Value ?? "0");
+            var raw = User.FindFirst("sub")?.Value;
+            Console.WriteLine($"🟡 Claim 'sub' (manual): {raw}");
+            return int.TryParse(raw, out var id) ? id : 0;
         }
 
         private bool IsAdmin()

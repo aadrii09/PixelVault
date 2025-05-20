@@ -9,28 +9,31 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings")); // Configurar las opciones de ApiSettings
 
 var claveSecreta = builder.Configuration.GetSection("ApiSettings:Secreta").Value;
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(op =>
-{
-    op.RequireHttpsMetadata = false;
-    op.SaveToken = true;
-    op.TokenValidationParameters = new TokenValidationParameters
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
     {
-        ValidateIssuer = true,
-        ValidateIssuerSigningKey = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidIssuer = builder.Configuration["ApiSettings:Emisor"],
-        ValidAudience = builder.Configuration["ApiSettings:Audiencia"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(claveSecreta)),
+        options.RequireHttpsMetadata = false;
+        options.SaveToken = true;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateIssuerSigningKey = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidIssuer = builder.Configuration["ApiSettings:Emisor"],
+            ValidAudience = builder.Configuration["ApiSettings:Audiencia"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(claveSecreta)),
+            NameClaimType = JwtRegisteredClaimNames.Sub 
+        };
+    });
 
-    };
-});
 
 var key = builder.Configuration.GetValue<string>("ApiSettings:Secreta");
 
@@ -116,7 +119,6 @@ app.UseCors("PoliticaCors");
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseHttpsRedirection();
-app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
