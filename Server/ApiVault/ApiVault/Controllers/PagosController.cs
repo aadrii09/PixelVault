@@ -26,9 +26,20 @@ namespace ApiVault.Controllers
         [HttpPost("crear-orden")]
         public async Task<IActionResult> CrearOrden([FromBody] MontoDto dto)
         {
-            var orderId = await _paypal.CrearOrderAsync(dto);
-            return Ok(new { orderId });
+            try
+            {
+                Console.WriteLine($"Recibida solicitud para crear orden PayPal con total: {dto.Total} {dto.Currency}");
+                var orderId = await _paypal.CrearOrderAsync(dto);
+                Console.WriteLine($"Orden creada con ID: {orderId}");
+                return Ok(new { orderId });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Error al crear orden PayPal: {ex.Message}");
+                return StatusCode(500, new { mensaje = "Error interno al crear la orden", error = ex.Message });
+            }
         }
+
 
         [HttpPost("verificar-orden")]
         public async Task<IActionResult> VerificarOrden([FromBody] VerificarDto dto)

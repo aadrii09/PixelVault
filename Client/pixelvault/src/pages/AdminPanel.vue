@@ -13,7 +13,7 @@ const nuevaMarca = ref({ nombre: '', logoUrl: '', website: '' });
 const marcaEdit = ref(null);
 
 const api = axios.create({
-  baseURL: 'http://localhost:5225/api', // Cambia al puerto real de tu backend .NET
+  baseURL: 'http://localhost:5225/api', 
   headers: {
     'Content-Type': 'application/json',
   },

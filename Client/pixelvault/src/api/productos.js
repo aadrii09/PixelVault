@@ -7,7 +7,7 @@ const userStore = useUserStore(pinia);
 
 
 const api = axios.create({
-  baseURL: "http://localhost:5225/api", // con esa url llamamos a la api
+  baseURL: "http://localhost:5225/api", 
 });
 
 api.interceptors.request.use((config) => {

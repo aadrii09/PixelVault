@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Globalization;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using ApiVault.DTOs;
@@ -37,30 +38,43 @@ namespace ApiVault.Services
         {
             var token = await ObtenerTokenAsync();
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            Console.WriteLine($"Recibida solicitud para crear orden PayPal con total: {dto.Total} {dto.Currency}");
+
             var body = new
             {
                 intent = "CAPTURE",
                 purchase_units = new[]
                 {
-                    new
-                    {
-                        amount = new
-                        {
-                            currency_code = dto.Currency,
-                            value = dto.Total.ToString("F2")
-                        }
-                    }
+            new
+            {
+                amount = new
+                {
+                    currency_code = dto.Currency,
+                    value = dto.Total.ToString("F2", CultureInfo.InvariantCulture)
                 }
+            }
+        }
             };
+
             var json = JsonSerializer.Serialize(body);
+            Console.WriteLine("🟡 Payload a PayPal:");
+            Console.WriteLine(json);
+
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             var response = await _httpClient.PostAsync($"{_settings.BaseUrl}/v2/checkout/orders", content);
             var result = await response.Content.ReadAsStringAsync();
 
+            Console.WriteLine("🟢 Respuesta de PayPal:");
+            Console.WriteLine(result);
+
+            response.EnsureSuccessStatusCode();
+
             using var jsonDoc = JsonDocument.Parse(result);
             return jsonDoc.RootElement.GetProperty("id").GetString();
         }
+
 
         public async Task<bool> VerificarOrdenAsync(string orderId)
         {
@@ -72,7 +86,7 @@ namespace ApiVault.Services
             using var jsonDoc = JsonDocument.Parse(result);
             var status = jsonDoc.RootElement.GetProperty("status").GetString();
 
-            return status == "COMPLETED"|| status == "APPROVED";
+            return status == "COMPLETED" || status == "APPROVED";
         }
     }
 }

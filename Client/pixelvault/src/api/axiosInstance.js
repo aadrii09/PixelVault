@@ -2,7 +2,7 @@ import axios from 'axios';
 import { computed } from 'vue'
 
 const api = axios.create({
-  baseURL: 'http://localhost:5225/api', // Cambia al puerto real de tu backend
+  baseURL: 'http://localhost:5225/api', 
   headers: {
     'Content-Type': 'application/json',
   },
