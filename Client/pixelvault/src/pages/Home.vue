@@ -22,18 +22,20 @@ onMounted(async () => {
 
 
 <template>
-    <div class="max-w-6xl mx-auto px-4 py-6">
-        <h1 class="text-2xl font-bold mb-6 text-center">Productos Destacados</h1>
-        <div v-if="cargando" class="text-gray-500 text-center">
-            <p>Cargando productos...</p>
-        </div>
-        <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <ProductCard
-                v-for="producto in productos"
-                :key="idProducto"
-                :producto="producto"
-                :mostrarBoton="mostrarBoton"
-            />
+    <div class="home-container">
+        <div class="max-w-6xl mx-auto px-4 py-6">
+            <h1 class="text-2xl font-bold mb-6 text-center text-white">Productos Destacados</h1>
+            <div v-if="cargando" class="text-gray-300 text-center">
+                <p>Cargando productos...</p>
+            </div>
+            <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <ProductCard
+                    v-for="producto in productos"
+                    :key="idProducto"
+                    :producto="producto"
+                    :mostrarBoton="mostrarBoton"
+                />
+            </div>
         </div>
     </div>
 </template>
@@ -41,5 +43,14 @@ onMounted(async () => {
 
 
 <style lang="scss" scoped>
-
+.home-container {
+    min-height: 100vh;
+    background-color: #0e0b30;
+    color: white;
+    padding-top: 2rem;
+    padding-bottom: 0;
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
+}
 </style>
