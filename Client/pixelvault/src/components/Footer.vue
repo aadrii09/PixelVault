@@ -21,8 +21,8 @@
       <div class="flex w-full justify-between items-center mt-2">
         <!-- Enlaces izquierda -->
         <div class="flex flex-col space-y-4 text-gray-300 text-lg ml-2">
-          <a href="#" class="hover:text-white">Marcas</a>
-          <a href="#" class="hover:text-white">Productos</a>
+          <a href="#" class="hover:text-white">Inicio</a>
+          <a href="#" class="hover:text-white">Sobre Nosotros</a>
         </div>
         <!-- Logo y texto -->
         <div class="flex flex-col items-center">

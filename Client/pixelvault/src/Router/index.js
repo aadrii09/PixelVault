@@ -7,6 +7,7 @@ import {useUserStore} from '../store/user'
 import pinia from '../pinia'
 import Carrito from '../pages/Carrito.vue'
 import AdminPanel from '../pages/AdminPanel.vue'
+import SobreNosotros from '../pages/SobreNosotros.vue'
 
 
 const routes = [
@@ -15,6 +16,7 @@ const routes = [
     {path: '/register', name: 'Register', component: Register},
     {path: '/carrito', name: 'Carrito', component: Carrito, meta: {requiresAuth: true}},
     {path: '/admin', name: 'AdminPanel', component: AdminPanel, meta: {requiresAdmin: true}},
+    {path: '/about', name: 'SobreNosotros', component: SobreNosotros},
 ]
 
 const router = createRouter({

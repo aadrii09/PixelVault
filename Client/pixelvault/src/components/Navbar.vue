@@ -10,6 +10,7 @@ const router = useRouter()
 const isLoggedIn = computed(() => !!userStore.token)
 const showProfileMenu = ref(false)
 const isHomePage = computed(() => route.path === '/')
+const isSobreNosotrosPage = computed(() => route.path === '/about')
 
 const logout = async () => {
     userStore.logout()
@@ -30,21 +31,21 @@ const goTo = (path) => {
     <div class="bg-image-overlay"></div>
     
     <!-- Barra de navegación común para todas las páginas, ahora dentro del contenedor de la homepage -->
-    <nav id="navbar" class="w-full flex justify-between items-center px-6 py-4 z-10 relative">
-      <div class="flex space-x-8">
-        <router-link to="/brands" class="font-bold text-white text-xl hover:underline">Marcas</router-link>
-        <router-link to="/products" class="font-bold text-white text-xl hover:underline">Productos</router-link>
+    <nav id="navbar" class="w-full flex justify-between items-center px-6 py-8 z-10 relative">
+      <div class="flex space-x-20">
+        <router-link to="/" class="font-bold text-white text-xl hover:underline ml-20">Inicio</router-link>
+        <router-link to="/about" class="font-bold text-white text-xl hover:underline">Sobre Nosotros</router-link>
       </div>
       
       <!-- Logo en el centro -->
-      <div class="absolute left-1/2 transform -translate-x-1/2">
-        <img src="/images/logo2.png" alt="PixelVault" class="h-30 w-40 mt-10" />
+      <div class="absolute left-1/2 transform -translate-x-1/2 flex items-center h-full">
+        <img src="/images/logo2.png" alt="PixelVault" id="logo" />
       </div>
       
-      <div class="flex space-x-8">
+      <div class="flex space-x-20">
         <router-link to="/carrito" class="font-bold text-white text-xl hover:underline">Carrito</router-link>
         <div class="relative">
-          <button @click="showProfileMenu = !showProfileMenu" class="font-bold text-white text-xl focus:outline-none">Perfil</button>
+          <button @click="showProfileMenu = !showProfileMenu" class="font-bold text-white text-xl focus:outline-none mr-20">Perfil</button>
           <div v-if="showProfileMenu" class="absolute right-0 mt-2 w-48 bg-white rounded shadow-lg z-50">
             <template v-if="!isLoggedIn">
               <button @click="goTo('/login')" class="block w-full text-left px-4 py-2 hover:bg-gray-100">Iniciar Sesión</button>
@@ -75,22 +76,63 @@ const goTo = (path) => {
     </div>
   </div>
 
-  <!-- Navbar para otras páginas que no son la página de inicio -->
-  <nav v-if="!isHomePage" id="navbar" class="w-full flex justify-between items-center px-6 py-4 solid-bg">
-    <div class="flex space-x-8">
-      <router-link to="/brands" class="font-bold text-white text-xl hover:underline">Marcas</router-link>
-      <router-link to="/products" class="font-bold text-white text-xl hover:underline">Productos</router-link>
+  <!-- Elementos específicos para la página Sobre Nosotros -->
+  <div v-else-if="isSobreNosotrosPage" class="sobre-nosotros-content">
+    <!-- Fondo de imagen para la página Sobre Nosotros -->
+    <div class="sobre-nosotros-bg-overlay"></div>
+    
+    <!-- Navbar para Sobre Nosotros -->
+    <nav id="navbar" class="w-full flex justify-between items-center px-6 py-8 z-10 relative">
+      <div class="flex space-x-20">
+        <router-link to="/" class="font-bold text-white text-xl hover:underline ml-20">Inicio</router-link>
+        <router-link to="/about" class="font-bold text-white text-xl hover:underline">Sobre Nosotros</router-link>
+      </div>
+      
+      <!-- Logo en el centro -->
+      <div class="absolute left-1/2 transform -translate-x-1/2 flex items-center h-full">
+        <img src="/images/logo2.png" alt="PixelVault" id="logo" />
+      </div>
+      
+      <div class="flex space-x-20">
+        <router-link to="/carrito" class="font-bold text-white text-xl hover:underline">Carrito</router-link>
+        <div class="relative">
+          <button @click="showProfileMenu = !showProfileMenu" class="font-bold text-white text-xl focus:outline-none mr-20">Perfil</button>
+          <div v-if="showProfileMenu" class="absolute right-0 mt-2 w-48 bg-white rounded shadow-lg z-50">
+            <template v-if="!isLoggedIn">
+              <button @click="goTo('/login')" class="block w-full text-left px-4 py-2 hover:bg-gray-100">Iniciar Sesión</button>
+              <button @click="goTo('/register')" class="block w-full text-left px-4 py-2 hover:bg-gray-100">Registro</button>
+            </template>
+            <template v-else>
+              <div class="px-4 py-2 text-gray-700">Hola, {{ userStore.user?.nombre }}</div>
+              <button @click="logout" class="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100">Cerrar Sesión</button>
+            </template>
+          </div>
+        </div>
+      </div>
+    </nav>
+    
+    <!-- Contenido central de Sobre Nosotros -->
+    <div class="flex flex-col items-center justify-center flex-grow py-20">
+      <h1 class="text-7xl font-bold text-white mb-6" style="text-shadow: 0 2px 8px #000">Sobre nosotros</h1>
+    </div>
+  </div>
+
+  <!-- Navbar para otras páginas que no son la página de inicio ni Sobre Nosotros -->
+  <nav v-else id="navbar" class="w-full flex justify-between items-center px-6 py-8 solid-bg">
+    <div class="flex space-x-20">
+      <router-link to="/" class="font-bold text-white text-xl hover:underline ml-20">Inicio</router-link>
+      <router-link to="/about" class="font-bold text-white text-xl hover:underline">Sobre Nosotros</router-link>
     </div>
     
     <!-- Logo en el centro -->
-    <div class="absolute left-1/2 transform -translate-x-1/2">
-      <img src="/images/logo2.png" alt="PixelVault" class="h-30 w-40" />
+    <div class="absolute left-1/2 transform -translate-x-1/2 flex items-center h-full">
+      <img src="/images/logo2.png" alt="PixelVault" id="logo" />
     </div>
     
-    <div class="flex space-x-8">
-      <router-link to="/carrito" class="font-bold text-white text-xl hover:underline">Carrito</router-link>
+    <div class="flex space-x-20">
+      <router-link to="/carrito" class="font-bold text-white text-xl hover:underline ">Carrito</router-link>
       <div class="relative">
-        <button @click="showProfileMenu = !showProfileMenu" class="font-bold text-white text-xl focus:outline-none">Perfil</button>
+        <button @click="showProfileMenu = !showProfileMenu" class="font-bold text-white text-xl focus:outline-none mr-20">Perfil</button>
         <div v-if="showProfileMenu" class="absolute right-0 mt-2 w-48 bg-white rounded shadow-lg z-50">
           <template v-if="!isLoggedIn">
             <button @click="goTo('/login')" class="block w-full text-left px-4 py-2 hover:bg-gray-100">Iniciar Sesión</button>
@@ -107,6 +149,10 @@ const goTo = (path) => {
 </template>
 
 <style lang="scss" scoped>
+#logo {
+    height: 7rem !important;
+    width: 8rem !important;
+}
 // Estilos para el navbar
 .transparent-bg {
   background: transparent;
@@ -115,6 +161,10 @@ const goTo = (path) => {
 .solid-bg {
   background-color: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(5px);
+}
+
+#navbar {
+  min-height: 7rem;
 }
 
 // Estilos para elementos de la página de inicio
@@ -134,6 +184,29 @@ const goTo = (path) => {
   right: 0;
   bottom: 0;
   background-image: url('/images/parteArribaHome.png');
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  z-index: -1;
+}
+
+// Estilos para la página Sobre Nosotros
+.sobre-nosotros-content {
+  min-height: 80vh;
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.sobre-nosotros-bg-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('../../public/images/prueba4.png') !important;
   background-size: cover;
   background-position: center top;
   background-repeat: no-repeat;
@@ -210,6 +283,4 @@ const goTo = (path) => {
   letter-spacing: 1px;
   border: 1px solid #ffdd00;
 }
-
-
 </style>
