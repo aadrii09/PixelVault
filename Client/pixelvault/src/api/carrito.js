@@ -40,3 +40,24 @@ export const vaciarCarrito = async () => {
   const userId = userStore.user.id;
   await api.delete(`/Carritos/${userId}/vaciar`);
 }
+
+export const actualizarCantidad = async (idProducto, cantidad) => {
+  try {
+    const userId = userStore.user.id;
+    console.log(`🔄 Actualizando cantidad: Producto ${idProducto}, cantidad ${cantidad}`);
+    
+    // Asegurarnos que la cantidad sea al menos 1
+    cantidad = Math.max(1, cantidad);
+    
+    // Ajustando al endpoint real según los errores de la consola
+    const response = await api.patch(`/Carritos/${userId}/productos/${idProducto}`, { 
+      cantidad 
+    });
+    
+    console.log('✅ Cantidad actualizada correctamente', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('❌ Error al actualizar cantidad:', error);
+    throw error;
+  }
+}
