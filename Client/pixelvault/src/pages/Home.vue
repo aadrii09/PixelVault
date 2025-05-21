@@ -23,7 +23,7 @@ onMounted(async () => {
 
 <template>
     <div class="max-w-6xl mx-auto px-4 py-6">
-        <h1 class="text-2xl font-bold mb-6">Catalogo de productos</h1>
+        <h1 class="text-2xl font-bold mb-6 text-center">Productos Destacados</h1>
         <div v-if="cargando" class="text-gray-500 text-center">
             <p>Cargando productos...</p>
         </div>

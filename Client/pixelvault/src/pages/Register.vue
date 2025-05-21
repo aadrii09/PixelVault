@@ -50,58 +50,67 @@ const handleRegister = async () => {
 .register-bg {
   min-height: 100vh;
   width: 100vw;
-  background: url('../../public/images/fondoRegistroLogin.png') center/cover no-repeat;
+  background: url('/images/fondoRegistroLogin.png') center/cover no-repeat fixed;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 .register-container {
   display: flex;
   background: transparent;
-  border-radius: 24px;
+  border-radius: 16px;
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
   overflow: hidden;
-  max-width: 900px;
-  width: 90vw;
+  max-width: 700px;
+  width: 80vw;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .register-image {
-  width: 400px;
+  width: 300px;
   min-height: 100%;
-  background: url('../../public/images/mandoRegistro.png') center center/cover no-repeat, #181c2f;
-  border-top-left-radius: 24px;
-  border-bottom-left-radius: 24px;
+  background: url('/images/mandoRegistro.png') center center/cover no-repeat, #181c2f;
+  border-top-left-radius: 16px;
+  border-bottom-left-radius: 16px;
 }
 
 .register-form {
   background: #fff;
-  padding: 48px 40px;
+  padding: 32px 28px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 400px;
-  border-top-right-radius: 24px;
-  border-bottom-right-radius: 24px;
+  width: 300px;
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
 
   h2 {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     font-weight: bold;
-    margin-bottom: 24px;
-    text-align: left;
+    margin-bottom: 18px;
+    text-align: center;
   }
 
   form {
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 14px;
   }
 
   input {
-    padding: 12px;
+    padding: 10px;
     border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    font-size: 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
     outline: none;
     transition: border 0.2s;
     &:focus {
@@ -112,10 +121,10 @@ const handleRegister = async () => {
   button {
     background: #fff;
     color: #222;
-    padding: 12px;
+    padding: 10px;
     border: 1.5px solid #222;
-    border-radius: 8px;
-    font-size: 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
     margin-top: 8px;
@@ -129,16 +138,39 @@ const handleRegister = async () => {
 
   .mensaje {
     color: #2563eb;
-    margin-top: 18px;
-    font-size: 1rem;
+    margin-top: 14px;
+    font-size: 0.9rem;
     text-align: center;
   }
 }
 
 .not-registered {
-  margin-top:0.4rem;
-  font-size: 0.85rem;
+  margin-top: 0.3rem;
+  font-size: 0.8rem;
   color: #888;
-  text-align: left;
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .register-container {
+    flex-direction: column;
+    width: 90vw;
+    max-width: 300px;
+  }
+  
+  .register-image {
+    width: 100%;
+    height: 150px;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    border-bottom-left-radius: 0;
+  }
+  
+  .register-form {
+    width: 100%;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+  }
 }
 </style>

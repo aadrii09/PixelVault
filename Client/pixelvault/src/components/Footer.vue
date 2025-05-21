@@ -26,7 +26,7 @@
         </div>
         <!-- Logo y texto -->
         <div class="flex flex-col items-center">
-          <img src="/images/logo.png" alt="PixelVault Logo" class="w-24 h-24 object-contain mb-2" />
+          <img src="/images/logo2.png" alt="PixelVault Logo" class="w-24 h-24 object-contain mb-2" />
         </div>
         <!-- Enlaces derecha -->
         <div class="flex flex-col space-y-4 text-gray-300 text-lg mr-2">

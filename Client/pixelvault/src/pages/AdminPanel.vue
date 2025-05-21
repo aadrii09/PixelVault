@@ -236,13 +236,13 @@ const router = useRouter();
     <aside class="w-64 bg-gray-800 text-gray-100 flex flex-col justify-between py-6 px-4 min-h-screen">
       <div>
         <div class="flex flex-col items-center mb-8">
-          <img src="/images/logo.png" alt="PixelVault Logo" class="w-40 h-20 mb-2 object-contain shadow-lg" />
+          <img src="/images/logo2.png" alt="PixelVault Logo" class="w-40 h-40 mb-2 object-contain shadow-lg" />
           <span class="text-2xl font-bold text-yellow-100 tracking-wide">PixelVault</span>
         </div>
         <nav class="flex flex-col gap-2">
           <button
             v-for="item in [
-              { key: 'usuarios', label: 'Users' },
+              { key: 'usuarios', label:'Usuarios' },
               { key: 'productos', label: 'Productos' },
               { key: 'marcas', label: 'Marcas' },
               { key: 'tiposProductos', label: 'Tipo Producto' }
@@ -262,7 +262,7 @@ const router = useRouter();
           <button class="w-full text-left px-4 py-2 rounded transition hover:bg-gray-700 hover:text-white text-gray-300">Historial</button>
         </nav>
       </div>
-      <button class="text-left px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded transition mt-8" @click="router.push('/')">Leave</button>
+      <button class="text-left px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded transition mt-8" @click="router.push('/')">Salir</button>
     </aside>
 
     <!-- Main Content -->
