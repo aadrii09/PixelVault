@@ -198,6 +198,9 @@ onMounted(cargarCarrito);
     </div>
 </template>
 <style>
+body {
+    background-color: #0e0b30;
+}
 #paypal-button-container {
     display: flex;
     justify-content: center;
