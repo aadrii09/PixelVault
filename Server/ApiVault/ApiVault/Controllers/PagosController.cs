@@ -44,26 +44,68 @@ namespace ApiVault.Controllers
         [HttpPost("verificar-orden")]
         public async Task<IActionResult> VerificarOrden([FromBody] VerificarDto dto)
         {
-            var esValida = await _paypal.VerificarOrdenAsync(dto.OrderId);
-            if (!esValida)
-                return BadRequest("La orden no es válida");
+            Console.WriteLine($"🔵 Iniciando verificación de orden PayPal con ID: {dto.OrderId}");
 
-            var usuarioId = int.Parse(User.FindFirst("sub")?.Value ?? "0");
+            try
+            {
+                var esValida = await _paypal.VerificarOrdenAsync(dto.OrderId);
+                Console.WriteLine($"🟢 Resultado de verificación de PayPal: {esValida}");
 
-            // Obtener el carrito original
-            var carrito = await _carritoService.GetCarritoEntityAsync(usuarioId);
-            if (carrito == null || carrito.CarritoProductos == null || !carrito.CarritoProductos.Any())
-                return BadRequest("El carrito está vacío o no existe.");
+                if (!esValida)
+                {
+                    Console.WriteLine("❌ La orden no es válida según PayPal.");
+                    return BadRequest("La orden no es válida");
+                }
 
-            // Crear el pedido
-            var creado = await _pedidoService.CrearPedidoDesdeCarritoAsync(usuarioId, carrito);
-            if (!creado)
-                return StatusCode(500, "Error al crear el pedido.");
+                // var userIdClaim = User.FindFirst("sub")?.Value;
+                // Console.WriteLine($"🔐 Usuario autenticado con Claim 'sub': {userIdClaim}");
 
-            // Vaciar carrito
-            await _carritoService.ClearCarritoAsync(usuarioId);
+                var userIdClaim = User.FindFirst("sub")?.Value ?? User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                Console.WriteLine($"🔐 Usuario autenticado con Claim: {userIdClaim}");
 
-            return Ok(new { estado = "confirmado", mensaje = "Pago procesado y pedido creado con éxito" });
+                var usuarioId = int.TryParse(userIdClaim, out var parsedId) ? parsedId : 0;
+
+
+                if (usuarioId == 0)
+                {
+                    Console.WriteLine("❌ UsuarioId inválido al verificar orden.");
+                    return Unauthorized("Usuario no identificado");
+                }
+
+                var carrito = await _carritoService.GetCarritoEntityAsync(usuarioId);
+
+                if (carrito == null)
+                {
+                    Console.WriteLine("❌ Carrito no encontrado para el usuario.");
+                    return BadRequest("El carrito no existe.");
+                }
+
+                if (carrito.CarritoProductos == null || !carrito.CarritoProductos.Any())
+                {
+                    Console.WriteLine("❌ Carrito vacío.");
+                    return BadRequest("El carrito está vacío.");
+                }
+
+                Console.WriteLine($"🛒 Carrito con {carrito.CarritoProductos.Count} productos. Procesando pedido...");
+
+                var creado = await _pedidoService.CrearPedidoDesdeCarritoAsync(usuarioId, carrito);
+                if (!creado)
+                {
+                    Console.WriteLine("❌ Error al crear pedido desde carrito.");
+                    return StatusCode(500, "Error al crear el pedido.");
+                }
+
+                await _carritoService.ClearCarritoAsync(usuarioId);
+                Console.WriteLine("✅ Pedido creado y carrito vaciado exitosamente.");
+
+                return Ok(new { estado = "confirmado", mensaje = "Pago procesado y pedido creado con éxito" });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Excepción en verificación de orden: {ex.Message}");
+                return StatusCode(500, "Error interno al verificar la orden.");
+            }
         }
+
     }
 }

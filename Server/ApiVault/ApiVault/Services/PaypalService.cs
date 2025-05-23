@@ -78,13 +78,21 @@ namespace ApiVault.Services
 
         public async Task<bool> VerificarOrdenAsync(string orderId)
         {
+            Console.WriteLine($"🔍 Verificando estado de orden PayPal: {orderId}");
+
             var token = await ObtenerTokenAsync();
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
             var response = await _httpClient.GetAsync($"{_settings.BaseUrl}/v2/checkout/orders/{orderId}");
             var result = await response.Content.ReadAsStringAsync();
 
+            Console.WriteLine($"🟢 Respuesta JSON de PayPal:");
+            Console.WriteLine(result);
+
             using var jsonDoc = JsonDocument.Parse(result);
             var status = jsonDoc.RootElement.GetProperty("status").GetString();
+
+            Console.WriteLine($"📦 Estado recibido de PayPal: {status}");
 
             return status == "COMPLETED" || status == "APPROVED";
         }

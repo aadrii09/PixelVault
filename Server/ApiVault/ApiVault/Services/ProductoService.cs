@@ -30,6 +30,10 @@ namespace ApiVault.Services
                     Destacado = producto.Destacado,
                     IdMarca = producto.IdMarca,
                     IdTipo = producto.IdTipo,
+                    Precio = producto.Precios
+                        .OrderByDescending(p => p.FechaInicioOferta ?? DateTime.MinValue)
+                        .Select(p => p.PrecioOferta > 0 ? p.PrecioOferta : p.PrecioRegular)
+                        .FirstOrDefault()
                 })
                 .ToListAsync();
         }
