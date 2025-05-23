@@ -106,6 +106,32 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "ApiVault.Controllers.EmailController",
+    "Method": "Subscribe",
+    "RelativePath": "api/Email/subscribe",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "ApiVault.Models.EmailRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "ApiVault.Models.EmailResponse",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "ApiVault.Controllers.MarcasController",
     "Method": "Get",
     "RelativePath": "api/Marcas",

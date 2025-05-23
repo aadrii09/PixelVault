@@ -10,6 +10,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
+using System.Net.Mail;
+using System.ComponentModel.DataAnnotations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +33,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidIssuer = builder.Configuration["ApiSettings:Emisor"],
             ValidAudience = builder.Configuration["ApiSettings:Audiencia"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(claveSecreta)),
-            NameClaimType = JwtRegisteredClaimNames.Sub 
+            NameClaimType = JwtRegisteredClaimNames.Sub
         };
     });
 
@@ -60,14 +63,26 @@ builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.Configure<PaypalSettings>(builder.Configuration.GetSection("PayPal"));
 // Inyectar servicio de PayPal
 builder.Services.AddScoped<PaypalService>();
+// Registrar el servicio de email
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 // Configurar CORS
-builder.Services.AddCors(p => p.AddPolicy("PoliticaCors", build =>
+builder.Services.AddCors(options =>
 {
-    build.WithOrigins("http://localhost:5173", "http://127.0.0.1:5173")
-         .AllowAnyMethod()
-         .AllowAnyHeader();
-}));
+    options.AddPolicy("PoliticaCors", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173", "http://127.0.0.1:5173")
+             .AllowAnyMethod()
+             .AllowAnyHeader();
+    });
+
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
 
 // Agregar otros servicios que necesites
 builder.Services.AddControllers();
