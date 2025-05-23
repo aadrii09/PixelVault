@@ -35,8 +35,13 @@ const agregar = async () => {
         <p v-if="props.producto.descripcion" class="text-gray-300 text-sm mb-3 line-clamp-2">
             {{ props.producto.descripcion }}
         </p>
-        <div class="text-2xl font-bold text-[#00ccff] mb-4 product-price">
-            {{ props.producto.stock }}
+        <div class="flex justify-between items-center mb-4">
+            <div class="text-2xl font-bold text-[#00ccff] product-price">
+                ${{ props.producto.precio?.toFixed(2) }}
+            </div>
+            <div class="text-sm text-gray-400">
+                Stock: {{ props.producto.stock }}
+            </div>
         </div>
         
         <!-- Buttons Container -->
