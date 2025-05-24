@@ -62,6 +62,12 @@ namespace ApiVault.Services
 
         public async Task<ProductoDto> CreateAsync(ProductoDto dto)
         {
+            var precioProductoNuevo = new Precio();
+            precioProductoNuevo.PrecioRegular = (decimal)dto.Precio;
+            precioProductoNuevo.PrecioOferta = 0;
+            precioProductoNuevo.FechaFinOferta = null;
+
+
             var producto = new Producto
             {
                 Nombre = dto.Nombre,
@@ -74,7 +80,16 @@ namespace ApiVault.Services
                 IdMarca = dto.IdMarca,
                 IdTipo = dto.IdTipo,
             };
-            _context.Productos.Add(producto);
+
+            // 1. Crear el producto
+            var productoNuevo = _context.Productos.Add(producto);
+            await _context.SaveChangesAsync();  // Guardar para generar el IdProducto
+
+            // 2. Asociar el producto al precio
+            precioProductoNuevo.IdProducto = productoNuevo.Entity.IdProducto;
+
+            // 3. Agregar el precio y guardar
+            _context.Precios.Add(precioProductoNuevo);
             await _context.SaveChangesAsync();
 
             return dto;

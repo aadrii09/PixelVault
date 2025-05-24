@@ -26,6 +26,12 @@ namespace ApiVault.Services
                 return null;
             }
 
+            // hacer un bucle
+            // llamar al producto
+
+
+
+
             return new CarritoDto
             {
                 IdCarrito = carrito.IdCarrito,
@@ -37,7 +43,12 @@ namespace ApiVault.Services
                 {
                     IdProducto = cp.IdProducto,
                     Cantidad = cp.Cantidad,
-                    PrecioUnitario = cp.PrecioUnitario
+                    PrecioUnitario = _context.Precios
+                    .Where(p => p.IdProducto == cp.IdProducto)
+                    .OrderByDescending(p => p.Producto) // Si quieres el precio más reciente
+                    .Select(p => p.PrecioRegular)
+                    .FirstOrDefault()
+
                 }).ToList()
             };
         }
