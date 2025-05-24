@@ -14,6 +14,9 @@ const currentIndex = ref(0);
 const autoScrollInterval = ref(null);
 const carouselRef = ref(null);
 const visibleItems = ref(3);
+const isSubscribing = ref(false);
+const subscriptionMessage = ref('');
+const isError = ref(false);
 
 // Datos de noticias
 const noticias = ref([
@@ -125,6 +128,7 @@ function inicializarAnimaciones() {
         rootMargin: '0px 0px -50px 0px'
     };
 
+    
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -215,10 +219,63 @@ function goToDotIndex(index) {
     resetAutoScroll();
 }
 
-function suscribirse() {
-    if (email.value) {
-        alert(`¡Gracias por suscribirte con ${email.value}!`);
+async function suscribirse() {
+    if (!email.value) {
+        subscriptionMessage.value = 'Por favor ingresa un correo electrónico';
+        isError.value = true;
+        return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.value)) {
+        subscriptionMessage.value = 'Por favor ingresa un correo electrónico válido';
+        isError.value = true;
+        return;
+    }
+
+    isSubscribing.value = true;
+    isError.value = false;
+    subscriptionMessage.value = '';
+
+    try {
+        const apiUrl = 'http://localhost:5225/api/Email/subscribe';
+        console.log('Enviando solicitud a:', apiUrl);
+        
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                email: email.value
+            })
+        });
+        
+        console.log('Respuesta recibida, status:', response.status);
+        
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.message || `Error HTTP: ${response.status}`);
+        }
+
+        const data = await response.json();
+        subscriptionMessage.value = data.message || '¡Gracias por suscribirte!';
+        isError.value = false;
         email.value = '';
+
+    } catch (error) {
+        console.error('Error en suscripción:', error);
+        subscriptionMessage.value = 'Error al conectar con el servidor. Por favor, inténtalo de nuevo más tarde.';
+        isError.value = true;
+    } finally {
+        isSubscribing.value = false;
+        
+        if (subscriptionMessage.value) {
+            setTimeout(() => {
+                subscriptionMessage.value = '';
+            }, 5000);
+        }
     }
 }
 
@@ -353,9 +410,28 @@ function añadirAlCarrito(producto) {
                 <h2 class="text-5xl text-center mb-12 text-gradient section-title">Únete a la Comunidad</h2>
                 <p class="mb-8">Suscríbete para recibir las últimas noticias, ofertas exclusivas y lanzamientos.</p>
                 <form class="max-w-lg mx-auto mt-8 flex flex-col md:flex-row gap-4 newsletter-form" @submit.prevent="suscribirse">
-                    <input v-model="email" type="email" class="flex-1 p-4 border border-white/20 rounded-full bg-white/10 text-white backdrop-blur-md placeholder-white/60 newsletter-input" placeholder="Tu email aquí..." required>
-                    <button type="submit" class="bg-gradient-cta border-none py-4 px-8 rounded-full text-white font-bold cursor-pointer transition-all duration-300 hover:transform hover:-translate-y-0.5 hover:shadow-md hover:shadow-[#ff0080]/40 newsletter-btn">Suscribirse</button>
+                    <input 
+                        v-model="email" 
+                        type="email" 
+                        class="flex-1 p-4 border border-white/20 rounded-full bg-white/10 text-white backdrop-blur-md placeholder-white/60 newsletter-input" 
+                        placeholder="Tu email aquí..." 
+                        :disabled="isSubscribing"
+                        required>
+                    <button 
+                        type="submit" 
+                        class="bg-gradient-cta border-none py-4 px-8 rounded-full text-white font-bold cursor-pointer transition-all duration-300 hover:transform hover:-translate-y-0.5 hover:shadow-md hover:shadow-[#ff0080]/40 newsletter-btn"
+                        :disabled="isSubscribing">
+                        {{ isSubscribing ? 'Enviando...' : 'Suscribirse' }}
+                    </button>
                 </form>
+                <div 
+                    v-if="subscriptionMessage" 
+                    :class="[
+                        'mt-4 p-3 rounded-lg transition-all duration-300',
+                        isError ? 'bg-red-500/20 border border-red-500/50' : 'bg-green-500/20 border border-green-500/50'
+                    ]">
+                    {{ subscriptionMessage }}
+                </div>
             </div>
         </section>
     </div>

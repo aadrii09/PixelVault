@@ -37,54 +37,36 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-
 var key = builder.Configuration.GetValue<string>("ApiSettings:Secreta");
 
 // Agregar servicios al contenedor
-// Configurar el contexto de base de datos con SQL Server
 builder.Services.AddDbContext<ApplicationDbContext>(opciones =>
     opciones.UseSqlServer(builder.Configuration.GetConnectionString("ConexionSql")));
-//Inyectando helper JWT
 builder.Services.AddScoped<JwtHelper>();
-
-
-// Inyectar el servicio de productos
 builder.Services.AddScoped<IProductoService, ProductoService>();
-// Inyectar el servicio de carrito
 builder.Services.AddScoped<ICarritoService, CarritoService>();
-// Inyectar el servicio de pedidos
 builder.Services.AddScoped<IPedidoService, PedidoService>();
-// Inyectar el servicio de tipos de productos y marcas 
 builder.Services.AddScoped<ITipoProductoService, TipoProductoService>();
 builder.Services.AddScoped<IMarcaService, MarcaService>();
-// Inyectar el servicio de usuarios
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
-// Inyectar la configuracion de PayPal
 builder.Services.Configure<PaypalSettings>(builder.Configuration.GetSection("PayPal"));
-// Inyectar servicio de PayPal
 builder.Services.AddScoped<PaypalService>();
-// Registrar el servicio de email
 builder.Services.AddScoped<IEmailService, EmailService>();
 
 // Configurar CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("PoliticaCors", policy =>
+    options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:5173", "http://127.0.0.1:5173")
-             .AllowAnyMethod()
-             .AllowAnyHeader();
-    });
-
-    options.AddPolicy("AllowAll", policy =>
-    {
-        policy.AllowAnyOrigin()
-              .AllowAnyMethod()
-              .AllowAnyHeader();
+        policy.WithOrigins(
+                "http://localhost:5173",
+                "http://127.0.0.1:5173"
+            )
+            .AllowAnyMethod()
+            .AllowAnyHeader();
     });
 });
 
-// Agregar otros servicios que necesites
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -128,12 +110,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// Usar CORS antes de Authentication y Authorization
-app.UseCors("PoliticaCors");
+// Usar SIEMPRE la política que permite tu frontend
+app.UseCors("AllowFrontend");
+app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseHttpsRedirection();
 app.MapControllers();
 
 app.Run();

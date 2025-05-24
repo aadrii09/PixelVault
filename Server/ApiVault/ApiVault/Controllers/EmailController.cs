@@ -1,11 +1,13 @@
 ﻿using ApiVault.Interfaces;
 using ApiVault.Models;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiVault.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [EnableCors("AllowFrontend")]
     public class EmailController : ControllerBase
     {
         private readonly IEmailService _emailService;
