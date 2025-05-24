@@ -25,7 +25,7 @@ export const agregarAlCarrito = async (producto) => {
   const body = {
     idProducto: producto.idProducto,
     cantidad: 1,
-    precioUnitario: 49.99
+    precioUnitario: producto.precio || producto.precioUnitario || 0
   }
   await api.post(`/Carritos/${userId}`, body)
 }

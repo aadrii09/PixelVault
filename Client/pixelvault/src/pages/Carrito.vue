@@ -15,14 +15,17 @@ const cargarCarrito = async () => {
         // Usar getCarrito() para obtener los datos iniciales
         try {
             const data = await getCarrito();
-            // Aseguramos que cada producto tenga una propiedad cantidad
+            // Aseguramos que cada producto tenga una propiedad cantidad y calculemos el subtotal
             if (data && data.productos) {
                 data.productos = data.productos.map(producto => {
                     return {
                         ...producto,
-                        cantidad: producto.cantidad || 1
+                        cantidad: producto.cantidad || 1,
+                        subtotal: (producto.cantidad || 1) * (producto.precioUnitario || 0)
                     };
                 });
+                // Recalcular el total
+                data.total = data.productos.reduce((sum, item) => sum + item.subtotal, 0);
             }
             carrito.value = data;
         } catch (err) {
@@ -143,7 +146,6 @@ onMounted(cargarCarrito);
                         </div>
                         <div class="flex-grow">
                             <p class="font-medium">{{ item.nombre || `Producto ${item.idProducto}` }}</p>
-                            <p class="text-gray-600 text-sm">{{ item.precioUnitario.toFixed(2) }}€</p>
                         </div>
                         <div class="flex items-center">
                             <button @click="decrementarCantidad(item)" class="w-8 h-8 flex items-center justify-center bg-gray-200 hover:bg-gray-300 rounded-l">
@@ -154,7 +156,7 @@ onMounted(cargarCarrito);
                                 +
                             </button>
                         </div>
-                        <div class="ml-8 text-right font-bold">
+                        <div class="ml-8 text-right font-bold w-32">
                             {{ (item.subtotal || (item.cantidad * item.precioUnitario)).toFixed(2) }}€
                         </div>
                     </div>
@@ -162,7 +164,7 @@ onMounted(cargarCarrito);
 
                 <div class="border-t pt-4">
                     <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold">COMPRA</h2>
+                        <h2 class="text-xl font-bold">TOTAL</h2>
                         <p class="text-xl font-bold">{{ carrito.total.toFixed(2) }}€</p>
                     </div>
                     
