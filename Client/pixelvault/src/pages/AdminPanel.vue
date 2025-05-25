@@ -87,7 +87,7 @@ const actualizarUsuario = async (id, data) => {
 
 // --- Productos ---
 const productos = ref([]);
-const nuevoProducto = ref({ nombre: '', precio: 0 });
+const nuevoProducto = ref({ nombre: '', precio: 0, descripcion: '', stock: 0, fechaLanzamiento: '', imagenUrl: '', activo: false, destacado: false, idMarca: 0, idTipo: 0 });
 const productoEdit = ref(null);
 const productoIdBuscar = ref('');
 const productoDetalle = ref(null);
@@ -95,7 +95,7 @@ const productoDetalle = ref(null);
 const cargarProductos = async () => { productos.value = await adminPanel.getProductos(); };
 const crearProducto = async () => {
   await adminPanel.createProducto(nuevoProducto.value);
-  nuevoProducto.value = { nombre: '', precio: 0 };
+  nuevoProducto.value = { nombre: '', precio: 0, descripcion: '', stock: 0, fechaLanzamiento: '', imagenUrl: '', activo: false, destacado: false, idMarca: 0, idTipo: 0 };
   await cargarProductos();
 };
 const actualizarProducto = async (id, data) => {
@@ -369,6 +369,10 @@ const router = useRouter();
                 <input v-model="nuevoProducto.nombre" class="w-full border-b border-gray-400 focus:outline-none py-1" required>
               </div>
               <div>
+                <label class="block text-sm font-semibold mb-1">Precio</label>
+                <input v-model.number="nuevoProducto.precio" type="number" step="0.01" min="0" class="w-full border-b border-gray-400 focus:outline-none py-1" required>
+              </div>
+              <div>
                 <label class="block text-sm font-semibold mb-1">ID Marca</label>
                 <input v-model.number="nuevoProducto.idMarca" type="number" class="w-full border-b border-gray-400 focus:outline-none py-1" required>
               </div>
@@ -421,6 +425,7 @@ const router = useRouter();
                   <th class="py-2 px-4 font-semibold">Destacado</th>
                   <th class="py-2 px-4 font-semibold">ID Marca</th>
                   <th class="py-2 px-4 font-semibold">ID Tipo</th>
+                  <th class="py-2 px-4 font-semibold">Precio</th>
                   <th class="py-2 px-4 font-semibold">Acciones</th>
                 </tr>
               </thead>
@@ -444,6 +449,7 @@ const router = useRouter();
                   </td>
                   <td class="py-2 px-4">{{ producto.idMarca }}</td>
                   <td class="py-2 px-4">{{ producto.idTipo }}</td>
+                  <td class="py-2 px-4">{{ producto.precio }}</td>
                   <td class="py-2 px-4 flex gap-2">
                     <button @click="productoEdit = { ...producto }" class="text-blue-600 hover:underline">Editar</button>
                     <button @click="confirmDeleteProducto(producto.idProducto)" class="text-red-600 hover:underline">Eliminar</button>
@@ -454,8 +460,8 @@ const router = useRouter();
           </div>
           <div v-if="productoEdit" class="mt-6 p-4 bg-gray-50 rounded shadow">
             <h4 class="font-bold mb-2">Editar Producto</h4>
-            <!-- Repite los campos del formulario de creación aquí para editar -->
             <input v-model="productoEdit.nombre" placeholder="Nombre" class="w-full border-b border-gray-400 focus:outline-none py-1 mb-2" required>
+            <input v-model.number="productoEdit.precio" type="number" step="0.01" min="0" placeholder="Precio" class="w-full border-b border-gray-400 focus:outline-none py-1 mb-2" required>
             <input v-model="productoEdit.descripcion" placeholder="Descripción" class="w-full border-b border-gray-400 focus:outline-none py-1 mb-2" required>
             <input v-model.number="productoEdit.stock" placeholder="Stock" type="number" class="w-full border-b border-gray-400 focus:outline-none py-1 mb-2" required>
             <input v-model="productoEdit.fechaLanzamiento" placeholder="Fecha Lanzamiento" type="date" class="w-full border-b border-gray-400 focus:outline-none py-1 mb-2" required>
