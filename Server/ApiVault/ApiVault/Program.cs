@@ -53,6 +53,9 @@ builder.Services.Configure<PaypalSettings>(builder.Configuration.GetSection("Pay
 builder.Services.AddScoped<PaypalService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 
+// Registrar el servicio de Cloudinary
+builder.Services.AddScoped<CloudinaryService>();
+
 // Configurar CORS
 builder.Services.AddCors(options =>
 {

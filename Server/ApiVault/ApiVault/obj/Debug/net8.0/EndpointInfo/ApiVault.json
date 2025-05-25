@@ -185,6 +185,38 @@
         }
       }
     },
+    "/api/CloudinaryImages/upload": {
+      "post": {
+        "tags": [
+          "CloudinaryImages"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "image": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Email/subscribe": {
       "post": {
         "tags": [

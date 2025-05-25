@@ -362,3 +362,5 @@ C:\Users\ferxas\Documents\.net\PixelVaultNewUpdate\PixelVault\Server\ApiVault\Ap
 C:\Users\ferxas\Documents\.net\PixelVaultNewUpdate\PixelVault\Server\ApiVault\ApiVault\obj\Debug\net8.0\ApiVault.genruntimeconfig.cache
 C:\Users\ferxas\Documents\.net\PixelVaultNewUpdate\PixelVault\Server\ApiVault\ApiVault\obj\Debug\net8.0\ref\ApiVault.dll
 C:\Users\ferxas\Documents\.net\PixelVaultNewUpdate\PixelVault\Server\ApiVault\ApiVault\bin\Debug\net8.0\appsettings.json
+C:\Users\adrian.castrobeiro\Desktop\PixelVault\Server\ApiVault\ApiVault\bin\Debug\net8.0\CloudinaryDotNet.dll
+C:\Users\adrian.castrobeiro\Desktop\PixelVault\Server\ApiVault\ApiVault\bin\Debug\net8.0\Newtonsoft.Json.dll

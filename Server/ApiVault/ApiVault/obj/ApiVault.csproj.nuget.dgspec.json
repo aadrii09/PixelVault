@@ -62,6 +62,10 @@
               "target": "Package",
               "version": "[14.0.0, )"
             },
+            "CloudinaryDotNet": {
+              "target": "Package",
+              "version": "[1.27.5, )"
+            },
             "Microsoft.AspNet.Identity.Core": {
               "target": "Package",
               "version": "[2.2.4, )"

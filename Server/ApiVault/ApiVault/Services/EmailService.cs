@@ -178,7 +178,7 @@ namespace ApiVault.Services
                 <li><span class='emoji'>💬</span> Comunidad activa para compartir tus mejores jugadas</li>
             </ul>
             <center>
-                <a href='#' class='button'>Entrar al Portal Gamer</a>
+                <a href='https://www.linkedin.com/in/adrian-castro-9b7712256/' class='button'>¡Éntra a mi LinkedIn!</a>
             </center>
             <p style='margin-top:32px;'>¿Tienes dudas o sugerencias? ¡Respóndenos y únete a la conversación!</p>
             <p style='margin-top:18px;'>¡Gracias por unirte a la familia PixelVault!<br>
