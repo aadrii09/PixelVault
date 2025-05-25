@@ -106,22 +106,6 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "ApiVault.Controllers.CloudinaryImagesController",
-    "Method": "UploadImage",
-    "RelativePath": "api/CloudinaryImages/upload",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "image",
-        "Type": "Microsoft.AspNetCore.Http.IFormFile",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
     "ContainingType": "ApiVault.Controllers.EmailController",
     "Method": "Subscribe",
     "RelativePath": "api/Email/subscribe",
@@ -350,9 +334,64 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "dto",
-        "Type": "ApiVault.DTOs.ProductoDto",
-        "IsRequired": true
+        "Name": "IdProducto",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "Nombre",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Descripcion",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Stock",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "FechaLanzamiento",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "ImagenUrl",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Activo",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      },
+      {
+        "Name": "Destacado",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      },
+      {
+        "Name": "IdMarca",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "IdTipo",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "Precio",
+        "Type": "System.Nullable\u00601[[System.Decimal, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "imagen",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [

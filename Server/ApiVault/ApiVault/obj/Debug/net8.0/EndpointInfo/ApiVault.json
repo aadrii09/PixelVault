@@ -185,38 +185,6 @@
         }
       }
     },
-    "/api/CloudinaryImages/upload": {
-      "post": {
-        "tags": [
-          "CloudinaryImages"
-        ],
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "image": {
-                    "type": "string",
-                    "format": "binary"
-                  }
-                }
-              },
-              "encoding": {
-                "image": {
-                  "style": "form"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/api/Email/subscribe": {
       "post": {
         "tags": [
@@ -598,19 +566,92 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/ProductoDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ProductoDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/ProductoDto"
+                "type": "object",
+                "properties": {
+                  "IdProducto": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "Nombre": {
+                    "type": "string"
+                  },
+                  "Descripcion": {
+                    "type": "string"
+                  },
+                  "Stock": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "FechaLanzamiento": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "ImagenUrl": {
+                    "type": "string"
+                  },
+                  "Activo": {
+                    "type": "boolean"
+                  },
+                  "Destacado": {
+                    "type": "boolean"
+                  },
+                  "IdMarca": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "IdTipo": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "Precio": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "imagen": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "IdProducto": {
+                  "style": "form"
+                },
+                "Nombre": {
+                  "style": "form"
+                },
+                "Descripcion": {
+                  "style": "form"
+                },
+                "Stock": {
+                  "style": "form"
+                },
+                "FechaLanzamiento": {
+                  "style": "form"
+                },
+                "ImagenUrl": {
+                  "style": "form"
+                },
+                "Activo": {
+                  "style": "form"
+                },
+                "Destacado": {
+                  "style": "form"
+                },
+                "IdMarca": {
+                  "style": "form"
+                },
+                "IdTipo": {
+                  "style": "form"
+                },
+                "Precio": {
+                  "style": "form"
+                },
+                "imagen": {
+                  "style": "form"
+                }
               }
             }
           }

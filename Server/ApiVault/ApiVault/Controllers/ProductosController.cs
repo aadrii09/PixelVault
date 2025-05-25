@@ -1,7 +1,14 @@
 ﻿using ApiVault.DTOs;
 using ApiVault.Interfaces;
+using ApiVault.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace ApiVault.Controllers
 {
@@ -10,10 +17,12 @@ namespace ApiVault.Controllers
     public class ProductosController : ControllerBase
     {
         private readonly IProductoService _productoService;
+        private readonly CloudinaryService _cloudinaryService;
 
-        public ProductosController(IProductoService productoService)
+        public ProductosController(IProductoService productoService, CloudinaryService cloudinaryService)
         {
             _productoService = productoService;
+            _cloudinaryService = cloudinaryService;
         }
 
         [HttpGet]
@@ -33,12 +42,40 @@ namespace ApiVault.Controllers
             }
             return Ok(producto);
         }
+
         [Authorize(Roles = "Admin")] //jwt
         [HttpPost]
-        public async Task<ActionResult<ProductoDto>> Create([FromBody] ProductoDto dto)
+        public async Task<ActionResult<ProductoDto>> Create([FromForm] ProductoDto dto, IFormFile imagen)
         {
-            var creado = await _productoService.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id = creado.IdProducto }, creado);
+            try
+            {
+                // Si hay una imagen, procesarla
+                if (imagen != null && imagen.Length > 0)
+                {
+                    // Validamos el tipo de archivo
+                    string[] allowedExtensions = { ".jpg", ".png", ".svg" };
+                    string fileExtension = Path.GetExtension(imagen.FileName).ToLowerInvariant();
+
+                    if (!allowedExtensions.Contains(fileExtension))
+                    {
+                        return BadRequest("Tipo de archivo no permitido. Use imágenes JPG, PNG o SVG.");
+                    }
+
+                    // Subimos la imagen a Cloudinary
+                    string imageUrl = await _cloudinaryService.UploadImageAsync(imagen);
+
+                    // Asignar la URL de la imagen al DTO
+                    dto.ImagenUrl = imageUrl;
+                }
+
+                // Crear el producto
+                var creado = await _productoService.CreateAsync(dto);
+                return CreatedAtAction(nameof(GetById), new { id = creado.IdProducto }, creado);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al crear el producto: {ex.Message}");
+            }
         }
 
         [Authorize(Roles = "Admin")]

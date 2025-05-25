@@ -5,8 +5,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace ApiVault.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
+   
     public class CloudinaryImagesController : ControllerBase
     {
         private readonly CloudinaryService _cloudinaryService;
@@ -16,7 +15,7 @@ namespace ApiVault.Controllers
             _cloudinaryService = cloudinaryService;
         }
 
-        [HttpPost("upload")]
+        
         public async Task<IActionResult> UploadImage(IFormFile image)
         {
             if (image == null || image.Length == 0)
