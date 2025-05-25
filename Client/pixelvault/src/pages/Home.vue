@@ -18,6 +18,11 @@ const isSubscribing = ref(false);
 const subscriptionMessage = ref('');
 const isError = ref(false);
 
+// Computed property para obtener solo productos destacados
+const productosDestacados = computed(() => {
+    return productos.value.filter(producto => producto.destacado === true);
+});
+
 // Datos de noticias
 const noticias = ref([
     {
@@ -301,7 +306,7 @@ function añadirAlCarrito(producto) {
             </div>
             <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 <ProductCard
-                    v-for="producto in productos"
+                    v-for="producto in productosDestacados"
                     :key="producto.idProducto"
                     :producto="producto"
                     :mostrarBoton="mostrarBoton"
