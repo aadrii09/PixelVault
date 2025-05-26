@@ -6,8 +6,10 @@ using ApiVault.Settings;
 using ApiVault.Utilidades;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Stripe;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
@@ -53,6 +55,16 @@ builder.Services.Configure<PaypalSettings>(builder.Configuration.GetSection("Pay
 builder.Services.AddScoped<PaypalService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 
+// Registrando el servicio de Stripe
+builder.Services.Configure<StripeSettings>(
+    builder.Configuration.GetSection("StripeSettings"));
+// Registrar StripeSettings como un servicio para que se pueda inyectar directamente
+builder.Services.AddSingleton(sp =>
+    sp.GetRequiredService<IOptions<StripeSettings>>().Value);
+builder.Services.AddScoped<StripeService>();
+// Inicializar configuración global de Stripe
+StripeConfiguration.ApiKey = builder.Configuration["StripeSettings:SecretKey"];
+
 // Registrar el servicio de Cloudinary
 builder.Services.AddScoped<CloudinaryService>();
 
@@ -63,7 +75,9 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins(
                 "http://localhost:5173",
-                "http://127.0.0.1:5173"
+                "http://127.0.0.1:5173",
+                "http://localhost:5225",
+                "http://127.0.0.1:5225"
             )
             .AllowAnyMethod()
             .AllowAnyHeader();

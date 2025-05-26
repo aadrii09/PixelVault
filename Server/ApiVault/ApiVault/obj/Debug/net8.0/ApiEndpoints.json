@@ -470,6 +470,38 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "ApiVault.Controllers.StripeController",
+    "Method": "CreatePaymentIntent",
+    "RelativePath": "api/Stripe/crear-intent",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "ApiVault.DTOs.PaymentIntentDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiVault.Controllers.StripeController",
+    "Method": "VerifyPayment",
+    "RelativePath": "api/Stripe/verificar-pago",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "ApiVault.DTOs.VerifyPaymentDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "ApiVault.Controllers.TiposProductosController",
     "Method": "Get",
     "RelativePath": "api/TiposProductos",
