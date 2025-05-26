@@ -15,8 +15,8 @@ PixelVault es un e-commerce especializado en videojuegos para múltiples platafo
   - Estilos: Tailwind CSS 
 - **Otros**:
   - Autenticación: JWT
-  - Pasarelas de pago: PayPal 
-  - Envío de emails: SendGrid o similar (para confirmación de registro)
+  - Pasarelas de pago: PayPal y Stripe
+  - Envío de emails: SMTP Gmail(subscripcion)
 
 ## 🔗 Estructura del Proyecto
 ### 📌 Mapa de Navegación 
