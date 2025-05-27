@@ -1,205 +1,210 @@
 <script setup>
 import { ref, onMounted, nextTick, watch } from 'vue';
 import { getCarrito, vaciarCarrito } from '../api/carrito';
-import { crearOrder, verificarOrden } from '../api/paypal';
+import { processPayment } from '../api/stripe';
+import { loadStripe } from '@stripe/stripe-js';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const carrito = ref(null);
 const cargando = ref(true);
 const error = ref('');
-const mostrarBotonPaypal = ref(false);
+const procesandoPago = ref(false);
+const mostrarFormularioPago = ref(false);
+const cardElement = ref(null);
+const stripe = ref(null);
+const elements = ref(null);
 
+// Inicializar Stripe
+const initStripe = async () => {
+  stripe.value = await loadStripe('tu_stripe_publishable_key');
+  elements.value = stripe.value.elements();
+  
+  // Crear el elemento de tarjeta
+  cardElement.value = elements.value.create('card', {
+    style: {
+      base: {
+        fontSize: '16px',
+        color: '#424770',
+        '::placeholder': {
+          color: '#aab7c4',
+        },
+      },
+      invalid: {
+        color: '#9e2146',
+      },
+    },
+  });
+
+  // Montar el elemento de tarjeta
+  await nextTick();
+  cardElement.value.mount('#card-element');
+};
+
+// Cargar el carrito
 const cargarCarrito = async () => {
-    try {
-        cargando.value = true;
-        
-        // Usar getCarrito() para obtener los datos iniciales
-        try {
-            const data = await getCarrito();
-            // Aseguramos que cada producto tenga una propiedad cantidad y calculemos el subtotal
-            if (data && data.productos) {
-                data.productos = data.productos.map(producto => {
-                    return {
-                        ...producto,
-                        cantidad: producto.cantidad || 1,
-                        subtotal: (producto.cantidad || 1) * (producto.precioUnitario || 0)
-                    };
-                });
-                // Recalcular el total
-                data.total = data.productos.reduce((sum, item) => sum + item.subtotal, 0);
-            }
-            carrito.value = data;
-        } catch (err) {
-            // Si falla la API, crear datos de ejemplo para que siga funcionando
-            console.warn('⚠️ Error cargando el carrito desde la API, usando datos de ejemplo', err);
-            carrito.value = {
-                total: 0,
-                productos: []
-            };
-        }
-        
-        mostrarBotonPaypal.value = carrito.value?.productos?.length > 0;
-    } catch (err) {
-        console.error('Error general al cargar el carrito:', err);
-        error.value = 'Error al cargar el carrito';
-    } finally {
-        cargando.value = false;
-    }
+  try {
+    cargando.value = true;
+    carrito.value = await getCarrito();
+  } catch (err) {
+    error.value = 'Error al cargar el carrito';
+    console.error(err);
+  } finally {
+    cargando.value = false;
+  }
 };
 
-const vaciar = async () => {
-    try {
-        await vaciarCarrito();
-    } catch (err) {
-        console.warn('⚠️ Error al vaciar el carrito en la API', err);
-    }
-    // Vaciar localmente de todas formas
-    if (carrito.value) {
-        carrito.value.productos = [];
-        carrito.value.total = 0;
-    }
-};
+// Procesar el pago
+const procesarPago = async () => {
+  if (!carrito.value || carrito.value.Total <= 0) {
+    error.value = 'El carrito está vacío';
+    return;
+  }
 
-// Implementación local de incrementar/decrementar sin llamar al API
-const incrementarCantidad = (item) => {
-    if (!item) return;
-    item.cantidad++;
-    actualizarSubtotales();
-};
+  try {
+    procesandoPago.value = true;
+    error.value = '';
 
-const decrementarCantidad = (item) => {
-    if (!item || item.cantidad <= 1) return;
-    item.cantidad--;
-    actualizarSubtotales();
-};
-
-// Recalcula subtotales y total
-const actualizarSubtotales = () => {
-    if (!carrito.value || !carrito.value.productos) return;
-    
-    let total = 0;
-    carrito.value.productos.forEach(item => {
-        item.subtotal = item.cantidad * item.precioUnitario;
-        total += item.subtotal;
-    });
-    
-    carrito.value.total = total;
-};
-
-const renderizarPaypal = async () => {
-    await nextTick();
-
-    const container = document.getElementById('paypal-button-container');
-    if (!window.paypal || !container) {
-        console.warn("⚠️ El contenedor de PayPal aún no está disponible.");
-        return;
-    }
-
-    window.paypal.Buttons({
-        createOrder: async () => {
-            return await crearOrder(carrito.value.total);
+    const { error: stripeError, paymentIntent } = await stripe.value.confirmCardPayment(
+      await processPayment(carrito.value.Total),
+      {
+        payment_method: {
+          card: cardElement.value,
+          billing_details: {
+            name: 'Nombre del Cliente', // Puedes obtener esto del usuario actual
+          },
         },
-        onApprove: async (data) => {
-            const respuesta = await verificarOrden(data.orderID);
-            alert('Pago realizado con éxito: ' + respuesta.estado);
-            await vaciarCarrito();
-        },
-        onError: (err) => {
-            console.error('Error al procesar el pago:', err);
-            alert('Error al procesar el pago');
-        },
-        onCancel: () => {
-            alert('Pago cancelado');
-        }
-    }).render('#paypal-button-container');
+      }
+    );
+
+    if (stripeError) {
+      error.value = stripeError.message;
+      return;
+    }
+
+    if (paymentIntent.status === 'succeeded') {
+      // Pago exitoso
+      await vaciarCarrito();
+      router.push({ name: 'PagoExitoso' });
+    }
+  } catch (err) {
+    error.value = 'Error al procesar el pago';
+    console.error(err);
+  } finally {
+    procesandoPago.value = false;
+  }
 };
 
-watch(mostrarBotonPaypal, async (nuevoValor) => {
-    if (nuevoValor) {
-        await renderizarPaypal();
-    }
+// Observar cambios en el carrito
+watch(carrito, (newVal) => {
+  if (newVal && newVal.Total > 0) {
+    mostrarFormularioPago.value = true;
+  } else {
+    mostrarFormularioPago.value = false;
+  }
 });
 
-onMounted(cargarCarrito);
+onMounted(async () => {
+  await initStripe();
+  await cargarCarrito();
+});
 </script>
 
 <template>
-    <div class="max-w-4xl mx-auto px-4 scroll-py-64">
-        <div class="bg-white rounded-lg shadow-lg p-6 my-8">
-            <h1 class="text-2xl font-bold mb-6">CARRITO</h1>
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-8">Carrito de Compras</h1>
 
-            <div v-if="cargando" class="text-center py-8">Cargando...</div>
-            <div v-else-if="!carrito || carrito.productos.length === 0" class="text-center py-8">
-                <p>No hay productos en el carrito</p>
-            </div>
-            <div v-else>
-                <div class="space-y-4 mb-8">
-                    <div v-for="item in carrito.productos" :key="item.idProducto"
-                        class="flex items-center py-4 border-b">
-                        <div class="w-20 h-20 mr-4">
-                            <!-- Sistema completo de fallback para imágenes -->
-                            <img 
-                                :src="item.urlImagen || item.imagenUrl || item.imagen" 
-                                :alt="item.nombre || `Producto ${item.idProducto}`" 
-                                class="w-full h-full object-contain"
-                                @error="e => e.target.outerHTML = `<div class='w-full h-full flex items-center justify-center bg-gray-200 text-gray-600 text-sm'>Producto ${item.idProducto}</div>`"
-                            >
-                        </div>
-                        <div class="flex-grow">
-                            <p class="font-medium">{{ item.nombre || `Producto ${item.idProducto}` }}</p>
-                        </div>
-                        <div class="flex items-center">
-                            <button @click="decrementarCantidad(item)" class="w-8 h-8 flex items-center justify-center bg-gray-200 hover:bg-gray-300 rounded-l">
-                                -
-                            </button>
-                            <input type="text" :value="item.cantidad" readonly class="w-10 h-8 text-center border-y outline-none bg-white">
-                            <button @click="incrementarCantidad(item)" class="w-8 h-8 flex items-center justify-center bg-gray-200 hover:bg-gray-300 rounded-r">
-                                +
-                            </button>
-                        </div>
-                        <div class="ml-8 text-right font-bold w-32">
-                            {{ (item.subtotal || (item.cantidad * item.precioUnitario)).toFixed(2) }}€
-                        </div>
-                    </div>
-                </div>
-
-                <div class="border-t pt-4">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold">TOTAL</h2>
-                        <p class="text-xl font-bold">{{ carrito.total.toFixed(2) }}€</p>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <p class="font-medium mb-2">Método de pago</p>
-                        <div class="border rounded-md p-2 flex items-center">
-                            <img src="../../public/images/paypallogo.png" alt="PayPal" class="h-6 mr-2">
-                            <span>PayPal</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-auto" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                            </svg>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-6">
-                        <p class="font-medium mb-2">CÓDIGO DESCUENTO</p>
-                        <input type="text" placeholder="xxx-xxx-xx" class="w-full border rounded-md p-2">
-                    </div>
-                    
-                    <div class="flex justify-between">
-                        <button @click="vaciar" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-800">
-                            Vaciar Carrito
-                        </button>
-                        <button class="bg-blue-600 text-white px-8 py-2 rounded hover:bg-blue-800">
-                            COMPRAR
-                        </button>
-                    </div>
-
-                    <div id="paypal-button-container" class="mt-6" v-if="mostrarBotonPaypal"></div>
-                </div>
-            </div>
-        </div>
+    <!-- Mensaje de carga -->
+    <div v-if="cargando" class="text-center">
+      <p>Cargando carrito...</p>
     </div>
+
+    <!-- Mensaje de error -->
+    <div v-if="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+      {{ error }}
+    </div>
+
+    <!-- Carrito vacío -->
+    <div v-if="!cargando && (!carrito || carrito.Productos.length === 0)" class="text-center">
+      <p class="text-gray-600">Tu carrito está vacío</p>
+      <router-link to="/" class="text-blue-500 hover:underline mt-4 inline-block">
+        Continuar comprando
+      </router-link>
+    </div>
+
+    <!-- Contenido del carrito -->
+    <div v-if="carrito && carrito.Productos.length > 0" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Lista de productos -->
+      <div class="md:col-span-2">
+        <div v-for="producto in carrito.Productos" :key="producto.IdProducto" 
+             class="flex items-center justify-between border-b py-4">
+          <div class="flex items-center">
+            <img :src="producto.ImagenUrl" :alt="producto.Nombre" 
+                 class="w-20 h-20 object-cover rounded">
+            <div class="ml-4">
+              <h3 class="font-semibold">{{ producto.Nombre }}</h3>
+              <p class="text-gray-600">Cantidad: {{ producto.Cantidad }}</p>
+              <p class="text-gray-600">Precio: ${{ producto.PrecioUnitario }}</p>
+            </div>
+          </div>
+          <p class="font-semibold">${{ producto.Subtotal }}</p>
+        </div>
+      </div>
+
+      <!-- Resumen y pago -->
+      <div class="md:col-span-1">
+        <div class="bg-gray-50 p-6 rounded-lg">
+          <h2 class="text-xl font-semibold mb-4">Resumen del Pedido</h2>
+          <div class="space-y-2 mb-4">
+            <div class="flex justify-between">
+              <span>Subtotal:</span>
+              <span>${{ carrito?.Total }}</span>
+            </div>
+            <div class="flex justify-between font-semibold">
+              <span>Total:</span>
+              <span>${{ carrito?.Total }}</span>
+            </div>
+          </div>
+
+          <!-- Formulario de pago con Stripe -->
+          <div v-if="mostrarFormularioPago" class="mt-6">
+            <div id="card-element" class="mb-4"></div>
+            <button @click="procesarPago" 
+                    :disabled="procesandoPago"
+                    class="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 
+                           disabled:bg-gray-400 disabled:cursor-not-allowed">
+              {{ procesandoPago ? 'Procesando...' : 'Pagar Ahora' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
-<style>
+
+<style scoped>
+#card-element {
+  padding: 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.375rem;
+  margin-bottom: 1rem;
+  background-color: white;
+}
+
+/* Estilos adicionales para el formulario de Stripe */
+.StripeElement--focus {
+  border-color: #4299e1;
+  box-shadow: 0 0 0 1px #4299e1;
+}
+
+.StripeElement--invalid {
+  border-color: #e53e3e;
+}
+
+.StripeElement--webkit-autofill {
+  background-color: #fefde5 !important;
+}
+
 body {
     background-color: #0e0b30;
 }
