@@ -16,12 +16,14 @@ api.interceptors.request.use((config) => {
 });
 
 export const crearOrder = async (total) => {
-    const response = await api.post('/pagos/crear-orden', {
-        total: total,
-        currency: 'USD'
-    });
-    return response.data.orderId;
+  const response = await api.post('/pagos/crear-orden', {
+    total: total,
+    currency: 'USD'
+  });
+  console.log("🧾 Respuesta al crear orden:", response.data);
+  return response.data.orderId;
 };
+
 
 export const verificarOrden = async (orderId) => {
     const response = await api.post('/pagos/verificar-orden', {

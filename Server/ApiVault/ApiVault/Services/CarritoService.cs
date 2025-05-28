@@ -18,19 +18,13 @@ namespace ApiVault.Services
         {
             var carrito = await _context.Carritos
                 .Include(c => c.CarritoProductos)
-                .ThenInclude(cp => cp.Producto)
+                    .ThenInclude(cp => cp.Producto)
                 .FirstOrDefaultAsync(c => c.IdUsuario == usuarioId && c.Estado == "Abierto");
 
             if (carrito == null)
             {
                 return null;
             }
-
-            // hacer un bucle
-            // llamar al producto
-
-
-
 
             return new CarritoDto
             {
@@ -42,16 +36,14 @@ namespace ApiVault.Services
                 Productos = carrito.CarritoProductos.Select(cp => new CarritoProductoDto
                 {
                     IdProducto = cp.IdProducto,
+                    Nombre = cp.Producto?.Nombre,
+                    ImagenUrl = cp.Producto?.ImagenUrl,
                     Cantidad = cp.Cantidad,
-                    PrecioUnitario = _context.Precios
-                    .Where(p => p.IdProducto == cp.IdProducto)
-                    .OrderByDescending(p => p.Producto) // Si quieres el precio más reciente
-                    .Select(p => p.PrecioRegular)
-                    .FirstOrDefault()
-
+                    PrecioUnitario = cp.PrecioUnitario
                 }).ToList()
             };
         }
+
 
         public async Task<Carrito> GetCarritoEntityAsync(int usuarioId)
         {

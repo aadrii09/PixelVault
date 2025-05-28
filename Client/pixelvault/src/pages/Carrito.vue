@@ -4,6 +4,7 @@ import { getCarrito, vaciarCarrito } from '../api/carrito';
 import { processPayment } from '../api/stripe';
 import { loadStripe } from '@stripe/stripe-js';
 import { useRouter } from 'vue-router';
+import { crearOrder, verificarOrden } from '../api/paypal';
 
 const router = useRouter();
 const carrito = ref(null);
@@ -17,9 +18,10 @@ const elements = ref(null);
 
 // Inicializar Stripe
 const initStripe = async () => {
-  stripe.value = await loadStripe('tu_stripe_publishable_key');
+  console.log('💳 Iniciando Stripe...');
+  stripe.value = await loadStripe('pk_test_51RTSVtQv5xnysdLKAXO57tv8Y5LvK4mP0SnkDl7zaCAE4fHP6c5bLoln640AzUs8gkJjlhFgiJZNXXv2w6TV7wRY00HlcD7Gfc');
   elements.value = stripe.value.elements();
-  
+
   // Crear el elemento de tarjeta
   cardElement.value = elements.value.create('card', {
     style: {
@@ -39,6 +41,7 @@ const initStripe = async () => {
   // Montar el elemento de tarjeta
   await nextTick();
   cardElement.value.mount('#card-element');
+  console.log('✅ Stripe card element montado en #card-element');
 };
 
 // Cargar el carrito
@@ -46,6 +49,10 @@ const cargarCarrito = async () => {
   try {
     cargando.value = true;
     carrito.value = await getCarrito();
+    console.log('📦 Carrito recibido del backend:', carrito.value);
+    if (carrito.value && carrito.value.Productos) {
+      carrito.value.productos = carrito.value.Productos;
+    }
   } catch (err) {
     error.value = 'Error al cargar el carrito';
     console.error(err);
@@ -65,27 +72,13 @@ const procesarPago = async () => {
     procesandoPago.value = true;
     error.value = '';
 
-    const { error: stripeError, paymentIntent } = await stripe.value.confirmCardPayment(
-      await processPayment(carrito.value.Total),
-      {
-        payment_method: {
-          card: cardElement.value,
-          billing_details: {
-            name: 'Nombre del Cliente', // Puedes obtener esto del usuario actual
-          },
-        },
-      }
-    );
+    const success = await processPayment(carrito.value.Total, elements.value); // ✅ pasa el `elements`
 
-    if (stripeError) {
-      error.value = stripeError.message;
-      return;
-    }
-
-    if (paymentIntent.status === 'succeeded') {
-      // Pago exitoso
+    if (success) {
       await vaciarCarrito();
       router.push({ name: 'PagoExitoso' });
+    } else {
+      error.value = 'El pago no fue exitoso';
     }
   } catch (err) {
     error.value = 'Error al procesar el pago';
@@ -95,19 +88,83 @@ const procesarPago = async () => {
   }
 };
 
+const renderPayPalButton = () => {
+  if (!window.paypal) return;
+  const container = document.getElementById('paypal-button-container');
+  if (!container) {
+    console.warn('⚠️ Contenedor #paypal-button-container no encontrado en el DOM');
+    return;
+  } else {
+    console.log('🟢 Contenedor de PayPal encontrado');
+  }
+
+
+  window.paypal.Buttons({
+    createOrder: async () => {
+      const orderId = await crearOrder(carrito.value.total);
+      console.log("🧾 ID de orden generado:", orderId);
+      return orderId;
+    },
+
+    onApprove: async (data, actions) => {
+      const result = await verificarOrden(data.orderID);
+      if (result.success) {
+        await vaciarCarrito();
+        router.push({ name: 'PagoExitoso' });
+      } else {
+        error.value = 'No se pudo verificar el pago con PayPal';
+      }
+    },
+    onError: (err) => {
+      console.error('❌ Error en PayPal:', err);
+      error.value = 'Error con PayPal';
+    }
+  }).render('#paypal-button-container');
+};
+
+
 // Observar cambios en el carrito
 watch(carrito, (newVal) => {
-  if (newVal && newVal.Total > 0) {
-    mostrarFormularioPago.value = true;
-  } else {
-    mostrarFormularioPago.value = false;
-  }
+  console.log('🔁 Carrito actualizado:', newVal);
+  console.log('✅ mostrarFormularioPago debería ser true?', newVal?.total > 0); // minúscula
+  mostrarFormularioPago.value = !!(newVal && newVal.total > 0);
 });
 
 onMounted(async () => {
-  await initStripe();
   await cargarCarrito();
+  await nextTick();
+
+  // Espera al DOM para montar Stripe y PayPal
+  watch(
+    mostrarFormularioPago,
+    async (mostrar) => {
+      console.log('👀 Cambio en mostrarFormularioPago:', mostrar);
+      if (mostrar) {
+        await nextTick();
+        console.log('⌛ DOM actualizado. Inicializando métodos de pago...');
+        await initStripe();
+
+        if (!document.getElementById("paypal-sdk")) {
+          console.log('📦 SDK de PayPal aún no cargado. Añadiendo script...');
+          const script = document.createElement("script");
+          script.src = "https://www.paypal.com/sdk/js?client-id=AUyxWpP73OMKhrokIfzR-qKJuPfLdsE4OfdVF6XgJscBRMcMKsndcf4rBU3jUUTerM6umvnU0ElwRVwk&currency=USD";
+          script.id = "paypal-sdk";
+          script.onload = () => {
+            console.log('✅ SDK de PayPal cargado y listo');
+            renderPayPalButton();
+          };
+          document.body.appendChild(script);
+        } else {
+          console.log('♻️ SDK de PayPal ya cargado. Renderizando botón...');
+          renderPayPalButton();
+        }
+      }
+    },
+    { immediate: true }
+  );
 });
+
+
 </script>
 
 <template>
@@ -125,7 +182,7 @@ onMounted(async () => {
     </div>
 
     <!-- Carrito vacío -->
-    <div v-if="!cargando && (!carrito || carrito.Productos.length === 0)" class="text-center">
+    <div v-if="!cargando && (!carrito || !carrito.productos || carrito.productos.length === 0)">
       <p class="text-gray-600">Tu carrito está vacío</p>
       <router-link to="/" class="text-blue-500 hover:underline mt-4 inline-block">
         Continuar comprando
@@ -133,21 +190,20 @@ onMounted(async () => {
     </div>
 
     <!-- Contenido del carrito -->
-    <div v-if="carrito && carrito.Productos.length > 0" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div v-if="carrito && carrito.productos.length > 0" class="grid grid-cols-1 md:grid-cols-3 gap-8">
       <!-- Lista de productos -->
       <div class="md:col-span-2">
-        <div v-for="producto in carrito.Productos" :key="producto.IdProducto" 
-             class="flex items-center justify-between border-b py-4">
+        <div v-for="producto in carrito.productos" :key="producto.IdProducto"
+          class="flex items-center justify-between border-b py-4">
           <div class="flex items-center">
-            <img :src="producto.ImagenUrl" :alt="producto.Nombre" 
-                 class="w-20 h-20 object-cover rounded">
+            <img :src="producto.imagenUrl" :alt="producto.nombre" class="w-20 h-20 object-cover rounded">
             <div class="ml-4">
-              <h3 class="font-semibold">{{ producto.Nombre }}</h3>
-              <p class="text-gray-600">Cantidad: {{ producto.Cantidad }}</p>
-              <p class="text-gray-600">Precio: ${{ producto.PrecioUnitario }}</p>
+              <h3 class="font-semibold">{{ producto.nombre }}</h3>
+              <p class="text-gray-600">Cantidad: {{ producto.cantidad }}</p>
+              <p class="text-gray-600">Precio: ${{ producto.precioUnitario.toFixed(2) }}</p>
             </div>
           </div>
-          <p class="font-semibold">${{ producto.Subtotal }}</p>
+          <p class="font-semibold">${{ producto.subtotal }}</p>
         </div>
       </div>
 
@@ -158,24 +214,31 @@ onMounted(async () => {
           <div class="space-y-2 mb-4">
             <div class="flex justify-between">
               <span>Subtotal:</span>
-              <span>${{ carrito?.Total }}</span>
+              <span>${{ carrito?.total }}</span>
             </div>
             <div class="flex justify-between font-semibold">
               <span>Total:</span>
-              <span>${{ carrito?.Total }}</span>
+              <span>${{ carrito?.total }}</span>
             </div>
           </div>
 
-          <!-- Formulario de pago con Stripe -->
-          <div v-if="mostrarFormularioPago" class="mt-6">
-            <div id="card-element" class="mb-4"></div>
-            <button @click="procesarPago" 
-                    :disabled="procesandoPago"
-                    class="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 
-                           disabled:bg-gray-400 disabled:cursor-not-allowed">
-              {{ procesandoPago ? 'Procesando...' : 'Pagar Ahora' }}
-            </button>
+          <!-- Pago con Stripe y PayPal -->
+          <div v-if="mostrarFormularioPago" class="mt-6 space-y-4">
+            <!-- Stripe -->
+            <div>
+              <div id="card-element" class="mb-4"></div>
+              <button @click="procesarPago" :disabled="procesandoPago" class="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 
+                   disabled:bg-gray-400 disabled:cursor-not-allowed">
+                {{ procesandoPago ? 'Procesando...' : 'Pagar con tarjeta' }}
+              </button>
+            </div>
+
+            <!-- PayPal -->
+            <div id="paypal-button-container" class="mt-6"></div>
           </div>
+
+
+
         </div>
       </div>
     </div>
@@ -206,12 +269,13 @@ onMounted(async () => {
 }
 
 body {
-    background-color: #0e0b30;
+  background-color: #0e0b30;
 }
+
 #paypal-button-container {
-    display: flex;
-    justify-content: center;
-    justify-self: center;  
-    width: 50%;
+  display: flex;
+  justify-content: center;
+  justify-self: center;
+  width: 50%;
 }
 </style>

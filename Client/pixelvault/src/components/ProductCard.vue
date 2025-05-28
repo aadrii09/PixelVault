@@ -7,14 +7,25 @@ const props = defineProps([
 ]);
 
 const agregar = async () => {
-    try {
-        await agregarAlCarrito(props.producto);
-        alert(`Producto ${props.producto.nombre} agregado al carrito`); 
-    } catch (error) {
-        alert('Error al agregar al carrito');
-        console.error('Error al agregar al carrito:', error);
-    }
-}
+  try {
+    const productoFormateado = {
+      idProducto: props.producto.idProducto,
+      nombre: props.producto.nombre || "",      // debe ser string
+      imagenUrl: props.producto.imagenUrl || "", // debe ser string
+      cantidad: 1,
+      precioUnitario: props.producto.precio || 0 // debe ser número
+    };
+
+    console.log("📦 Producto enviado al backend:", productoFormateado);
+
+    await agregarAlCarrito(productoFormateado);
+    alert(`Producto ${props.producto.nombre} agregado al carrito`);
+  } catch (error) {
+    alert('Error al agregar al carrito');
+    console.error('Error al agregar al carrito:', error.response?.data || error);
+  }
+};
+
 </script>
 
 <template>

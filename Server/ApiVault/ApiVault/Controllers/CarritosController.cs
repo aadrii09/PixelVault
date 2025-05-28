@@ -48,6 +48,14 @@ namespace ApiVault.Controllers
             }
 
             var result = await _carritoService.AddProductoAsync(usuarioId, productoDto);
+
+            Console.WriteLine("🔎 BODY RECIBIDO:");
+            Console.WriteLine($"   ID: {productoDto.IdProducto}");
+            Console.WriteLine($"   Nombre: {productoDto.Nombre}");
+            Console.WriteLine($"   ImagenUrl: {productoDto.ImagenUrl}");
+            Console.WriteLine($"   Cantidad: {productoDto.Cantidad}");
+            Console.WriteLine($"   PrecioUnitario: {productoDto.PrecioUnitario}");
+
             return Ok(result);
         }
 
