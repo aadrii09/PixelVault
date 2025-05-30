@@ -3,6 +3,7 @@ using ApiVault.DTOs;
 using ApiVault.Interfaces;
 using ApiVault.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace ApiVault.Services
 {
@@ -40,25 +41,24 @@ namespace ApiVault.Services
 
         public async Task<ProductoDto> GetByIdAsync(int id)
         {
-            var producto = await _context.Productos.FindAsync(id);
-            if (producto == null)
-            {
-                return null;
-            }
+            var producto = await _context.Productos
+                .Include(p => p.Precios.OrderByDescending(x => x.FechaInicioOferta))
+                .FirstOrDefaultAsync(p => p.IdProducto == id);
+
+            if (producto == null) return null;
+
             return new ProductoDto
             {
                 IdProducto = producto.IdProducto,
                 Nombre = producto.Nombre,
                 Descripcion = producto.Descripcion,
+                ImagenUrl = producto.ImagenUrl,
                 Stock = producto.Stock,
                 FechaLanzamiento = producto.FechaLanzamiento,
-                ImagenUrl = producto.ImagenUrl,
-                Activo = producto.Activo,
-                Destacado = producto.Destacado,
-                IdMarca = producto.IdMarca,
-                IdTipo = producto.IdTipo,
+                Precio = producto.Precios.FirstOrDefault()?.PrecioRegular ?? 0
             };
         }
+
 
         public async Task<ProductoDto> CreateAsync(ProductoDto dto)
         {
@@ -91,6 +91,8 @@ namespace ApiVault.Services
             // 3. Agregar el precio y guardar
             _context.Precios.Add(precioProductoNuevo);
             await _context.SaveChangesAsync();
+
+            Console.WriteLine(JsonSerializer.Serialize(dto));
 
             return dto;
 

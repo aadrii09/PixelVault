@@ -78,23 +78,31 @@ namespace ApiVault.Services
 
         public async Task<bool> VerificarOrdenAsync(string orderId)
         {
-            Console.WriteLine($"🔍 Verificando estado de orden PayPal: {orderId}");
+            Console.WriteLine($"🔍 Verificando y capturando orden PayPal: {orderId}");
 
             var token = await ObtenerTokenAsync();
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            var response = await _httpClient.GetAsync($"{_settings.BaseUrl}/v2/checkout/orders/{orderId}");
-            var result = await response.Content.ReadAsStringAsync();
+            // Capturar la orden (para confirmar el pago)
+            var request = new HttpRequestMessage(HttpMethod.Post, $"{_settings.BaseUrl}/v2/checkout/orders/{orderId}/capture");
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            request.Content = new StringContent("{}", Encoding.UTF8, "application/json");
 
-            Console.WriteLine($"🟢 Respuesta JSON de PayPal:");
+            var response = await _httpClient.SendAsync(request);
+
+
+            var result = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"🟢 Respuesta CAPTURE PayPal:");
             Console.WriteLine(result);
+
+            response.EnsureSuccessStatusCode();
 
             using var jsonDoc = JsonDocument.Parse(result);
             var status = jsonDoc.RootElement.GetProperty("status").GetString();
 
-            Console.WriteLine($"📦 Estado recibido de PayPal: {status}");
+            Console.WriteLine($"📦 Estado después del capture: {status}");
 
-            return status == "COMPLETED" || status == "APPROVED";
+            return status == "COMPLETED";
         }
     }
 }
