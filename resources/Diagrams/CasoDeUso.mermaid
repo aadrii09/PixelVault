@@ -1,0 +1,128 @@
+graph TB
+    %% Actores
+    Cliente[👤 Cliente]
+    Admin[👨‍💼 Administrador]
+    Sistema[🖥️ Sistema]
+    
+    %% Casos de Uso - Gestión de Usuario
+    subgraph "Gestión de Usuario"
+        UC1[Registrarse]
+        UC2[Iniciar Sesión]
+        UC3[Actualizar Perfil]
+        UC4[Ver Historial]
+    end
+    
+    %% Casos de Uso - Gestión de Productos
+    subgraph "Gestión de Productos"
+        UC5[Buscar Productos]
+        UC6[Ver Detalles Producto]
+        UC7[Filtrar por Marca]
+        UC8[Filtrar por Tipo]
+        UC9[Ver Productos Destacados]
+        UC10[Gestionar Productos]
+        UC11[Actualizar Stock]
+        UC12[Gestionar Precios]
+    end
+    
+    %% Casos de Uso - Gestión de Carrito
+    subgraph "Gestión de Carrito"
+        UC13[Agregar al Carrito]
+        UC14[Ver Carrito]
+        UC15[Modificar Cantidad]
+        UC16[Eliminar del Carrito]
+        UC17[Calcular Total]
+    end
+    
+    %% Casos de Uso - Gestión de Pedidos
+    subgraph "Gestión de Pedidos"
+        UC18[Realizar Pedido]
+        UC19[Seleccionar Método Pago]
+        UC20[Ver Estado Pedido]
+        UC21[Ver Historial Pedidos]
+        UC22[Gestionar Pedidos]
+        UC23[Actualizar Estado Pedido]
+    end
+    
+    %% Casos de Uso - Comentarios y Valoraciones
+    subgraph "Comentarios y Valoraciones"
+        UC24[Escribir Comentario]
+        UC25[Valorar Producto]
+        UC26[Ver Comentarios]
+        UC27[Moderar Comentarios]
+    end
+    
+    %% Casos de Uso - Administración
+    subgraph "Administración del Sistema"
+        UC28[Gestionar Usuarios]
+        UC29[Gestionar Marcas]
+        UC30[Gestionar Plataformas]
+        UC31[Ver Reportes]
+        UC32[Monitorear Sistema]
+    end
+    
+    %% Relaciones Cliente
+    Cliente --> UC1
+    Cliente --> UC2
+    Cliente --> UC3
+    Cliente --> UC4
+    Cliente --> UC5
+    Cliente --> UC6
+    Cliente --> UC7
+    Cliente --> UC8
+    Cliente --> UC9
+    Cliente --> UC13
+    Cliente --> UC14
+    Cliente --> UC15
+    Cliente --> UC16
+    Cliente --> UC18
+    Cliente --> UC19
+    Cliente --> UC20
+    Cliente --> UC21
+    Cliente --> UC24
+    Cliente --> UC25
+    Cliente --> UC26
+    
+    %% Relaciones Administrador
+    Admin --> UC2
+    Admin --> UC3
+    Admin --> UC4
+    Admin --> UC5
+    Admin --> UC6
+    Admin --> UC10
+    Admin --> UC11
+    Admin --> UC12
+    Admin --> UC22
+    Admin --> UC23
+    Admin --> UC27
+    Admin --> UC28
+    Admin --> UC29
+    Admin --> UC30
+    Admin --> UC31
+    Admin --> UC32
+    
+    %% Relaciones Sistema
+    Sistema --> UC17
+    Sistema --> UC32
+    
+    %% Relaciones de Inclusión
+    UC18 -.->|include| UC17
+    UC18 -.->|include| UC19
+    UC13 -.->|include| UC17
+    UC15 -.->|include| UC17
+    UC16 -.->|include| UC17
+    UC24 -.->|include| UC25
+    
+    %% Relaciones de Extensión
+    UC6 -.->|extend| UC24
+    UC6 -.->|extend| UC13
+    UC5 -.->|extend| UC7
+    UC5 -.->|extend| UC8
+    
+    %% Estilos
+    classDef actor fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef usecase fill:#f3e5f5,stroke:#4a148c,stroke-width:1px
+    classDef system fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    
+    class Cliente,Admin actor
+    class Sistema system
+    class UC1,UC2,UC3,UC4,UC5,UC6,UC7,UC8,UC9,UC10,UC11,UC12,UC13,UC14,UC15,UC16,UC17,UC18,UC19,UC20,UC21,UC22,UC23,UC24,UC25,UC26,UC27,UC28,UC29,UC30,UC31,UC32 usecase
