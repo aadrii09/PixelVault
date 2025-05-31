@@ -115,26 +115,36 @@ const crearProducto = async () => {
     formData.append("IdTipo", String(nuevoProducto.value.idTipo));
     formData.append("Precio", String(nuevoProducto.value.precio));
 
-    formData.append("ImagenUrl", "");
-
     const fileInput = document.querySelector("#fileInput");
     if (fileInput.files.length > 0) {
-      formData.append("image", fileInput.files[0]);
+      formData.append("imagen", fileInput.files[0]); // Note: must match the parameter name in the controller
     }
 
-    await api.post("/Productos/CreateWithImage", formData, {
+    // Change this line to use the correct endpoint
+    await api.post("/Productos", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
 
-    alert("Producto creado con imagen en Cloudinary.");
+    alert("Producto creado exitosamente.");
     await cargarProductos();
+    // Reset form
+    nuevoProducto.value = { 
+      nombre: '', 
+      precio: 0, 
+      descripcion: '', 
+      stock: 0, 
+      fechaLanzamiento: '', 
+      activo: false, 
+      destacado: false, 
+      idMarca: 0, 
+      idTipo: 0 
+    };
+    if (fileInput) fileInput.value = '';
   } catch (error) {
-    console.error(error.response?.data || error);
-    alert("Error al crear el producto.");
+    console.error("Error al crear el producto:", error);
+    alert("Error al crear el producto: " + (error.response?.data || error.message));
   }
 };
-
-
 
 
 
