@@ -12,13 +12,12 @@ using Microsoft.OpenApi.Models;
 using Stripe;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Net;
-using System.Net.Mail;
-using System.ComponentModel.DataAnnotations;
+using CloudinaryDotNet; // Cloudinary
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings")); // Configurar las opciones de ApiSettings
+// Configuración de ApiSettings
+builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
 
 var claveSecreta = builder.Configuration.GetSection("ApiSettings:Secreta").Value;
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -39,9 +38,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-var key = builder.Configuration.GetValue<string>("ApiSettings:Secreta");
-
-// Agregar servicios al contenedor
+// Configuración de DbContext y servicios propios
 builder.Services.AddDbContext<ApplicationDbContext>(opciones =>
     opciones.UseSqlServer(builder.Configuration.GetConnectionString("ConexionSql")));
 builder.Services.AddScoped<JwtHelper>();
@@ -54,21 +51,28 @@ builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.Configure<PaypalSettings>(builder.Configuration.GetSection("PayPal"));
 builder.Services.AddScoped<PaypalService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
-// Registrando el servicio de Stripe
+// Configuración de Stripe
 builder.Services.Configure<StripeSettings>(
     builder.Configuration.GetSection("StripeSettings"));
-// Registrar StripeSettings como un servicio para que se pueda inyectar directamente
 builder.Services.AddSingleton(sp =>
     sp.GetRequiredService<IOptions<StripeSettings>>().Value);
 builder.Services.AddScoped<StripeService>();
-// Inicializar configuración global de Stripe
 StripeConfiguration.ApiKey = builder.Configuration["StripeSettings:SecretKey"];
 
-// Registrar el servicio de Cloudinary
+// Configuración de Cloudinary
+builder.Services.Configure<CloudinarySettings>(
+    builder.Configuration.GetSection("CloudinarySettings"));
+builder.Services.AddSingleton(s =>
+{
+    var config = builder.Configuration.GetSection("CloudinarySettings").Get<ApiVault.Settings.CloudinarySettings>();
+    var account = new CloudinaryDotNet.Account(config.CloudName, config.ApiKey, config.ApiSecret);
+    return new CloudinaryDotNet.Cloudinary(account);
+});
 builder.Services.AddScoped<CloudinaryService>();
 
-// Configurar CORS
+// Configuración de CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
@@ -84,6 +88,7 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Configuración de controladores y Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -116,21 +121,18 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
-builder.Services.AddScoped<IAuthService, AuthService>(); // Agregar el servicio de autenticación
 
+// Build y Middleware
 var app = builder.Build();
 
-// Configurar el pipeline de solicitudes HTTP
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// Usar SIEMPRE la política que permite tu frontend
 app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
-
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

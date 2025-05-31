@@ -3,6 +3,9 @@ import { ref, watch, onMounted, computed } from 'vue';
 import * as adminPanel from '../api/adminPanel';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+import { useUserStore } from '../store/user';
+
+const userStore = useUserStore();
 
 // Tabs
 const tab = ref('marcas');
@@ -13,11 +16,15 @@ const nuevaMarca = ref({ nombre: '', logoUrl: '', website: '' });
 const marcaEdit = ref(null);
 
 const api = axios.create({
-  baseURL: 'http://localhost:5225/api', 
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  baseURL: 'http://localhost:5225/api',
 });
+
+api.interceptors.request.use(config => {
+  const token = localStorage.getItem('token');
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
 
 const cargarMarcas = async () => { marcas.value = await adminPanel.getMarcas(); };
 const crearMarca = async () => {
@@ -87,17 +94,52 @@ const actualizarUsuario = async (id, data) => {
 
 // --- Productos ---
 const productos = ref([]);
-const nuevoProducto = ref({ nombre: '', precio: 0, descripcion: '', stock: 0, fechaLanzamiento: '', imagenUrl: '', activo: false, destacado: false, idMarca: 0, idTipo: 0 });
+const nuevoProducto = ref({ nombre: '', precio: 0, descripcion: '', stock: 0, fechaLanzamiento: '', activo: false, destacado: false, idMarca: 0, idTipo: 0 });
 const productoEdit = ref(null);
 const productoIdBuscar = ref('');
 const productoDetalle = ref(null);
 
 const cargarProductos = async () => { productos.value = await adminPanel.getProductos(); };
+
+
 const crearProducto = async () => {
-  await adminPanel.createProducto(nuevoProducto.value);
-  nuevoProducto.value = { nombre: '', precio: 0, descripcion: '', stock: 0, fechaLanzamiento: '', imagenUrl: '', activo: false, destacado: false, idMarca: 0, idTipo: 0 };
-  await cargarProductos();
+  try {
+    const formData = new FormData();
+    formData.append("Nombre", nuevoProducto.value.nombre);
+    formData.append("Descripcion", nuevoProducto.value.descripcion);
+    formData.append("Stock", String(nuevoProducto.value.stock));
+    formData.append("FechaLanzamiento", nuevoProducto.value.fechaLanzamiento);
+    formData.append("Activo", String(nuevoProducto.value.activo));
+    formData.append("Destacado", String(nuevoProducto.value.destacado));
+    formData.append("IdMarca", String(nuevoProducto.value.idMarca));
+    formData.append("IdTipo", String(nuevoProducto.value.idTipo));
+    formData.append("Precio", String(nuevoProducto.value.precio));
+
+    formData.append("ImagenUrl", "");
+
+    const fileInput = document.querySelector("#fileInput");
+    if (fileInput.files.length > 0) {
+      formData.append("image", fileInput.files[0]);
+    }
+
+    await api.post("/Productos/CreateWithImage", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    alert("Producto creado con imagen en Cloudinary.");
+    await cargarProductos();
+  } catch (error) {
+    console.error(error.response?.data || error);
+    alert("Error al crear el producto.");
+  }
 };
+
+
+
+
+
+
+
 const actualizarProducto = async (id, data) => {
   await adminPanel.updateProducto(id, data);
   productoEdit.value = null;
@@ -240,29 +282,28 @@ const router = useRouter();
           <span class="text-2xl font-bold text-yellow-100 tracking-wide">PixelVault</span>
         </div>
         <nav class="flex flex-col gap-2">
-          <button
-            v-for="item in [
-              { key: 'usuarios', label:'Usuarios' },
-              { key: 'productos', label: 'Productos' },
-              { key: 'marcas', label: 'Marcas' },
-              { key: 'tiposProductos', label: 'Tipo Producto' }
-            ]"
-            :key="item.key"
-            @click="tab = item.key"
-            :class="[
-              'w-full text-left px-4 py-2 rounded transition',
-              tab === item.key ? 'bg-gray-700 text-white font-semibold' : 'hover:bg-gray-700 hover:text-white text-gray-300'
-            ]"
-          >
+          <button v-for="item in [
+            { key: 'usuarios', label: 'Usuarios' },
+            { key: 'productos', label: 'Productos' },
+            { key: 'marcas', label: 'Marcas' },
+            { key: 'tiposProductos', label: 'Tipo Producto' }
+          ]" :key="item.key" @click="tab = item.key" :class="[
+            'w-full text-left px-4 py-2 rounded transition',
+            tab === item.key ? 'bg-gray-700 text-white font-semibold' : 'hover:bg-gray-700 hover:text-white text-gray-300'
+          ]">
             {{ item.label }}
           </button>
           <!-- Nuevos botones sin funcionalidad -->
-          <button class="w-full text-left px-4 py-2 rounded transition hover:bg-gray-700 hover:text-white text-gray-300">Pedidos</button>
-          <button class="w-full text-left px-4 py-2 rounded transition hover:bg-gray-700 hover:text-white text-gray-300">Pagos</button>
-          <button class="w-full text-left px-4 py-2 rounded transition hover:bg-gray-700 hover:text-white text-gray-300">Historial</button>
+          <button
+            class="w-full text-left px-4 py-2 rounded transition hover:bg-gray-700 hover:text-white text-gray-300">Pedidos</button>
+          <button
+            class="w-full text-left px-4 py-2 rounded transition hover:bg-gray-700 hover:text-white text-gray-300">Pagos</button>
+          <button
+            class="w-full text-left px-4 py-2 rounded transition hover:bg-gray-700 hover:text-white text-gray-300">Historial</button>
         </nav>
       </div>
-      <button class="text-left px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded transition mt-8" @click="router.push('/')">Salir</button>
+      <button class="text-left px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded transition mt-8"
+        @click="router.push('/')">Salir</button>
     </aside>
 
     <!-- Main Content -->
@@ -274,8 +315,10 @@ const router = useRouter();
         <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
           <h3 class="text-lg font-bold mb-4">{{ modalMessage }}</h3>
           <div class="flex justify-end space-x-2">
-            <button @click="confirmAction" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Aceptar</button>
-            <button @click="closeModal" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">Cerrar</button>
+            <button @click="confirmAction"
+              class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Aceptar</button>
+            <button @click="closeModal"
+              class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">Cerrar</button>
           </div>
         </div>
       </div>
@@ -291,19 +334,23 @@ const router = useRouter();
             <div class="grid grid-cols-2 gap-4">
               <div>
                 <label class="block text-sm font-semibold mb-1">Nombre</label>
-                <input v-model="nuevaMarca.nombre" class="w-full border-b border-gray-400 focus:outline-none py-1" required>
+                <input v-model="nuevaMarca.nombre" class="w-full border-b border-gray-400 focus:outline-none py-1"
+                  required>
               </div>
               <div>
                 <label class="block text-sm font-semibold mb-1">Logo URL</label>
-                <input v-model="nuevaMarca.logoUrl" class="w-full border-b border-gray-400 focus:outline-none py-1" required>
+                <input v-model="nuevaMarca.logoUrl" class="w-full border-b border-gray-400 focus:outline-none py-1"
+                  required>
               </div>
               <div class="col-span-2">
                 <label class="block text-sm font-semibold mb-1">Website</label>
-                <input v-model="nuevaMarca.website" class="w-full border-b border-gray-400 focus:outline-none py-1" required>
+                <input v-model="nuevaMarca.website" class="w-full border-b border-gray-400 focus:outline-none py-1"
+                  required>
               </div>
             </div>
             <div class="flex justify-center mt-6">
-              <button type="submit" class="px-8 py-2 border border-black rounded-full font-semibold hover:bg-black hover:text-white transition">Crear</button>
+              <button type="submit"
+                class="px-8 py-2 border border-black rounded-full font-semibold hover:bg-black hover:text-white transition">Crear</button>
             </div>
           </form>
           <div class="overflow-x-auto">
@@ -321,11 +368,14 @@ const router = useRouter();
                 <tr v-for="marca in marcas" :key="marca.idMarca" class="border-b hover:bg-gray-50">
                   <td class="py-2 px-4">{{ marca.idMarca }}</td>
                   <td class="py-2 px-4">{{ marca.nombre }}</td>
-                  <td class="py-2 px-4 truncate max-w-xs"><a :href="marca.logoUrl" target="_blank" class="text-blue-600 hover:underline">{{ marca.logoUrl }}</a></td>
-                  <td class="py-2 px-4 truncate max-w-xs"><a :href="marca.website" target="_blank" class="text-blue-600 hover:underline">{{ marca.website }}</a></td>
+                  <td class="py-2 px-4 truncate max-w-xs"><a :href="marca.logoUrl" target="_blank"
+                      class="text-blue-600 hover:underline">{{ marca.logoUrl }}</a></td>
+                  <td class="py-2 px-4 truncate max-w-xs"><a :href="marca.website" target="_blank"
+                      class="text-blue-600 hover:underline">{{ marca.website }}</a></td>
                   <td class="py-2 px-4 flex gap-2">
                     <button @click="marcaEdit = { ...marca }" class="text-blue-600 hover:underline">Editar</button>
-                    <button @click="confirmDeleteMarca(marca.idMarca)" class="text-red-600 hover:underline">Eliminar</button>
+                    <button @click="confirmDeleteMarca(marca.idMarca)"
+                      class="text-red-600 hover:underline">Eliminar</button>
                   </td>
                 </tr>
               </tbody>
@@ -337,18 +387,22 @@ const router = useRouter();
               <div class="grid grid-cols-2 gap-4 mb-4">
                 <div>
                   <label class="block text-sm font-semibold mb-1">Nombre</label>
-                  <input v-model="marcaEdit.nombre" class="w-full border-b border-gray-400 focus:outline-none py-1" required>
+                  <input v-model="marcaEdit.nombre" class="w-full border-b border-gray-400 focus:outline-none py-1"
+                    required>
                 </div>
                 <div>
                   <label class="block text-sm font-semibold mb-1">Logo URL</label>
-                  <input v-model="marcaEdit.logoUrl" class="w-full border-b border-gray-400 focus:outline-none py-1" required>
+                  <input v-model="marcaEdit.logoUrl" class="w-full border-b border-gray-400 focus:outline-none py-1"
+                    required>
                 </div>
                 <div class="col-span-2">
                   <label class="block text-sm font-semibold mb-1">Website</label>
-                  <input v-model="marcaEdit.website" class="w-full border-b border-gray-400 focus:outline-none py-1" required>
+                  <input v-model="marcaEdit.website" class="w-full border-b border-gray-400 focus:outline-none py-1"
+                    required>
                 </div>
               </div>
-              <button type="submit" class="px-4 py-1 border border-green-600 rounded-full text-green-700 font-semibold mr-2 hover:bg-green-600 hover:text-white transition">Guardar</button>
+              <button type="submit"
+                class="px-4 py-1 border border-green-600 rounded-full text-green-700 font-semibold mr-2 hover:bg-green-600 hover:text-white transition">Guardar</button>
               <button @click="marcaEdit = null" type="button" class="text-red-600 hover:underline">Cancelar</button>
             </form>
           </div>
@@ -366,37 +420,52 @@ const router = useRouter();
             <div class="grid grid-cols-2 gap-4">
               <div>
                 <label class="block text-sm font-semibold mb-1">Nombre</label>
-                <input v-model="nuevoProducto.nombre" class="w-full border-b border-gray-400 focus:outline-none py-1" required>
+                <input v-model="nuevoProducto.nombre" class="w-full border-b border-gray-400 focus:outline-none py-1"
+                  required>
               </div>
               <div>
                 <label class="block text-sm font-semibold mb-1">Precio</label>
-                <input v-model.number="nuevoProducto.precio" type="number" step="0.01" min="0" class="w-full border-b border-gray-400 focus:outline-none py-1" required>
+                <input v-model.number="nuevoProducto.precio" type="number" step="0.01" min="0"
+                  class="w-full border-b border-gray-400 focus:outline-none py-1" required>
               </div>
               <div>
                 <label class="block text-sm font-semibold mb-1">ID Marca</label>
-                <input v-model.number="nuevoProducto.idMarca" type="number" class="w-full border-b border-gray-400 focus:outline-none py-1" required>
+                <input v-model.number="nuevoProducto.idMarca" type="number"
+                  class="w-full border-b border-gray-400 focus:outline-none py-1" required>
               </div>
               <div>
                 <label class="block text-sm font-semibold mb-1">ID Tipo</label>
-                <input v-model.number="nuevoProducto.idTipo" type="number" class="w-full border-b border-gray-400 focus:outline-none py-1" required>
+                <input v-model.number="nuevoProducto.idTipo" type="number"
+                  class="w-full border-b border-gray-400 focus:outline-none py-1" required>
               </div>
               <div>
                 <label class="block text-sm font-semibold mb-1">Stock</label>
-                <input v-model.number="nuevoProducto.stock" type="number" class="w-full border-b border-gray-400 focus:outline-none py-1" required>
+                <input v-model.number="nuevoProducto.stock" type="number"
+                  class="w-full border-b border-gray-400 focus:outline-none py-1" required>
               </div>
             </div>
             <div>
               <label class="block text-sm font-semibold mb-1">Descripción</label>
-              <textarea v-model="nuevoProducto.descripcion" class="w-full border-b border-gray-400 focus:outline-none py-1" required></textarea>
+              <textarea v-model="nuevoProducto.descripcion"
+                class="w-full border-b border-gray-400 focus:outline-none py-1" required></textarea>
             </div>
             <div>
               <label class="block text-sm font-semibold mb-1">Fecha Lanzamiento</label>
-              <input v-model="nuevoProducto.fechaLanzamiento" type="date" class="w-full border-b border-gray-400 focus:outline-none py-1" required>
+              <input v-model="nuevoProducto.fechaLanzamiento" type="date"
+                class="w-full border-b border-gray-400 focus:outline-none py-1" required>
             </div>
-            <div>
+            <!-- <div>
               <label class="block text-sm font-semibold mb-1">Imagen URL</label>
-              <input v-model="nuevoProducto.imagenUrl" class="w-full border-b border-gray-400 focus:outline-none py-1" required>
+              <input v-model="nuevoProducto.imagenUrl" class="w-full border-b border-gray-400 focus:outline-none py-1"
+                required>
+            </div> -->
+            <!-- subida de imagen -->
+            <div>
+              <label class="block text-sm font-semibold mb-1">Imagen</label>
+              <input id="fileInput" type="file" accept="image/*"
+                class="w-full border-b border-gray-400 focus:outline-none py-1" />
             </div>
+
             <div class="flex gap-4">
               <label class="flex items-center gap-1">
                 <input v-model="nuevoProducto.activo" type="checkbox">
@@ -408,7 +477,8 @@ const router = useRouter();
               </label>
             </div>
             <div class="flex justify-center mt-6">
-              <button type="submit" class="px-8 py-2 border border-black rounded-full font-semibold hover:bg-black hover:text-white transition">Crear</button>
+              <button type="submit"
+                class="px-8 py-2 border border-black rounded-full font-semibold hover:bg-black hover:text-white transition">Crear</button>
             </div>
           </form>
           <div class="overflow-x-auto">
@@ -436,14 +506,17 @@ const router = useRouter();
                   <td class="py-2 px-4 truncate max-w-xs">{{ producto.descripcion }}</td>
                   <td class="py-2 px-4">{{ producto.stock }}</td>
                   <td class="py-2 px-4">{{ producto.fechaLanzamiento }}</td>
-                  <td class="py-2 px-4 truncate max-w-xs"><a :href="producto.imagenUrl" target="_blank" class="text-blue-600 hover:underline">Imagen</a></td>
+                  <td class="py-2 px-4 truncate max-w-xs"><a :href="producto.imagenUrl" target="_blank"
+                      class="text-blue-600 hover:underline">Imagen</a></td>
                   <td class="py-2 px-4">
-                    <span :class="producto.activo ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-700'" class="px-2 py-0.5 rounded text-xs">
+                    <span :class="producto.activo ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-700'"
+                      class="px-2 py-0.5 rounded text-xs">
                       {{ producto.activo ? 'Sí' : 'No' }}
                     </span>
                   </td>
                   <td class="py-2 px-4">
-                    <span :class="producto.destacado ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-700'" class="px-2 py-0.5 rounded text-xs">
+                    <span :class="producto.destacado ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-700'"
+                      class="px-2 py-0.5 rounded text-xs">
                       {{ producto.destacado ? 'Sí' : 'No' }}
                     </span>
                   </td>
@@ -451,8 +524,10 @@ const router = useRouter();
                   <td class="py-2 px-4">{{ producto.idTipo }}</td>
                   <td class="py-2 px-4">{{ producto.precio }}</td>
                   <td class="py-2 px-4 flex gap-2">
-                    <button @click="productoEdit = { ...producto }" class="text-blue-600 hover:underline">Editar</button>
-                    <button @click="confirmDeleteProducto(producto.idProducto)" class="text-red-600 hover:underline">Eliminar</button>
+                    <button @click="productoEdit = { ...producto }"
+                      class="text-blue-600 hover:underline">Editar</button>
+                    <button @click="confirmDeleteProducto(producto.idProducto)"
+                      class="text-red-600 hover:underline">Eliminar</button>
                   </td>
                 </tr>
               </tbody>
@@ -460,14 +535,22 @@ const router = useRouter();
           </div>
           <div v-if="productoEdit" class="mt-6 p-4 bg-gray-50 rounded shadow">
             <h4 class="font-bold mb-2">Editar Producto</h4>
-            <input v-model="productoEdit.nombre" placeholder="Nombre" class="w-full border-b border-gray-400 focus:outline-none py-1 mb-2" required>
-            <input v-model.number="productoEdit.precio" type="number" step="0.01" min="0" placeholder="Precio" class="w-full border-b border-gray-400 focus:outline-none py-1 mb-2" required>
-            <input v-model="productoEdit.descripcion" placeholder="Descripción" class="w-full border-b border-gray-400 focus:outline-none py-1 mb-2" required>
-            <input v-model.number="productoEdit.stock" placeholder="Stock" type="number" class="w-full border-b border-gray-400 focus:outline-none py-1 mb-2" required>
-            <input v-model="productoEdit.fechaLanzamiento" placeholder="Fecha Lanzamiento" type="date" class="w-full border-b border-gray-400 focus:outline-none py-1 mb-2" required>
-            <input v-model="productoEdit.imagenUrl" placeholder="Imagen URL" class="w-full border-b border-gray-400 focus:outline-none py-1 mb-2" required>
-            <input v-model.number="productoEdit.idMarca" placeholder="ID Marca" type="number" class="w-full border-b border-gray-400 focus:outline-none py-1 mb-2" required>
-            <input v-model.number="productoEdit.idTipo" placeholder="ID Tipo" type="number" class="w-full border-b border-gray-400 focus:outline-none py-1 mb-2" required>
+            <input v-model="productoEdit.nombre" placeholder="Nombre"
+              class="w-full border-b border-gray-400 focus:outline-none py-1 mb-2" required>
+            <input v-model.number="productoEdit.precio" type="number" step="0.01" min="0" placeholder="Precio"
+              class="w-full border-b border-gray-400 focus:outline-none py-1 mb-2" required>
+            <input v-model="productoEdit.descripcion" placeholder="Descripción"
+              class="w-full border-b border-gray-400 focus:outline-none py-1 mb-2" required>
+            <input v-model.number="productoEdit.stock" placeholder="Stock" type="number"
+              class="w-full border-b border-gray-400 focus:outline-none py-1 mb-2" required>
+            <input v-model="productoEdit.fechaLanzamiento" placeholder="Fecha Lanzamiento" type="date"
+              class="w-full border-b border-gray-400 focus:outline-none py-1 mb-2" required>
+            <!-- <input v-model="productoEdit.imagenUrl" placeholder="Imagen URL"
+              class="w-full border-b border-gray-400 focus:outline-none py-1 mb-2" required> -->
+            <input v-model.number="productoEdit.idMarca" placeholder="ID Marca" type="number"
+              class="w-full border-b border-gray-400 focus:outline-none py-1 mb-2" required>
+            <input v-model.number="productoEdit.idTipo" placeholder="ID Tipo" type="number"
+              class="w-full border-b border-gray-400 focus:outline-none py-1 mb-2" required>
             <div class="flex gap-4 mb-2">
               <label class="flex items-center gap-1">
                 <input v-model="productoEdit.activo" type="checkbox">
@@ -478,7 +561,8 @@ const router = useRouter();
                 Destacado
               </label>
             </div>
-            <button @click="confirmUpdateProducto(productoEdit.idProducto, productoEdit)" class="px-4 py-1 border border-green-600 rounded-full text-green-700 font-semibold mr-2 hover:bg-green-600 hover:text-white transition">Guardar</button>
+            <button @click="confirmUpdateProducto(productoEdit.idProducto, productoEdit)"
+              class="px-4 py-1 border border-green-600 rounded-full text-green-700 font-semibold mr-2 hover:bg-green-600 hover:text-white transition">Guardar</button>
             <button @click="productoEdit = null" class="text-red-600 hover:underline">Cancelar</button>
           </div>
         </div>
@@ -494,14 +578,17 @@ const router = useRouter();
           <form @submit.prevent="crearTipoProducto" class="space-y-4 mb-6">
             <div>
               <label class="block text-sm font-semibold mb-1">Nombre</label>
-              <input v-model="nuevoTipoProducto.nombre" class="w-full border-b border-gray-400 focus:outline-none py-1" required>
+              <input v-model="nuevoTipoProducto.nombre" class="w-full border-b border-gray-400 focus:outline-none py-1"
+                required>
             </div>
             <div>
               <label class="block text-sm font-semibold mb-1">Descripción</label>
-              <input v-model="nuevoTipoProducto.descripcion" class="w-full border-b border-gray-400 focus:outline-none py-1" required>
+              <input v-model="nuevoTipoProducto.descripcion"
+                class="w-full border-b border-gray-400 focus:outline-none py-1" required>
             </div>
             <div class="flex justify-center mt-6">
-              <button type="submit" class="px-8 py-2 border border-black rounded-full font-semibold hover:bg-black hover:text-white transition">Crear</button>
+              <button type="submit"
+                class="px-8 py-2 border border-black rounded-full font-semibold hover:bg-black hover:text-white transition">Crear</button>
             </div>
           </form>
           <div class="overflow-x-auto">
@@ -520,8 +607,10 @@ const router = useRouter();
                   <td class="py-2 px-4">{{ tipo.nombre }}</td>
                   <td class="py-2 px-4">{{ tipo.descripcion }}</td>
                   <td class="py-2 px-4 flex gap-2">
-                    <button @click="tipoProductoEdit = { ...tipo }" class="text-blue-600 hover:underline">Editar</button>
-                    <button @click="confirmDeleteTipoProducto(tipo.idTipo)" class="text-red-600 hover:underline">Eliminar</button>
+                    <button @click="tipoProductoEdit = { ...tipo }"
+                      class="text-blue-600 hover:underline">Editar</button>
+                    <button @click="confirmDeleteTipoProducto(tipo.idTipo)"
+                      class="text-red-600 hover:underline">Eliminar</button>
                   </td>
                 </tr>
               </tbody>
@@ -533,15 +622,19 @@ const router = useRouter();
               <div class="grid grid-cols-2 gap-4 mb-4">
                 <div>
                   <label class="block text-sm font-semibold mb-1">Nombre</label>
-                  <input v-model="tipoProductoEdit.nombre" class="w-full border-b border-gray-400 focus:outline-none py-1" required>
+                  <input v-model="tipoProductoEdit.nombre"
+                    class="w-full border-b border-gray-400 focus:outline-none py-1" required>
                 </div>
                 <div>
                   <label class="block text-sm font-semibold mb-1">Descripción</label>
-                  <input v-model="tipoProductoEdit.descripcion" class="w-full border-b border-gray-400 focus:outline-none py-1" required>
+                  <input v-model="tipoProductoEdit.descripcion"
+                    class="w-full border-b border-gray-400 focus:outline-none py-1" required>
                 </div>
               </div>
-              <button type="submit" class="px-4 py-1 border border-green-600 rounded-full text-green-700 font-semibold mr-2 hover:bg-green-600 hover:text-white transition">Guardar</button>
-              <button @click="tipoProductoEdit = null" type="button" class="text-red-600 hover:underline">Cancelar</button>
+              <button type="submit"
+                class="px-4 py-1 border border-green-600 rounded-full text-green-700 font-semibold mr-2 hover:bg-green-600 hover:text-white transition">Guardar</button>
+              <button @click="tipoProductoEdit = null" type="button"
+                class="text-red-600 hover:underline">Cancelar</button>
             </form>
           </div>
         </div>
@@ -567,8 +660,10 @@ const router = useRouter();
             <h2 class="text-xl font-bold tracking-wide">Usuarios</h2>
           </div>
           <form @submit.prevent="buscarUsuarioPorId" class="flex gap-2 mb-6">
-            <input v-model="usuarioIdBuscar" placeholder="Buscar por ID" class="flex-1 border-b border-gray-400 focus:outline-none py-1" />
-            <button type="submit" class="px-6 py-1 border border-black rounded-full font-semibold hover:bg-black hover:text-white transition">Buscar</button>
+            <input v-model="usuarioIdBuscar" placeholder="Buscar por ID"
+              class="flex-1 border-b border-gray-400 focus:outline-none py-1" />
+            <button type="submit"
+              class="px-6 py-1 border border-black rounded-full font-semibold hover:bg-black hover:text-white transition">Buscar</button>
           </form>
           <div v-if="usuarioDetalle" class="mb-6 p-4 bg-gray-50 rounded shadow">
             <h3 class="font-bold mb-2">Detalle de Usuario</h3>
@@ -591,30 +686,26 @@ const router = useRouter();
                   <td class="py-2 px-4">{{ usuario.nombre }} {{ usuario.apellidos }}</td>
                   <td class="py-2 px-4">{{ usuario.email }}</td>
                   <td class="py-2 px-4">
-                    <span :class="usuario.esAdmin ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-700'" class="px-2 py-0.5 rounded text-xs">
+                    <span :class="usuario.esAdmin ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-700'"
+                      class="px-2 py-0.5 rounded text-xs">
                       {{ usuario.esAdmin ? 'Sí' : 'No' }}
                     </span>
                   </td>
                   <td class="py-2 px-4 flex gap-2">
-                    <button
-                      @click="confirmDeleteUsuario(usuario.idUsuario)"
-                      class="text-red-600 hover:underline"
+                    <button @click="confirmDeleteUsuario(usuario.idUsuario)" class="text-red-600 hover:underline"
                       :disabled="usuario.esAdmin && adminCount.value === 1"
                       :class="usuario.esAdmin && adminCount.value === 1 ? 'opacity-50 cursor-not-allowed' : ''"
-                      :title="usuario.esAdmin && adminCount.value === 1 ? 'Debe haber al menos un administrador' : ''"
-                    >
+                      :title="usuario.esAdmin && adminCount.value === 1 ? 'Debe haber al menos un administrador' : ''">
                       Eliminar
                     </button>
-                    <button
-                      @click="usuarioRolEdit = usuario"
-                      class="text-blue-600 hover:underline"
+                    <button @click="usuarioRolEdit = usuario" class="text-blue-600 hover:underline"
                       :disabled="usuario.esAdmin && adminCount.value === 1"
                       :class="usuario.esAdmin && adminCount.value === 1 ? 'opacity-50 cursor-not-allowed' : ''"
-                      :title="usuario.esAdmin && adminCount.value === 1 ? 'Debe haber al menos un administrador' : ''"
-                    >
+                      :title="usuario.esAdmin && adminCount.value === 1 ? 'Debe haber al menos un administrador' : ''">
                       Editar Rol
                     </button>
-                    <button @click="usuarioEdit = { ...usuario }" class="text-yellow-600 hover:underline">Editar</button>
+                    <button @click="usuarioEdit = { ...usuario }"
+                      class="text-yellow-600 hover:underline">Editar</button>
                   </td>
                 </tr>
               </tbody>
@@ -622,8 +713,15 @@ const router = useRouter();
           </div>
           <div v-if="usuarioRolEdit" class="mt-6 p-4 bg-gray-50 rounded shadow">
             <h4 class="font-bold mb-2">Editar Rol de {{ usuarioRolEdit.nombre }}</h4>
-            <button @click="confirmUpdateRolUsuario(usuarioRolEdit.idUsuario, true)" class="px-4 py-1 border border-green-600 rounded-full text-green-700 font-semibold mr-2 hover:bg-green-600 hover:text-white transition">Hacer Admin</button>
-            <button @click="confirmUpdateRolUsuario(usuarioRolEdit.idUsuario, false)" class="px-4 py-1 border border-gray-600 rounded-full text-gray-700 font-semibold mr-2 hover:bg-gray-600 hover:text-white transition" :disabled="usuarioRolEdit.esAdmin && adminCount.value === 1" :class="usuarioRolEdit.esAdmin && adminCount.value === 1 ? 'opacity-50 cursor-not-allowed' : ''" :title="usuarioRolEdit.esAdmin && adminCount.value === 1 ? 'Debe haber al menos un administrador' : ''">Quitar Admin</button>
+            <button @click="confirmUpdateRolUsuario(usuarioRolEdit.idUsuario, true)"
+              class="px-4 py-1 border border-green-600 rounded-full text-green-700 font-semibold mr-2 hover:bg-green-600 hover:text-white transition">Hacer
+              Admin</button>
+            <button @click="confirmUpdateRolUsuario(usuarioRolEdit.idUsuario, false)"
+              class="px-4 py-1 border border-gray-600 rounded-full text-gray-700 font-semibold mr-2 hover:bg-gray-600 hover:text-white transition"
+              :disabled="usuarioRolEdit.esAdmin && adminCount.value === 1"
+              :class="usuarioRolEdit.esAdmin && adminCount.value === 1 ? 'opacity-50 cursor-not-allowed' : ''"
+              :title="usuarioRolEdit.esAdmin && adminCount.value === 1 ? 'Debe haber al menos un administrador' : ''">Quitar
+              Admin</button>
             <button @click="usuarioRolEdit = null" class="text-red-600 hover:underline">Cancelar</button>
           </div>
           <div v-if="usuarioEdit" class="mt-6 p-4 bg-gray-50 rounded shadow">
@@ -632,18 +730,22 @@ const router = useRouter();
               <div class="grid grid-cols-2 gap-4 mb-4">
                 <div>
                   <label class="block text-sm font-semibold mb-1">Nombre</label>
-                  <input v-model="usuarioEdit.nombre" class="w-full border-b border-gray-400 focus:outline-none py-1" required>
+                  <input v-model="usuarioEdit.nombre" class="w-full border-b border-gray-400 focus:outline-none py-1"
+                    required>
                 </div>
                 <div>
                   <label class="block text-sm font-semibold mb-1">Apellidos</label>
-                  <input v-model="usuarioEdit.apellidos" class="w-full border-b border-gray-400 focus:outline-none py-1" required>
+                  <input v-model="usuarioEdit.apellidos" class="w-full border-b border-gray-400 focus:outline-none py-1"
+                    required>
                 </div>
                 <div class="col-span-2">
                   <label class="block text-sm font-semibold mb-1">Email</label>
-                  <input v-model="usuarioEdit.email" class="w-full border-b border-gray-400 focus:outline-none py-1" required>
+                  <input v-model="usuarioEdit.email" class="w-full border-b border-gray-400 focus:outline-none py-1"
+                    required>
                 </div>
               </div>
-              <button type="submit" class="px-4 py-1 border border-green-600 rounded-full text-green-700 font-semibold mr-2 hover:bg-green-600 hover:text-white transition">Guardar</button>
+              <button type="submit"
+                class="px-4 py-1 border border-green-600 rounded-full text-green-700 font-semibold mr-2 hover:bg-green-600 hover:text-white transition">Guardar</button>
               <button @click="usuarioEdit = null" type="button" class="text-red-600 hover:underline">Cancelar</button>
             </form>
           </div>

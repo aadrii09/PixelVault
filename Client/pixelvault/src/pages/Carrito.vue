@@ -19,7 +19,7 @@ const elements = ref(null);
 // Inicializar Stripe
 const initStripe = async () => {
   console.log('💳 Iniciando Stripe...');
-  stripe.value = await loadStripe('pk_test_51RTSVtQv5xnysdLKAXO57tv8Y5LvK4mP0SnkDl7zaCAE4fHP6c5bLoln640AzUs8gkJjlhFgiJZNXXv2w6TV7wRY00HlcD7Gfc');
+  stripe.value = await loadStripe('pk_test_51RT8U9QfbUGb0jQPDFUoqI1nG4mqKUlzVcMDdMob5WDfEfFpl3UL5TTN3Qta0Sah3TTPgfvVIWWud5xxG4LLqvBf00RfCRCmAq');
   elements.value = stripe.value.elements();
 
   // Crear el elemento de tarjeta
@@ -50,16 +50,24 @@ const cargarCarrito = async () => {
     cargando.value = true;
     carrito.value = await getCarrito();
     console.log('📦 Carrito recibido del backend:', carrito.value);
+
     if (carrito.value && carrito.value.Productos) {
       carrito.value.productos = carrito.value.Productos;
     }
   } catch (err) {
-    error.value = 'Error al cargar el carrito';
-    console.error(err);
+    if (err.response && err.response.status === 404) {
+      // Carrito no encontrado (vacío)
+      carrito.value = { productos: [] }; // estructura vacía válida
+      console.log('🟡 Carrito no encontrado, se considera vacío');
+    } else {
+      error.value = 'Error al cargar el carrito';
+      console.error(err);
+    }
   } finally {
     cargando.value = false;
   }
 };
+
 
 // Procesar el pago
 const procesarPago = async () => {
@@ -147,7 +155,7 @@ onMounted(async () => {
         if (!document.getElementById("paypal-sdk")) {
           console.log('📦 SDK de PayPal aún no cargado. Añadiendo script...');
           const script = document.createElement("script");
-          script.src = "https://www.paypal.com/sdk/js?client-id=AUyxWpP73OMKhrokIfzR-qKJuPfLdsE4OfdVF6XgJscBRMcMKsndcf4rBU3jUUTerM6umvnU0ElwRVwk&currency=USD";
+          script.src = "https://www.paypal.com/sdk/js?client-id=AQiepbT5Qot4jIqhxfcUppb-ogD3WfqkZZpRi7IQvoE-eDsjVaO0aOyEnaWjwC5WxJOHyJHNwveYWddr&currency=USD";
           script.id = "paypal-sdk";
           script.onload = () => {
             console.log('✅ SDK de PayPal cargado y listo');
