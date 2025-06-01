@@ -1,0 +1,130 @@
+erDiagram
+    Usuario {
+        int IdUsuario PK
+        string Nombre
+        string Apellidos
+        string Email
+        string Direccion
+        string Telefono
+        date FechaRegistro
+        boolean EsAdmin
+    }
+    
+    Producto {
+        int IdProducto PK
+        string Nombre
+        string Descripcion
+        int Stock
+        date FechaLanzamiento
+        string ImagenUrl
+        boolean Activo
+        boolean Destacado
+        int IdMarca FK
+        int IdTipo FK
+    }
+    
+    Pedido {
+        int IdPedido PK
+        int IdUsuario FK
+        date FechaPedido
+        string EstadoPedido
+        decimal Total
+        string MetodoPago
+    }
+    
+    PedidoDetalle {
+        int IdDetalle PK
+        int IdPedido FK
+        int IdProducto FK
+        int Cantidad
+        decimal PrecioUnitario
+        decimal Subtotal
+    }
+    
+    Carrito {
+        int IdCarrito PK
+        int IdUsuario FK
+        date FechaCreacion
+        string Estado
+        decimal Total
+    }
+    
+    CarritoProducto {
+        int IdCarritoProducto PK
+        int IdCarrito FK
+        int IdProducto FK
+        int Cantidad
+        decimal PrecioUnitario
+        decimal Subtotal
+    }
+    
+    Comentario {
+        int IdComentario PK
+        int IdProducto FK
+        int IdUsuario FK
+        string TextoComentario
+        int Valoracion
+        date FechaComentario
+        boolean Aprobado
+    }
+    
+    Historial {
+        int IdHistorial PK
+        int IdUsuario FK
+        string Accion
+        date FechaAccion
+        string IpDireccion
+    }
+    
+    Marca {
+        int IdMarca PK
+        string Nombre
+        string LogoUrl
+        string Website
+    }
+    
+    Plataforma {
+        int IdPlataforma PK
+        string Nombre
+        string ImagenUrl
+        string Descripcion
+    }
+    
+    ProductoPlataforma {
+        int IdProducto FK
+        int IdPlataforma FK
+    }
+    
+    Precio {
+        int IdPrecio PK
+        int IdProducto FK
+        decimal PrecioRegular
+        decimal PrecioOferta
+        date FechaInicioOferta
+        date FechaFinOferta
+    }
+    
+    TipoProducto {
+        int IdTipo PK
+        string Nombre
+        string Descripcion
+    }
+    
+    %% Relaciones
+    Usuario ||--o{ Pedido : "realiza"
+    Usuario ||--o{ Comentario : "escribe"
+    Usuario ||--o{ Historial : "genera"
+    Usuario ||--o{ Carrito : "tiene"
+    
+    Producto ||--o{ Comentario : "recibe"
+    Producto ||--o{ PedidoDetalle : "incluye"
+    Producto ||--o{ CarritoProducto : "contiene"
+    Producto ||--o{ ProductoPlataforma : "disponible_en"
+    Producto ||--o{ Precio : "tiene"
+    
+    Marca ||--o{ Producto : "fabrica"
+    TipoProducto ||--o{ Producto : "categoriza"
+    
+    Carrito ||--o{ CarritoProducto : "contiene"
+    Pedido ||--o{ PedidoDetalle : "incluye"
+    Plataforma ||--o{ ProductoPlataforma : "aloja"
