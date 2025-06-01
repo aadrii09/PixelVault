@@ -10,8 +10,7 @@ import Carrito from '../pages/Carrito.vue'
 import AdminPanel from '../pages/AdminPanel.vue'
 import SobreNosotros from '../pages/SobreNosotros.vue'
 import ProductoDetalle from '../pages/ProductoDetalle.vue'
-
-
+import ProductosPlataforma from '../pages/ProductosPlataforma.vue';
 
 const routes = [
     { path: '/', name: 'Home', component: Home },
@@ -21,6 +20,7 @@ const routes = [
     { path: '/admin', name: 'AdminPanel', component: AdminPanel, meta: { requiresAdmin: true } },
     { path: '/about', name: 'SobreNosotros', component: SobreNosotros },
     { path: '/producto/:id', name: 'ProductoDetalle', component: ProductoDetalle },
+    { path: '/plataforma/:plataforma', name: 'ProductosPlataforma', component: ProductosPlataforma },
 ]
 
 const router = createRouter({
