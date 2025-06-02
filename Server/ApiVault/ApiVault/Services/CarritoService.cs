@@ -130,5 +130,26 @@ namespace ApiVault.Services
 
             return true;
         }
+
+        public async Task<bool> ActualizarCantidadProductoAsync(int usuarioId, int productoId, int cantidad)
+        {
+            var carrito = await _context.Carritos
+                .Include(c => c.CarritoProductos)
+                .FirstOrDefaultAsync(c => c.IdUsuario == usuarioId && c.Estado == "Abierto");
+
+            if (carrito == null) return false;
+
+            var producto = carrito.CarritoProductos.FirstOrDefault(p => p.IdProducto == productoId);
+            if (producto == null) return false;
+
+            producto.Cantidad = cantidad;
+            producto.Subtotal = producto.PrecioUnitario * cantidad;
+
+            carrito.Total = carrito.CarritoProductos.Sum(p => p.Subtotal);
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
     }
 }

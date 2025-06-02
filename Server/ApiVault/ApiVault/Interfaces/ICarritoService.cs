@@ -10,5 +10,6 @@ namespace ApiVault.Interfaces
         Task<CarritoDto> AddProductoAsync(int usuarioId, CarritoProductoDto productoDto);
         Task<bool> RemoveProductoAsync(int usuarioId, int productoId);
         Task<bool> ClearCarritoAsync(int usuarioId);
+        Task<bool> ActualizarCantidadProductoAsync(int usuarioId, int productoId, int cantidad);
     }
 }

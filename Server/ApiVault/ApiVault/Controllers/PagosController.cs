@@ -86,7 +86,7 @@ namespace ApiVault.Controllers
                     return BadRequest("El carrito está vacío.");
                 }
 
-                Console.WriteLine($"🛒 Carrito con {carrito.CarritoProductos.Count} productos. Procesando pedido...");
+                Console.WriteLine($"Carrito con {carrito.CarritoProductos.Count} productos. Procesando pedido...");
 
                 var creado = await _pedidoService.CrearPedidoDesdeCarritoAsync(usuarioId, carrito);
                 if (!creado)
@@ -96,9 +96,9 @@ namespace ApiVault.Controllers
                 }
 
                 await _carritoService.ClearCarritoAsync(usuarioId);
-                Console.WriteLine("✅ Pedido creado y carrito vaciado exitosamente.");
+                Console.WriteLine("Pedido creado y carrito vaciado exitosamente.");
 
-                return Ok(new { estado = "confirmado", mensaje = "Pago procesado y pedido creado con éxito" });
+                return Ok(new { success = true, estado = "confirmado", mensaje = "Pago procesado y pedido creado con éxito" });
             }
             catch (Exception ex)
             {
@@ -106,6 +106,8 @@ namespace ApiVault.Controllers
                 return StatusCode(500, "Error interno al verificar la orden.");
             }
         }
+
+
 
     }
 }

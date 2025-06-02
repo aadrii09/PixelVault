@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, nextTick, watch } from 'vue';
-import { getCarrito, vaciarCarrito, removeProducto } from '../api/carrito';
+import { getCarrito, vaciarCarrito, removeProducto, actualizarCantidad } from '../api/carrito';
 import { processPayment } from '../api/stripe';
 import { loadStripe } from '@stripe/stripe-js';
 import { useRouter } from 'vue-router';
@@ -46,12 +46,12 @@ const initStripe = async () => {
   await nextTick();
   // Only mount if the stripe-card-element div exists and Stripe is selected
   if (selectedPaymentMethod.value === 'stripe' && document.getElementById('stripe-card-element')) {
-     try {
-       cardElement.value.mount('#stripe-card-element');
-        console.log('✅ Stripe card element montado en #stripe-card-element');
-     } catch (e) {
-        console.error('❌ Error mounting Stripe card element:', e);
-     }
+    try {
+      cardElement.value.mount('#stripe-card-element');
+      console.log('✅ Stripe card element montado en #stripe-card-element');
+    } catch (e) {
+      console.error('❌ Error mounting Stripe card element:', e);
+    }
   }
 };
 
@@ -62,13 +62,13 @@ const cargarCarrito = async () => {
     const response = await getCarrito();
     carrito.value = response;
     console.log('📦 Carrito recibido del backend:', carrito.value);
-
+    console.log('🟢 Productos en carrito:', carrito.value.productos);
     if (carrito.value && carrito.value.productos) {
       // Ensure total is a number if it exists, otherwise default to 0
       carrito.value.total = parseFloat(carrito.value.total) || 0;
-       // Ensure each product subtotal is a number
-      if(carrito.value.productos && Array.isArray(carrito.value.productos)){
-         carrito.value.productos = carrito.value.productos.map(p => ({...p, subtotal: parseFloat(p.subtotal) || 0}));
+      // Ensure each product subtotal is a number
+      if (carrito.value.productos && Array.isArray(carrito.value.productos)) {
+        carrito.value.productos = carrito.value.productos.map(p => ({ ...p, subtotal: parseFloat(p.subtotal) || 0 }));
       }
     }
   } catch (err) {
@@ -92,107 +92,116 @@ const handlePayment = async () => {
     return;
   }
 
-   if (procesandoPago.value) return; // Prevent double submission
+  if (procesandoPago.value) return; // Evitar doble clic
 
   try {
     procesandoPago.value = true;
     error.value = '';
 
     if (selectedPaymentMethod.value === 'stripe') {
-      // Stripe Payment
-       if (!stripe.value || !cardElement.value) {
-         error.value = 'Stripe no inicializado correctamente.';
-         procesandoPago.value = false;
-         return;
-       }
-       // Assuming your backend processPayment handles the confirmation
-      const success = await processPayment(carrito.value.total, elements.value); // You might need to pass more data
+      if (!stripe.value || !cardElement.value) {
+        error.value = 'Stripe no inicializado correctamente.';
+        procesandoPago.value = false;
+        return;
+      }
+
+      const success = await processPayment(carrito.value.total, elements.value);
 
       if (success) {
         await vaciarCarrito();
-        router.push({ name: 'PagoExitoso' });
+        successMessage.value = '¡Compra finalizada con éxito! Gracias por tu pedido.';
+        alert('¡Compra finalizada con éxito! Gracias por tu pedido.');
+        // router.push({ name: 'PagoExitoso' }); // Descomenta si quieres redirigir
       } else {
-         error.value = 'El pago con tarjeta no fue exitoso.'; // Generic error, refine with actual backend response
+        error.value = 'El pago con tarjeta no fue exitoso.';
       }
 
     } else if (selectedPaymentMethod.value === 'paypal') {
-      // PayPal Payment is handled by the PayPal button itself
-        error.value = 'Por favor, haz clic en el botón de PayPal para completar la compra.';
-         procesandoPago.value = false; // PayPal flow is external
-         return;
+      error.value = 'Por favor, haz clic en el botón de PayPal para completar la compra.';
+      procesandoPago.value = false;
+      return;
     }
 
   } catch (err) {
     error.value = 'Error general al procesar el pago';
     console.error(err);
   } finally {
-     // Only set procesandoPago to false here for methods that complete immediately (like Stripe direct calls)
-     if (selectedPaymentMethod.value === 'stripe'){
-         procesandoPago.value = false;
-     }
+    if (selectedPaymentMethod.value === 'stripe') {
+      procesandoPago.value = false;
+    }
   }
 };
+
+
 
 const renderPayPalButton = () => {
   console.log('Attempting to render PayPal button...');
   const container = document.getElementById('paypal-button-container');
   if (!container) {
     console.warn('⚠️ Contenedor #paypal-button-container no encontrado en el DOM');
-     // You might want to retry rendering later if the element isn't ready
+    // You might want to retry rendering later if the element isn't ready
     return;
   }
 
-   // Clear previous PayPal buttons if any to avoid duplicates
-   container.innerHTML = '';
+  // Clear previous PayPal buttons if any to avoid duplicates
+  container.innerHTML = '';
 
   if (window.paypal && window.paypal.Buttons) {
-     console.log('🟢 SDK de PayPal disponible. Renderizando botón.');
-     window.paypal.Buttons({
+    console.log('🟢 SDK de PayPal disponible. Renderizando botón.');
+    window.paypal.Buttons({
       createOrder: async (data, actions) => {
         try {
-           console.log('Creating PayPal order...');
-           // Pass the total amount to your backend API to create a PayPal order
-           const orderId = await crearOrder(carrito.value.total); // Use carrito.value.total
-           console.log("🧾 ID de orden de PayPal generado:", orderId);
-           return orderId;
+          console.log('Creating PayPal order...');
+          // Pass the total amount to your backend API to create a PayPal order
+          const orderId = await crearOrder(carrito.value.total); // Use carrito.value.total
+          console.log("🧾 ID de orden de PayPal generado:", orderId);
+          return orderId;
         } catch (err) {
           console.error('❌ Error creando orden de PayPal:', err);
-           error.value = 'Error al crear la orden de PayPal';
-           // Inform PayPal.js that there was an error
-           return actions.reject(err);
+          error.value = 'Error al crear la orden de PayPal';
+          // Inform PayPal.js that there was an error
+          return actions.reject(err);
         }
       },
 
       onApprove: async (data, actions) => {
         console.log('PayPal payment approved.', data);
         try {
-           // Verify the order completion with your backend API
           const result = await verificarOrden(data.orderID);
-           console.log('PayPal order verification result:', result);
+          console.log('PayPal order verification result:', result);
+
           if (result.success) {
+            console.log('✅ Orden verificada exitosamente con PayPal. Vaciar carrito...');
             await vaciarCarrito();
-            router.push({ name: 'PagoExitoso' });
+            console.log('✅ Carrito vaciado (backend). Actualizando datos en frontend...');
+            await cargarCarrito();
+
+            successMessage.value = '¡Compra finalizada con éxito! Gracias por tu pedido.';
+            console.log('✅ Mensaje de éxito actualizado en la vista.');
+            alert('¡Compra finalizada con éxito! Gracias por tu pedido.');
+
           } else {
-             // Handle verification failure
             error.value = result.message || 'No se pudo verificar el pago con PayPal';
+            console.error('❌ Error en verificación de orden:', error.value);
           }
         } catch (err) {
           console.error('❌ Error verificando orden de PayPal:', err);
           error.value = 'Error al verificar el pago con PayPal';
         }
       },
+
       onError: (err) => {
         console.error('❌ Error en PayPal:', err);
         error.value = 'Error con PayPal. Por favor, intenta de nuevo.';
       },
-       onCancel: (data) => {
-         console.log('PayPal payment cancelled.', data);
-         error.value = 'Pago de PayPal cancelado.';
-       }
+      onCancel: (data) => {
+        console.log('PayPal payment cancelled.', data);
+        error.value = 'Pago de PayPal cancelado.';
+      }
 
     }).render('#paypal-button-container');
   } else {
-     console.warn('⚠️ SDK de PayPal o PayPal.Buttons no disponible para renderizar el botón.');
+    console.warn('⚠️ SDK de PayPal o PayPal.Buttons no disponible para renderizar el botón.');
   }
 };
 
@@ -203,82 +212,82 @@ watch(selectedPaymentMethod, async (newMethod, oldMethod) => {
 
   // Clear previous errors related to payment method selection
   if (error.value.includes('Por favor, selecciona un método de pago') || error.value.includes('Stripe no inicializado')) {
-      error.value = '';
+    error.value = '';
   }
 
   if (newMethod === 'stripe') {
-     console.log('Switching to Stripe.');
-     // Clear PayPal container
-     const paypalContainer = document.getElementById('paypal-button-container');
-     if(paypalContainer) paypalContainer.innerHTML = '';
+    console.log('Switching to Stripe.');
+    // Clear PayPal container
+    const paypalContainer = document.getElementById('paypal-button-container');
+    if (paypalContainer) paypalContainer.innerHTML = '';
     // Initialize and mount Stripe if not already done and element exists
-     if(!stripe.value) {
-       console.log('Stripe not initialized, initializing...');
-        await initStripe();
-     }
-     // Mount Stripe element after initialization if it exists
-     if (cardElement.value && document.getElementById('stripe-card-element')) {
-        try {
-           cardElement.value.mount('#stripe-card-element');
-           console.log('✅ Stripe card element montado en #stripe-card-element (via watch).');
-        } catch (e) {
-           console.error('❌ Error mounting Stripe card element via watch:', e);
-        }
-     } else {
-         console.warn('⚠️ Stripe card element div #stripe-card-element not found or cardElement not created.');
-     }
+    if (!stripe.value) {
+      console.log('Stripe not initialized, initializing...');
+      await initStripe();
+    }
+    // Mount Stripe element after initialization if it exists
+    if (cardElement.value && document.getElementById('stripe-card-element')) {
+      try {
+        cardElement.value.mount('#stripe-card-element');
+        console.log('✅ Stripe card element montado en #stripe-card-element (via watch).');
+      } catch (e) {
+        console.error('❌ Error mounting Stripe card element via watch:', e);
+      }
+    } else {
+      console.warn('⚠️ Stripe card element div #stripe-card-element not found or cardElement not created.');
+    }
 
   } else if (newMethod === 'paypal') {
-     console.log('Switching to PayPal.');
-     // Destroy Stripe element if it was mounted
-      if(cardElement.value) {
-         try {
-            cardElement.value.unmount();
-            console.log('✅ Stripe card element desmontado (via watch).');
-         } catch (e) {
-            console.warn('⚠️ Error unmounting Stripe card element:', e);
-         }
+    console.log('Switching to PayPal.');
+    // Destroy Stripe element if it was mounted
+    if (cardElement.value) {
+      try {
+        cardElement.value.unmount();
+        console.log('✅ Stripe card element desmontado (via watch).');
+      } catch (e) {
+        console.warn('⚠️ Error unmounting Stripe card element:', e);
       }
-     // Render PayPal button if SDK is loaded, otherwise load it
-      if(window.paypal && window.paypal.Buttons) {
-         console.log('PayPal SDK ready, rendering button.');
-         renderPayPalButton();
-      } else if (!document.getElementById("paypal-sdk")) {
-          // If SDK is not loaded, load it, and it will render on load
-          console.log('📦 SDK de PayPal aún no cargado. Añadiendo script...');
-          const script = document.createElement("script");
-          script.src = "https://www.paypal.com/sdk/js?client-id=AQiepbT5Qot4jIqhxfcUppb-ogD3WfqkZZpRi7IQvoE-eDsjVaO0aOyEnaWjwC5WxJOHyJHNwveYWddr&currency=USD"; // Ensure correct client ID and currency
-          script.id = "paypal-sdk";
-           // Use onload to ensure renderPayPalButton is called after the script is loaded
-          script.onload = () => {
-            console.log('✅ SDK de PayPal cargado y listo (via watch).');
-            renderPayPalButton();
-          };
-           script.onerror = (e) => {
-             console.error('❌ Error loading PayPal SDK:', e);
-             error.value = 'Error al cargar el SDK de PayPal.';
-           };
-          document.body.appendChild(script);
-       } else {
-           console.warn('⚠️ PayPal SDK script already exists but window.paypal is not ready or does not have Buttons.');
-            // Attempt to render just in case it became ready
-            renderPayPalButton();
-       }
+    }
+    // Render PayPal button if SDK is loaded, otherwise load it
+    if (window.paypal && window.paypal.Buttons) {
+      console.log('PayPal SDK ready, rendering button.');
+      renderPayPalButton();
+    } else if (!document.getElementById("paypal-sdk")) {
+      // If SDK is not loaded, load it, and it will render on load
+      console.log('📦 SDK de PayPal aún no cargado. Añadiendo script...');
+      const script = document.createElement("script");
+      script.src = "https://www.paypal.com/sdk/js?client-id=AQiepbT5Qot4jIqhxfcUppb-ogD3WfqkZZpRi7IQvoE-eDsjVaO0aOyEnaWjwC5WxJOHyJHNwveYWddr&currency=USD"; // Ensure correct client ID and currency
+      script.id = "paypal-sdk";
+      // Use onload to ensure renderPayPalButton is called after the script is loaded
+      script.onload = () => {
+        console.log('✅ SDK de PayPal cargado y listo (via watch).');
+        renderPayPalButton();
+      };
+      script.onerror = (e) => {
+        console.error('❌ Error loading PayPal SDK:', e);
+        error.value = 'Error al cargar el SDK de PayPal.';
+      };
+      document.body.appendChild(script);
+    } else {
+      console.warn('⚠️ PayPal SDK script already exists but window.paypal is not ready or does not have Buttons.');
+      // Attempt to render just in case it became ready
+      renderPayPalButton();
+    }
   } else {
-      // Handle case where no payment method is selected (optional)
-      console.warn('No payment method selected.');
-       // Clear both containers
-       const paypalContainer = document.getElementById('paypal-button-container');
-       if(paypalContainer) paypalContainer.innerHTML = '';
-       if(cardElement.value) {
-         try {
-            cardElement.value.unmount();
-            console.log('✅ Stripe card element desmontado (no method selected).');
-         } catch (e) {
-            console.warn('⚠️ Error unmounting Stripe card element:', e);
-         }
+    // Handle case where no payment method is selected (optional)
+    console.warn('No payment method selected.');
+    // Clear both containers
+    const paypalContainer = document.getElementById('paypal-button-container');
+    if (paypalContainer) paypalContainer.innerHTML = '';
+    if (cardElement.value) {
+      try {
+        cardElement.value.unmount();
+        console.log('✅ Stripe card element desmontado (no method selected).');
+      } catch (e) {
+        console.warn('⚠️ Error unmounting Stripe card element:', e);
       }
-       error.value = 'Por favor, selecciona un método de pago.';
+    }
+    error.value = 'Por favor, selecciona un método de pago.';
   }
 }, { immediate: true }); // immediate: true to run on component mount
 
@@ -289,23 +298,35 @@ watch(carrito, (newVal) => {
   // Ensure total is a number before checking
   const total = parseFloat(newVal?.total) || 0;
   mostrarFormularioPago.value = total > 0;
-   // The payment method watcher will handle initializing/rendering based on selectedPaymentMethod
-   // when mostrarFormularioPago becomes true.
+  // The payment method watcher will handle initializing/rendering based on selectedPaymentMethod
+  // when mostrarFormularioPago becomes true.
 }, { immediate: true }); // Immediate: true to run on initial load
 
 // Initial load of the cart data
 onMounted(async () => {
-   // The watchers now handle the rest of the setup based on cart data and selected payment method
-   await cargarCarrito();
+  // The watchers now handle the rest of the setup based on cart data and selected payment method
+  await cargarCarrito();
 });
 
 // You will need to implement this method to handle quantity updates
-const updateCantidad = (producto) => {
-   console.log('Update quantity for product:', producto);
-   // Implement logic to update the product quantity in the backend/carrito state
-   // After updating, you might need to refresh the cart data or update the total client-side
-   // Example: call an API to update quantity, then refetch or manually update carrito.value
+const updateCantidad = async (producto) => {
+  console.log('Update quantity for product:', producto);
+
+  try {
+    const success = await actualizarCantidad(producto.idProducto, producto.cantidad);
+    if (success) {
+      console.log('✅ Cantidad actualizada en backend. Recargando carrito...');
+      await cargarCarrito();
+    } else {
+      error.value = 'No se pudo actualizar la cantidad';
+      console.error('❌ No se pudo actualizar la cantidad en el backend.');
+    }
+  } catch (err) {
+    error.value = 'Error al actualizar la cantidad';
+    console.error('❌ Error al actualizar la cantidad:', err);
+  }
 };
+
 
 // Función para eliminar un producto individual
 const eliminarProducto = async (productoId) => {
@@ -358,7 +379,8 @@ const vaciarTodoCarrito = async () => {
         </div>
 
         <!-- Mensaje de error for cart loading -->
-        <div v-if="error && !cargando && (!carrito || !carrito.productos || carrito.productos.length === 0)" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <div v-if="error && !cargando && (!carrito || !carrito.productos || carrito.productos.length === 0)"
+          class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
           {{ error }}
         </div>
 
@@ -377,7 +399,7 @@ const vaciarTodoCarrito = async () => {
 
         <!-- Lista de productos -->
         <div v-if="carrito && carrito.productos.length > 0" class="space-y-4">
-          <div v-for="producto in carrito.productos" :key="producto.IdProducto"
+          <div v-for="producto in carrito.productos" :key="producto.idProducto"
             class="flex items-center justify-between border-b pb-4">
             <div class="flex items-center">
               <img :src="producto.imagenUrl" :alt="producto.nombre" class="w-16 h-16 object-contain rounded mr-4">
@@ -385,21 +407,15 @@ const vaciarTodoCarrito = async () => {
                 <h3 class="font-semibold text-gray-800">{{ producto.nombre }}</h3>
                 <!-- Quantity Input -->
                 <div class="flex items-center mt-1">
-                  <label :for="'cantidad-' + producto.IdProducto" class="text-gray-600 text-sm mr-2">Cantidad:</label>
-                  <input 
-                    :id="'cantidad-' + producto.IdProducto"
-                    type="number" 
-                    v-model.number="producto.cantidad" 
-                    min="1" 
-                    class="w-12 p-1 border rounded text-center text-gray-800"
-                    @change="updateCantidad(producto)"
-                  >
+                  <label :for="'cantidad-' + producto.idProducto" class="text-gray-600 text-sm mr-2">Cantidad:</label>
+                  <input :id="'cantidad-' + producto.idProducto" type="number" v-model.number="producto.cantidad"
+                    min="1" class="w-12 p-1 border rounded text-center text-gray-800"
+                    @change="updateCantidad(producto)">
                 </div>
               </div>
             </div>
             <div class="flex items-center space-x-4">
-              <button @click="eliminarProducto(producto.IdProducto)" 
-                      class="text-red-500 hover:text-red-600">
+              <button @click="eliminarProducto(producto.idProducto)" class="text-red-500 hover:text-red-600">
                 <i class="fas fa-trash"></i>
               </button>
               <p class="font-semibold text-gray-800">${{ producto.subtotal?.toFixed(2) ?? '0.00' }}</p>
@@ -411,63 +427,63 @@ const vaciarTodoCarrito = async () => {
       <!-- Right Column: COMPRA -->
       <div>
         <div class="flex justify-between items-center mb-6">
-           <h2 class="text-2xl font-bold text-gray-800">COMPRA</h2>
-           <button @click="vaciarTodoCarrito" 
-                   class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors">
-             Vaciar Carrito
-           </button>
-         </div>
+          <h2 class="text-2xl font-bold text-gray-800">COMPRA</h2>
+          <button @click="vaciarTodoCarrito"
+            class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors">
+            Vaciar Carrito
+          </button>
+        </div>
 
         <div v-if="!cargando && carrito && carrito.total > 0" class="bg-gray-50 p-6 rounded-lg space-y-4">
           <!-- Método de pago -->
           <div>
-              <label for="payment-method" class="block text-sm font-medium text-gray-700 mb-2">Método de pago</label>
-              <select id="payment-method" v-model="selectedPaymentMethod"
-                      class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
-                  <option value="paypal">PayPal</option>
-                  <option value="stripe">Tarjeta de Crédito/Débito</option>
-              </select>
+            <label for="payment-method" class="block text-sm font-medium text-gray-700 mb-2">Método de pago</label>
+            <select id="payment-method" v-model="selectedPaymentMethod"
+              class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+              <option value="paypal">PayPal</option>
+              <option value="stripe">Tarjeta de Crédito/Débito</option>
+            </select>
           </div>
 
           <!-- Payment Forms (Conditionally rendered) -->
           <div v-if="mostrarFormularioPago">
-              <!-- Stripe Card Element Container -->
-              <div v-if="selectedPaymentMethod === 'stripe'">
-                  <label for="stripe-card-element" class="block text-sm font-medium text-gray-700 mb-2">Detalles de la tarjeta</label>
-                  <div id="stripe-card-element" class="p-3 border border-gray-300 rounded-md bg-white"></div>
-              </div>
+            <!-- Stripe Card Element Container -->
+            <div v-if="selectedPaymentMethod === 'stripe'">
+              <label for="stripe-card-element" class="block text-sm font-medium text-gray-700 mb-2">Detalles de la
+                tarjeta</label>
+              <div id="stripe-card-element" class="p-3 border border-gray-300 rounded-md bg-white"></div>
+            </div>
 
-              <!-- PayPal Button Container -->
-              <div v-if="selectedPaymentMethod === 'paypal'">
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Pagar con PayPal</label>
-                  <div id="paypal-button-container"></div>
-              </div>
-           </div>
+            <!-- PayPal Button Container -->
+            <div v-if="selectedPaymentMethod === 'paypal'">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Pagar con PayPal</label>
+              <div id="paypal-button-container"></div>
+            </div>
+          </div>
 
           <!-- Código Descuento -->
           <div>
-              <label for="discount-code" class="block text-sm font-medium text-gray-700 mb-2">CÓDIGO DESCUENTO</label>
-              <input type="text" id="discount-code" placeholder="kkk-kkk-kk"
-                     class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-gray-800">
+            <label for="discount-code" class="block text-sm font-medium text-gray-700 mb-2">CÓDIGO DESCUENTO</label>
+            <input type="text" id="discount-code" placeholder="kkk-kkk-kk"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-gray-800">
           </div>
 
           <!-- Total Summary -->
-           <div class="border-t pt-4 mt-4 space-y-2">
-               <div class="flex justify-between text-lg font-semibold text-gray-900">
-                   <span>Total:</span>
-                   <span>${{ carrito?.total?.toFixed(2) ?? '0.00' }}</span>
-               </div>
-           </div>
+          <div class="border-t pt-4 mt-4 space-y-2">
+            <div class="flex justify-between text-lg font-semibold text-gray-900">
+              <span>Total:</span>
+              <span>${{ carrito?.total?.toFixed(2) ?? '0.00' }}</span>
+            </div>
+          </div>
 
           <!-- COMPRAR Button -->
-           <!-- Trigger payment based on selected method -->
-          <button @click="handlePayment" 
-                  :disabled="procesandoPago || (!carrito || carrito.total <= 0)"
-                  class="w-full mt-6 bg-blue-600 text-white py-3 px-4 rounded-md font-semibold text-lg hover:bg-blue-700 
+          <!-- Trigger payment based on selected method -->
+          <button @click="handlePayment" :disabled="procesandoPago || (!carrito || carrito.total <= 0)"
+            class="w-full mt-6 bg-blue-600 text-white py-3 px-4 rounded-md font-semibold text-lg hover:bg-blue-700 
                          disabled:bg-gray-400 disabled:cursor-not-allowed border border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-              {{ procesandoPago ? 'Procesando...' : 'COMPRAR' }}
+            {{ procesandoPago ? 'Procesando...' : 'COMPRAR' }}
           </button>
-       </div>
+        </div>
       </div>
     </div>
   </div>
@@ -488,12 +504,16 @@ const vaciarTodoCarrito = async () => {
 }
 
 .carrito-background {
-  background-color: #f0f0f0; /* Fallback background color */
-  background-image: url('../../public/images/fondocarrito.svg'); /* **REPLACE with your image path** */
-  background-size: cover; /* Cover the entire background */
-  background-position: center; /* Center the background image */
-  background-repeat: no-repeat; /* Do not repeat the image */
+  background-color: #f0f0f0;
+  /* Fallback background color */
+  background-image: url('../../public/images/fondocarrito.svg');
+  /* **REPLACE with your image path** */
+  background-size: cover;
+  /* Cover the entire background */
+  background-position: center;
+  /* Center the background image */
+  background-repeat: no-repeat;
+  /* Do not repeat the image */
   /* background-attachment: fixed; Uncomment this line if you want the background to be fixed when scrolling */
 }
-
 </style>

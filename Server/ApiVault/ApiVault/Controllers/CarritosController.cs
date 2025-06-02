@@ -98,5 +98,26 @@ namespace ApiVault.Controllers
         {
             return User.IsInRole("Admin") || User.HasClaim(c => c.Type == "esAdmin" && c.Value == "True");
         }
+
+        [HttpPatch("{usuarioId}/productos/{productoId}")]
+        public async Task<IActionResult> ActualizarCantidadProducto(int usuarioId, int productoId, [FromBody] int cantidad)
+        {
+            if (!EsPropietario(usuarioId)) return Forbid();
+
+            if (cantidad <= 0)
+            {
+                return BadRequest("La cantidad debe ser mayor a cero.");
+            }
+
+            var actualizado = await _carritoService.ActualizarCantidadProductoAsync(usuarioId, productoId, cantidad);
+
+            if (!actualizado)
+            {
+                return NotFound("No se pudo actualizar la cantidad del producto (carrito o producto no encontrado).");
+            }
+
+            return Ok(new { mensaje = "Cantidad actualizada con éxito." });
+        }
+
     }
 }
