@@ -13,6 +13,7 @@ const isHomePage = computed(() => route.path === '/')
 const isSobreNosotrosPage = computed(() => route.path === '/about')
 const isProductoDetallePage = computed(() => route.name === 'ProductoDetalle')
 const isProductosPlataformaPage = computed(() => route.name === 'ProductosPlataforma')
+const isWishlistPage = computed(() => route.path === '/wishlist')
 
 const logout = async () => {
     userStore.logout()
@@ -164,7 +165,7 @@ const goTo = (path) => {
   </div>
 
   <!-- Elementos específicos para la página ProductoDetalle -->
-  <div v-else-if="isProductoDetallePage" class="producto-detalle-content">
+  <div v-else-if="isProductoDetallePage || isWishlistPage" class="producto-detalle-content">
     <!-- Fondo de imagen para la página ProductoDetalle -->
     <div class="producto-detalle-bg-overlay"></div>
     
@@ -201,7 +202,7 @@ const goTo = (path) => {
     
     <!-- Contenido central de ProductoDetalle -->
     <div class="flex flex-col items-center justify-center flex-grow py-20">
-      <h1 class="text-7xl font-bold text-white mb-6" style="text-shadow: 0 2px 8px #000">Producto Detalle</h1>
+      <h1 class="text-7xl font-bold text-white mb-6" style="text-shadow: 0 2px 8px #000">{{ isWishlistPage ? 'Mi Lista de Deseos' : 'Producto Detalle' }}</h1>
     </div>
   </div>
 

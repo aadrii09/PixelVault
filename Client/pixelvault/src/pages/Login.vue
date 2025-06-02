@@ -11,6 +11,7 @@ const router = useRouter();
 const userStore = useUserStore();
 const showModal = ref(false);
 const recoveryEmail = ref('');
+const showErrorModal = ref(false);
 
 const handleLogin = async () => {
     try {
@@ -33,7 +34,9 @@ const handleLogin = async () => {
 
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
-        error.value = 'Error al iniciar sesión';
+        // Assuming any error during login is due to incorrect credentials for now
+        error.value = 'Correo o contraseña incorrectos';
+        showErrorModal.value = true;
     }
 };
 
@@ -44,6 +47,12 @@ const openModal = () => {
 const closeModal = () => {
   showModal.value = false;
 };
+
+const closeErrorModal = () => {
+  showErrorModal.value = false;
+  error.value = ''; // Clear the error message when the modal is closed
+};
+
 const handleRecovery = () => {
   closeModal();
   alert('Revise su Correo electrónico');
@@ -64,7 +73,8 @@ const handleRecovery = () => {
         <div class="not-registered">
           <a @click.prevent="router.push('/register')" href="#" style="cursor:pointer;">¿No tienes cuenta? Regístrate</a>
         </div>
-        <p v-if="error" class="error">{{ error }}</p>
+        <!-- The error message will now be shown in a modal -->
+        <!-- <p v-if="error" class="error">{{ error }}</p> -->
       </div>
       <div class="login-image">
         <img src="../../public/images/mandoLogin.png" alt="Gamepad" />
@@ -82,6 +92,16 @@ const handleRecovery = () => {
       <div class="flex justify-end">
         <button @click="handleRecovery" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Enviar</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Error Modal -->
+  <div v-if="showErrorModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full relative text-center">
+      <button @click="closeErrorModal" class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+      <h3 class="text-lg font-bold mb-4 text-red-600">Correo o contraseña incorrectos</h3>
+      <p class="mb-6 text-gray-700">{{ error }}</p>
+      <button @click="closeErrorModal" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Cerrar</button>
     </div>
   </div>
 </template>
