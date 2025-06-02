@@ -11,6 +11,8 @@ const isLoggedIn = computed(() => !!userStore.token)
 const showProfileMenu = ref(false)
 const isHomePage = computed(() => route.path === '/')
 const isSobreNosotrosPage = computed(() => route.path === '/about')
+const isProductoDetallePage = computed(() => route.name === 'ProductoDetalle')
+const isProductosPlataformaPage = computed(() => route.name === 'ProductosPlataforma')
 
 const logout = async () => {
     userStore.logout()
@@ -117,7 +119,89 @@ const goTo = (path) => {
     </div>
   </div>
 
-  <!-- Navbar para otras páginas que no son la página de inicio ni Sobre Nosotros -->
+  <!-- Elementos específicos para la página ProductosPlataforma -->
+  <div v-else-if="isProductosPlataformaPage" class="productos-plataforma-content">
+    <!-- Fondo de imagen para la página ProductosPlataforma -->
+    <div class="productos-plataforma-bg-overlay"></div>
+    
+    <!-- Navbar para ProductosPlataforma -->
+    <nav id="navbar" class="w-full flex justify-between items-center px-6 py-8 z-10 relative">
+      <div class="flex space-x-20">
+        <router-link to="/" class="font-bold text-white text-xl hover:underline ml-20">Inicio</router-link>
+        <router-link to="/about" class="font-bold text-white text-xl hover:underline">Sobre Nosotros</router-link>
+      </div>
+      
+      <!-- Logo en el centro -->
+      <div class="absolute left-1/2 transform -translate-x-1/2 flex items-center h-full">
+        <img src="/images/logo2.png" alt="PixelVault" id="logo" />
+      </div>
+      
+      <div class="flex space-x-20">
+        <router-link to="/carrito" class="font-bold text-white text-xl hover:underline">Carrito</router-link>
+        <div class="relative">
+          <button @click="showProfileMenu = !showProfileMenu" class="font-bold text-white text-xl focus:outline-none mr-20">Perfil</button>
+          <div v-if="showProfileMenu" class="absolute right-0 mt-2 w-48 bg-white rounded shadow-lg z-50">
+            <template v-if="!isLoggedIn">
+              <button @click="goTo('/login')" class="block w-full text-left px-4 py-2 hover:bg-gray-100">Iniciar Sesión</button>
+              <button @click="goTo('/register')" class="block w-full text-left px-4 py-2 hover:bg-gray-100">Registro</button>
+            </template>
+            <template v-else>
+              <div class="px-4 py-2 text-gray-700">Hola, {{ userStore.user?.nombre }}</div>
+              <button @click="logout" class="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100">Cerrar Sesión</button>
+            </template>
+          </div>
+        </div>
+      </div>
+    </nav>
+    
+    <!-- Contenido central de ProductosPlataforma -->
+    <div class="flex flex-col items-center justify-center flex-grow py-20">
+      <h1 class="text-7xl font-bold text-white mb-6" style="text-shadow: 0 2px 8px #000">Productos Plataforma</h1>
+    </div>
+  </div>
+
+  <!-- Elementos específicos para la página ProductoDetalle -->
+  <div v-else-if="isProductoDetallePage" class="producto-detalle-content">
+    <!-- Fondo de imagen para la página ProductoDetalle -->
+    <div class="producto-detalle-bg-overlay"></div>
+    
+    <!-- Navbar para ProductoDetalle -->
+    <nav id="navbar" class="w-full flex justify-between items-center px-6 py-8 z-10 relative">
+      <div class="flex space-x-20">
+        <router-link to="/" class="font-bold text-white text-xl hover:underline ml-20">Inicio</router-link>
+        <router-link to="/about" class="font-bold text-white text-xl hover:underline">Sobre Nosotros</router-link>
+      </div>
+      
+      <!-- Logo en el centro -->
+      <div class="absolute left-1/2 transform -translate-x-1/2 flex items-center h-full">
+        <img src="/images/logo2.png" alt="PixelVault" id="logo" />
+      </div>
+      
+      <div class="flex space-x-20">
+        <router-link to="/carrito" class="font-bold text-white text-xl hover:underline">Carrito</router-link>
+        <div class="relative">
+          <button @click="showProfileMenu = !showProfileMenu" class="font-bold text-white text-xl focus:outline-none mr-20">Perfil</button>
+          <div v-if="showProfileMenu" class="absolute right-0 mt-2 w-48 bg-white rounded shadow-lg z-50">
+            <template v-if="!isLoggedIn">
+              <button @click="goTo('/login')" class="block w-full text-left px-4 py-2 hover:bg-gray-100">Iniciar Sesión</button>
+              <button @click="goTo('/register')" class="block w-full text-left px-4 py-2 hover:bg-gray-100">Registro</button>
+            </template>
+            <template v-else>
+              <div class="px-4 py-2 text-gray-700">Hola, {{ userStore.user?.nombre }}</div>
+              <button @click="logout" class="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100">Cerrar Sesión</button>
+            </template>
+          </div>
+        </div>
+      </div>
+    </nav>
+    
+    <!-- Contenido central de ProductoDetalle -->
+    <div class="flex flex-col items-center justify-center flex-grow py-20">
+      <h1 class="text-7xl font-bold text-white mb-6" style="text-shadow: 0 2px 8px #000">Producto Detalle</h1>
+    </div>
+  </div>
+
+  <!-- Navbar para otras páginas que no son la página de inicio, Sobre Nosotros, ProductosPlataforma ni ProductoDetalle -->
   <nav v-else id="navbar" class="w-full flex justify-between items-center px-6 py-8 solid-bg">
     <div class="flex space-x-20">
       <router-link to="/" class="font-bold text-white text-xl hover:underline ml-20">Inicio</router-link>
@@ -207,6 +291,52 @@ const goTo = (path) => {
   right: 0;
   bottom: 0;
   background-image: url('../../public/images/prueba4.png') !important;
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  z-index: -1;
+}
+
+// Estilos para la página ProductosPlataforma
+.productos-plataforma-content {
+  min-height: 80vh;
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.productos-plataforma-bg-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('../../public/images/astrobot.svg') !important;
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  z-index: -1;
+}
+
+// Estilos para la página ProductoDetalle
+.producto-detalle-content {
+  min-height: 80vh;
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.producto-detalle-bg-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('../../public/images/Navbar.svg') !important;
   background-size: cover;
   background-position: center top;
   background-repeat: no-repeat;
