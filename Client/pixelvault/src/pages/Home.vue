@@ -299,7 +299,7 @@ function añadirAlCarrito(producto) {
     <div class="home-container">
 
         <!-- Sección de Productos Destacados -->
-        <div class="max-w-6xl mx-auto px-4 py-6">
+        <div  class="mx-auto px-4 py-6 bg-gradient-primary">
             <h1 class="text-2xl font-bold mb-6 text-center text-white">Productos Destacados</h1>
             <div v-if="cargando" class="text-gray-300 text-center">
                 <p>Cargando productos...</p>
@@ -364,7 +364,7 @@ function añadirAlCarrito(producto) {
 
 
         <!-- Sección de Noticias / Carrusel -->
-        <section class="relative py-20 px-8 bg-gradient-to-r from-[#16213e] to-[#1a1a2e] fade-in" id="noticias">
+        <section class="relative py-20 px-8 bg-gradient-to-r from-[#16213e] to-[#1a1a2e]" id="noticias">
             <div class="max-w-7xl mx-auto">
                 <h2 class="text-5xl text-center mb-12 text-gradient section-title">Últimas Noticias</h2>
 
@@ -412,7 +412,7 @@ function añadirAlCarrito(producto) {
         </section>
 
         <!-- Sección de Newsletter -->
-        <section class="py-16 px-8 bg-gradient-secondary text-center fade-in newsletter">
+        <section class="py-16 px-8 bg-gradient-secondary text-center" id="newsletter">
             <div class="max-w-7xl mx-auto">
                 <h2 class="text-5xl text-center mb-12 text-gradient section-title">Únete a la Comunidad</h2>
                 <p class="mb-8">Suscríbete para recibir las últimas noticias, ofertas exclusivas y lanzamientos.</p>
@@ -528,9 +528,8 @@ function añadirAlCarrito(producto) {
 
 /* Animaciones al scroll */
 .fade-in {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.6s ease;
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .fade-in.visible {
@@ -555,4 +554,5 @@ function añadirAlCarrito(producto) {
 .scroll-snap-align-start {
     scroll-snap-align: start;
 }
+
 </style>

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, nextTick, watch } from 'vue';
-import { getCarrito, vaciarCarrito } from '../api/carrito';
+import { getCarrito, vaciarCarrito, removeProducto } from '../api/carrito';
 import { processPayment } from '../api/stripe';
 import { loadStripe } from '@stripe/stripe-js';
 import { useRouter } from 'vue-router';
@@ -16,6 +16,7 @@ const cardElement = ref(null);
 const stripe = ref(null);
 const elements = ref(null);
 const selectedPaymentMethod = ref('paypal'); // Default to paypal or stripe based on preference
+const successMessage = ref(''); // New ref for success messages
 
 // Inicializar Stripe
 const initStripe = async () => {
@@ -306,6 +307,41 @@ const updateCantidad = (producto) => {
    // Example: call an API to update quantity, then refetch or manually update carrito.value
 };
 
+// Función para eliminar un producto individual
+const eliminarProducto = async (productoId) => {
+  try {
+    const success = await removeProducto(productoId);
+    if (success) {
+      await cargarCarrito(); // Recargar el carrito después de eliminar
+    } else {
+      error.value = 'Error al eliminar el producto';
+    }
+  } catch (err) {
+    error.value = 'Error al eliminar el producto';
+    console.error(err);
+  }
+};
+
+// Función para vaciar todo el carrito
+const vaciarTodoCarrito = async () => {
+  try {
+    const success = await vaciarCarrito();
+    if (success) {
+      await cargarCarrito(); // Recargar el carrito después de vaciar
+      successMessage.value = '¡El carrito se vació por completo!';
+      // Clear the success message after 5 seconds
+      setTimeout(() => {
+        successMessage.value = '';
+      }, 5000);
+    } else {
+      error.value = 'Error al vaciar el carrito';
+    }
+  } catch (err) {
+    error.value = 'Error al vaciar el carrito';
+    console.error(err);
+  }
+};
+
 </script>
 
 <template>
@@ -326,6 +362,11 @@ const updateCantidad = (producto) => {
           {{ error }}
         </div>
 
+        <!-- Mensaje de éxito -->
+        <div v-if="successMessage" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+          {{ successMessage }}
+        </div>
+
         <!-- Carrito vacío -->
         <div v-if="!cargando && (!carrito || !carrito.productos || carrito.productos.length === 0)">
           <p class="text-gray-600">Tu carrito está vacío</p>
@@ -343,80 +384,91 @@ const updateCantidad = (producto) => {
               <div class="flex-1">
                 <h3 class="font-semibold text-gray-800">{{ producto.nombre }}</h3>
                 <!-- Quantity Input -->
-                 <div class="flex items-center mt-1">
-                    <label :for="'cantidad-' + producto.IdProducto" class="text-gray-600 text-sm mr-2">Cantidad:</label>
-                    <input 
-                       :id="'cantidad-' + producto.IdProducto"
-                       type="number" 
-                       v-model.number="producto.cantidad" 
-                       min="1" 
-                       class="w-12 p-1 border rounded text-center text-gray-800"
-                       @change="updateCantidad(producto)"
-                    >
-                 </div>
+                <div class="flex items-center mt-1">
+                  <label :for="'cantidad-' + producto.IdProducto" class="text-gray-600 text-sm mr-2">Cantidad:</label>
+                  <input 
+                    :id="'cantidad-' + producto.IdProducto"
+                    type="number" 
+                    v-model.number="producto.cantidad" 
+                    min="1" 
+                    class="w-12 p-1 border rounded text-center text-gray-800"
+                    @change="updateCantidad(producto)"
+                  >
+                </div>
               </div>
             </div>
-            <p class="font-semibold text-gray-800">${{ producto.subtotal?.toFixed(2) ?? '0.00' }}</p>
+            <div class="flex items-center space-x-4">
+              <button @click="eliminarProducto(producto.IdProducto)" 
+                      class="text-red-500 hover:text-red-600">
+                <i class="fas fa-trash"></i>
+              </button>
+              <p class="font-semibold text-gray-800">${{ producto.subtotal?.toFixed(2) ?? '0.00' }}</p>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Right Column: COMPRA -->
       <div>
-        <h2 class="text-2xl font-bold mb-6 text-gray-800">COMPRA</h2>
-
-         <div v-if="!cargando && carrito && carrito.total > 0" class="bg-gray-50 p-6 rounded-lg space-y-4">
-            <!-- Método de pago -->
-            <div>
-                <label for="payment-method" class="block text-sm font-medium text-gray-700 mb-2">Método de pago</label>
-                <select id="payment-method" v-model="selectedPaymentMethod"
-                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
-                    <option value="paypal">PayPal</option>
-                    <option value="stripe">Tarjeta de Crédito/Débito</option>
-                </select>
-            </div>
-
-            <!-- Payment Forms (Conditionally rendered) -->
-            <div v-if="mostrarFormularioPago">
-                <!-- Stripe Card Element Container -->
-                <div v-if="selectedPaymentMethod === 'stripe'">
-                    <label for="stripe-card-element" class="block text-sm font-medium text-gray-700 mb-2">Detalles de la tarjeta</label>
-                    <div id="stripe-card-element" class="p-3 border border-gray-300 rounded-md bg-white"></div>
-                </div>
-
-                <!-- PayPal Button Container -->
-                <div v-if="selectedPaymentMethod === 'paypal'">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Pagar con PayPal</label>
-                    <div id="paypal-button-container"></div>
-                </div>
-             </div>
-
-            <!-- Código Descuento -->
-            <div>
-                <label for="discount-code" class="block text-sm font-medium text-gray-700 mb-2">CÓDIGO DESCUENTO</label>
-                <input type="text" id="discount-code" placeholder="kkk-kkk-kk"
-                       class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-gray-800">
-            </div>
-
-            <!-- Total Summary -->
-             <div class="border-t pt-4 mt-4 space-y-2">
-                 <div class="flex justify-between text-lg font-semibold text-gray-900">
-                     <span>Total:</span>
-                     <span>${{ carrito?.total?.toFixed(2) ?? '0.00' }}</span>
-                 </div>
-             </div>
-
-            <!-- COMPRAR Button -->
-             <!-- Trigger payment based on selected method -->
-            <button @click="handlePayment" 
-                    :disabled="procesandoPago || (!carrito || carrito.total <= 0)"
-                    class="w-full mt-6 bg-blue-600 text-white py-3 px-4 rounded-md font-semibold text-lg hover:bg-blue-700 
-                           disabled:bg-gray-400 disabled:cursor-not-allowed border border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                {{ procesandoPago ? 'Procesando...' : 'COMPRAR' }}
-            </button>
+        <div class="flex justify-between items-center mb-6">
+           <h2 class="text-2xl font-bold text-gray-800">COMPRA</h2>
+           <button @click="vaciarTodoCarrito" 
+                   class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors">
+             Vaciar Carrito
+           </button>
          </div>
-      </div>
 
+        <div v-if="!cargando && carrito && carrito.total > 0" class="bg-gray-50 p-6 rounded-lg space-y-4">
+          <!-- Método de pago -->
+          <div>
+              <label for="payment-method" class="block text-sm font-medium text-gray-700 mb-2">Método de pago</label>
+              <select id="payment-method" v-model="selectedPaymentMethod"
+                      class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                  <option value="paypal">PayPal</option>
+                  <option value="stripe">Tarjeta de Crédito/Débito</option>
+              </select>
+          </div>
+
+          <!-- Payment Forms (Conditionally rendered) -->
+          <div v-if="mostrarFormularioPago">
+              <!-- Stripe Card Element Container -->
+              <div v-if="selectedPaymentMethod === 'stripe'">
+                  <label for="stripe-card-element" class="block text-sm font-medium text-gray-700 mb-2">Detalles de la tarjeta</label>
+                  <div id="stripe-card-element" class="p-3 border border-gray-300 rounded-md bg-white"></div>
+              </div>
+
+              <!-- PayPal Button Container -->
+              <div v-if="selectedPaymentMethod === 'paypal'">
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Pagar con PayPal</label>
+                  <div id="paypal-button-container"></div>
+              </div>
+           </div>
+
+          <!-- Código Descuento -->
+          <div>
+              <label for="discount-code" class="block text-sm font-medium text-gray-700 mb-2">CÓDIGO DESCUENTO</label>
+              <input type="text" id="discount-code" placeholder="kkk-kkk-kk"
+                     class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-gray-800">
+          </div>
+
+          <!-- Total Summary -->
+           <div class="border-t pt-4 mt-4 space-y-2">
+               <div class="flex justify-between text-lg font-semibold text-gray-900">
+                   <span>Total:</span>
+                   <span>${{ carrito?.total?.toFixed(2) ?? '0.00' }}</span>
+               </div>
+           </div>
+
+          <!-- COMPRAR Button -->
+           <!-- Trigger payment based on selected method -->
+          <button @click="handlePayment" 
+                  :disabled="procesandoPago || (!carrito || carrito.total <= 0)"
+                  class="w-full mt-6 bg-blue-600 text-white py-3 px-4 rounded-md font-semibold text-lg hover:bg-blue-700 
+                         disabled:bg-gray-400 disabled:cursor-not-allowed border border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+              {{ procesandoPago ? 'Procesando...' : 'COMPRAR' }}
+          </button>
+       </div>
+      </div>
     </div>
   </div>
 </template>

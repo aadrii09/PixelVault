@@ -48,14 +48,15 @@ const goTo = (path) => {
         <router-link to="/carrito" class="font-bold text-white text-xl hover:underline">Carrito</router-link>
         <div class="relative">
           <button @click="showProfileMenu = !showProfileMenu" class="font-bold text-white text-xl focus:outline-none mr-20">Perfil</button>
-          <div v-if="showProfileMenu" class="absolute right-0 mt-2 w-48 bg-white rounded shadow-lg z-50">
+          <div v-if="showProfileMenu" class="absolute right-0 mt-2 w-48 bg-gray-800 rounded shadow-lg z-50">
             <template v-if="!isLoggedIn">
-              <button @click="goTo('/login')" class="block w-full text-left px-4 py-2 hover:bg-gray-100">Iniciar Sesión</button>
-              <button @click="goTo('/register')" class="block w-full text-left px-4 py-2 hover:bg-gray-100">Registro</button>
+              <button @click="goTo('/login')" class="block w-full text-left px-4 py-2 text-white hover:bg-gray-700">Iniciar Sesión</button>
+              <button @click="goTo('/register')" class="block w-full text-left px-4 py-2 text-white hover:bg-gray-700">Registro</button>
             </template>
             <template v-else>
-              <div class="px-4 py-2 text-gray-700">Hola, {{ userStore.user?.nombre }}</div>
-              <button @click="logout" class="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100">Cerrar Sesión</button>
+              <div class="px-4 py-2 text-white">Hola, {{ userStore.user?.nombre?.split(' ')[0] }}</div>
+              <button @click="goTo('/wishlist')" class="block w-full text-left px-4 py-2 text-white hover:bg-gray-700">Favoritos</button>
+              <button @click="logout" class="block w-full text-left px-4 py-2 text-red-400 hover:bg-gray-700">Cerrar Sesión</button>
             </template>
           </div>
         </div>
@@ -99,14 +100,15 @@ const goTo = (path) => {
         <router-link to="/carrito" class="font-bold text-white text-xl hover:underline">Carrito</router-link>
         <div class="relative">
           <button @click="showProfileMenu = !showProfileMenu" class="font-bold text-white text-xl focus:outline-none mr-20">Perfil</button>
-          <div v-if="showProfileMenu" class="absolute right-0 mt-2 w-48 bg-white rounded shadow-lg z-50">
+          <div v-if="showProfileMenu" class="absolute right-0 mt-2 w-48 bg-gray-800 rounded shadow-lg z-50">
             <template v-if="!isLoggedIn">
-              <button @click="goTo('/login')" class="block w-full text-left px-4 py-2 hover:bg-gray-100">Iniciar Sesión</button>
-              <button @click="goTo('/register')" class="block w-full text-left px-4 py-2 hover:bg-gray-100">Registro</button>
+              <button @click="goTo('/login')" class="block w-full text-left px-4 py-2 text-white hover:bg-gray-700">Iniciar Sesión</button>
+              <button @click="goTo('/register')" class="block w-full text-left px-4 py-2 text-white hover:bg-gray-700">Registro</button>
             </template>
             <template v-else>
-              <div class="px-4 py-2 text-gray-700">Hola, {{ userStore.user?.nombre }}</div>
-              <button @click="logout" class="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100">Cerrar Sesión</button>
+              <div class="px-4 py-2 text-white">Hola, {{ userStore.user?.nombre?.split(' ')[0] }}</div>
+              <button @click="goTo('/wishlist')" class="block w-full text-left px-4 py-2 text-white hover:bg-gray-700">Favoritos</button>
+              <button @click="logout" class="block w-full text-left px-4 py-2 text-red-400 hover:bg-gray-700">Cerrar Sesión</button>
             </template>
           </div>
         </div>
@@ -140,14 +142,15 @@ const goTo = (path) => {
         <router-link to="/carrito" class="font-bold text-white text-xl hover:underline">Carrito</router-link>
         <div class="relative">
           <button @click="showProfileMenu = !showProfileMenu" class="font-bold text-white text-xl focus:outline-none mr-20">Perfil</button>
-          <div v-if="showProfileMenu" class="absolute right-0 mt-2 w-48 bg-white rounded shadow-lg z-50">
+          <div v-if="showProfileMenu" class="absolute right-0 mt-2 w-48 bg-gray-800 rounded shadow-lg z-50">
             <template v-if="!isLoggedIn">
-              <button @click="goTo('/login')" class="block w-full text-left px-4 py-2 hover:bg-gray-100">Iniciar Sesión</button>
-              <button @click="goTo('/register')" class="block w-full text-left px-4 py-2 hover:bg-gray-100">Registro</button>
+              <button @click="goTo('/login')" class="block w-full text-left px-4 py-2 text-white hover:bg-gray-700">Iniciar Sesión</button>
+              <button @click="goTo('/register')" class="block w-full text-left px-4 py-2 text-white hover:bg-gray-700">Registro</button>
             </template>
             <template v-else>
-              <div class="px-4 py-2 text-gray-700">Hola, {{ userStore.user?.nombre }}</div>
-              <button @click="logout" class="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100">Cerrar Sesión</button>
+              <div class="px-4 py-2 text-white">Hola, {{ userStore.user?.nombre?.split(' ')[0] }}</div>
+              <button @click="goTo('/wishlist')" class="block w-full text-left px-4 py-2 text-white hover:bg-gray-700">Favoritos</button>
+              <button @click="logout" class="block w-full text-left px-4 py-2 text-red-400 hover:bg-gray-700">Cerrar Sesión</button>
             </template>
           </div>
         </div>
@@ -181,14 +184,15 @@ const goTo = (path) => {
         <router-link to="/carrito" class="font-bold text-white text-xl hover:underline">Carrito</router-link>
         <div class="relative">
           <button @click="showProfileMenu = !showProfileMenu" class="font-bold text-white text-xl focus:outline-none mr-20">Perfil</button>
-          <div v-if="showProfileMenu" class="absolute right-0 mt-2 w-48 bg-white rounded shadow-lg z-50">
+          <div v-if="showProfileMenu" class="absolute right-0 mt-2 w-48 bg-gray-800 rounded shadow-lg z-50">
             <template v-if="!isLoggedIn">
-              <button @click="goTo('/login')" class="block w-full text-left px-4 py-2 hover:bg-gray-100">Iniciar Sesión</button>
-              <button @click="goTo('/register')" class="block w-full text-left px-4 py-2 hover:bg-gray-100">Registro</button>
+              <button @click="goTo('/login')" class="block w-full text-left px-4 py-2 text-white hover:bg-gray-700">Iniciar Sesión</button>
+              <button @click="goTo('/register')" class="block w-full text-left px-4 py-2 text-white hover:bg-gray-700">Registro</button>
             </template>
             <template v-else>
-              <div class="px-4 py-2 text-gray-700">Hola, {{ userStore.user?.nombre }}</div>
-              <button @click="logout" class="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100">Cerrar Sesión</button>
+              <div class="px-4 py-2 text-white">Hola, {{ userStore.user?.nombre?.split(' ')[0] }}</div>
+              <button @click="goTo('/wishlist')" class="block w-full text-left px-4 py-2 text-white hover:bg-gray-700">Favoritos</button>
+              <button @click="logout" class="block w-full text-left px-4 py-2 text-red-400 hover:bg-gray-700">Cerrar Sesión</button>
             </template>
           </div>
         </div>
@@ -217,14 +221,15 @@ const goTo = (path) => {
       <router-link to="/carrito" class="font-bold text-white text-xl hover:underline ">Carrito</router-link>
       <div class="relative">
         <button @click="showProfileMenu = !showProfileMenu" class="font-bold text-white text-xl focus:outline-none mr-20">Perfil</button>
-        <div v-if="showProfileMenu" class="absolute right-0 mt-2 w-48 bg-white rounded shadow-lg z-50">
+        <div v-if="showProfileMenu" class="absolute right-0 mt-2 w-48 bg-gray-800 rounded shadow-lg z-50">
           <template v-if="!isLoggedIn">
-            <button @click="goTo('/login')" class="block w-full text-left px-4 py-2 hover:bg-gray-100">Iniciar Sesión</button>
-            <button @click="goTo('/register')" class="block w-full text-left px-4 py-2 hover:bg-gray-100">Registro</button>
+            <button @click="goTo('/login')" class="block w-full text-left px-4 py-2 text-white hover:bg-gray-700">Iniciar Sesión</button>
+            <button @click="goTo('/register')" class="block w-full text-left px-4 py-2 text-white hover:bg-gray-700">Registro</button>
           </template>
           <template v-else>
-            <div class="px-4 py-2 text-gray-700">Hola, {{ userStore.user?.nombre }}</div>
-            <button @click="logout" class="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100">Cerrar Sesión</button>
+            <div class="px-4 py-2 text-white">Hola, {{ userStore.user?.nombre?.split(' ')[0] }}</div>
+            <button @click="goTo('/wishlist')" class="block w-full text-left px-4 py-2 text-white hover:bg-gray-700">Favoritos</button>
+            <button @click="logout" class="block w-full text-left px-4 py-2 text-red-400 hover:bg-gray-700">Cerrar Sesión</button>
           </template>
         </div>
       </div>
@@ -336,7 +341,7 @@ const goTo = (path) => {
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: url('../../public/images/Navbar.svg') !important;
+  background-image: url('../../public/images/Nav.svg') !important;
   background-size: cover;
   background-position: center top;
   background-repeat: no-repeat;
@@ -412,5 +417,18 @@ const goTo = (path) => {
   border-radius: 4px;
   letter-spacing: 1px;
   border: 1px solid #ffdd00;
+}
+
+/* Gradientes */
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+}
+
+.bg-gradient-secondary {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+
+.bg-gradient-dark {
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
 }
 </style>

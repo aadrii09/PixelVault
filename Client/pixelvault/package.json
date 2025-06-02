@@ -12,6 +12,7 @@
     "@stripe/stripe-js": "^7.3.0",
     "axios": "^1.9.0",
     "pinia": "^3.0.2",
+    "pinia-plugin-persistedstate": "^4.3.0",
     "pixelvault": "file:",
     "vue": "^3.5.13",
     "vue-router": "^4.5.1"

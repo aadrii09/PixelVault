@@ -11,6 +11,7 @@ import AdminPanel from '../pages/AdminPanel.vue'
 import SobreNosotros from '../pages/SobreNosotros.vue'
 import ProductoDetalle from '../pages/ProductoDetalle.vue'
 import ProductosPlataforma from '../pages/ProductosPlataforma.vue';
+import Wishlist from '../pages/WishList.vue';
 
 const routes = [
     { path: '/', name: 'Home', component: Home },
@@ -21,6 +22,8 @@ const routes = [
     { path: '/about', name: 'SobreNosotros', component: SobreNosotros },
     { path: '/producto/:id', name: 'ProductoDetalle', component: ProductoDetalle },
     { path: '/plataforma/:plataforma', name: 'ProductosPlataforma', component: ProductosPlataforma },
+    { path: '/wishlist', name: 'Wishlist', component: Wishlist },
+
 ]
 
 const router = createRouter({
