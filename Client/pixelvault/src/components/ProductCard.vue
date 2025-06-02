@@ -34,9 +34,9 @@ const agregar = async () => {
         class="bg-gradient-to-br from-white/10 to-white/5 border border-white/20 rounded-3xl p-6 transition-all duration-300 hover:transform hover:-translate-y-2 hover:shadow-lg hover:shadow-[#00ccff]/20 hover:border-[#00ccff] product-card">
         <!-- Product Image -->
         <div
-            class="w-full h-[200px] bg-gradient-btn rounded-2xl mb-4 flex items-center justify-center overflow-hidden product-image">
+            class="w-full h-[150px] bg-gradient-btn rounded-2xl mb-4 flex items-center justify-center overflow-hidden product-image">
             <img v-if="props.producto.imagenUrl" :src="props.producto.imagenUrl" :alt="props.producto.nombre"
-                class="w-full h-full object-cover" />
+                class="w-full h-full object-contain" />
             <div v-else class="text-5xl text-[#0f0f23]">🎮</div>
         </div>
 
