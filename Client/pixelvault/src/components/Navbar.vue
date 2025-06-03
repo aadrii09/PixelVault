@@ -207,7 +207,7 @@ const goTo = (path) => {
   </div>
 
   <!-- Navbar para otras páginas que no son la página de inicio, Sobre Nosotros, ProductosPlataforma ni ProductoDetalle -->
-  <nav v-else id="navbar" class="w-full flex justify-between items-center px-6 py-8 solid-bg">
+  <nav v-else id="navbar" class="w-full flex justify-between items-center px-6 py-8 ">
     <div class="flex space-x-20">
       <router-link to="/" class="font-bold text-white text-xl hover:underline ml-20">Inicio</router-link>
       <router-link to="/about" class="font-bold text-white text-xl hover:underline">Sobre Nosotros</router-link>
@@ -255,6 +255,7 @@ const goTo = (path) => {
 
 #navbar {
   min-height: 7rem;
+  background-color: #202033;
 }
 
 // Estilos para elementos de la página de inicio

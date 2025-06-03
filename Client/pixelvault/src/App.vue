@@ -1,6 +1,7 @@
 <script setup>
 import Navbar from './components/Navbar.vue'
 import Footer from './components/Footer.vue'
+import CookieConsent from './components/CookieConsent.vue'
 import { useUserStore } from './store/user';
 import { useRoute } from 'vue-router';
 
@@ -17,6 +18,8 @@ userStore.cargarDesdeStorage();
       <router-view />
     </div>
     <Footer v-if="route.path === '/'" />
+    <!-- El componente de consentimiento de cookies se mostrará en todas las páginas -->
+    <CookieConsent />
   </div>
 </template>
 

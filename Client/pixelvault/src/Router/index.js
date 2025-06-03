@@ -12,6 +12,7 @@ import SobreNosotros from '../pages/SobreNosotros.vue'
 import ProductoDetalle from '../pages/ProductoDetalle.vue'
 import ProductosPlataforma from '../pages/ProductosPlataforma.vue';
 import Wishlist from '../pages/WishList.vue';
+import CookiesPolicy from '../pages/CookiesPolicy.vue';
 
 const routes = [
     { path: '/', name: 'Home', component: Home },
@@ -23,6 +24,7 @@ const routes = [
     { path: '/producto/:id', name: 'ProductoDetalle', component: ProductoDetalle },
     { path: '/plataforma/:plataforma', name: 'ProductosPlataforma', component: ProductosPlataforma },
     { path: '/wishlist', name: 'Wishlist', component: Wishlist },
+    { path: '/cookies-policy', name: 'CookiesPolicy', component: CookiesPolicy },
 
 ]
 

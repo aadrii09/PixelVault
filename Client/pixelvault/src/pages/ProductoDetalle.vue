@@ -1,11 +1,14 @@
 <script setup>
 import { onMounted, ref, computed } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
 import Footer from '../components/Footer.vue';
 import { agregarAlCarrito } from '../api/carrito';
+import { useUserStore } from '../store/user';
 
 const route = useRoute();
+const router = useRouter();
+const userStore = useUserStore();
 const producto = ref(null);
 const cargando = ref(true);
 const error = ref('');
@@ -21,7 +24,43 @@ const formattedFechaLanzamiento = computed(() => {
   return 'N/A';
 });
 
+const verificarAutenticacion = () => {
+    // Verificar si el usuario está autenticado
+    if (!userStore.token) {
+        // Si no está autenticado, redirigir a la página de inicio de sesión
+        alert('Debes iniciar sesión para agregar productos al carrito');
+        router.push('/login');
+        return false;
+    }
+    return true;
+};
+
+const comprarAhora = async () => {
+    if (!verificarAutenticacion()) return;
+    
+    if (!producto.value) return; // Ensure product data is available
+    try {
+        const productoFormateado = {
+            idProducto: producto.value.idProducto,
+            nombre: producto.value.nombre || "",
+            imagenUrl: producto.value.imagenUrl || "",
+            cantidad: 1,
+            precioUnitario: producto.value.precio || 0
+        };
+
+        // Primero agregamos al carrito
+        await agregarAlCarrito(productoFormateado);
+          // Luego redirigimos directamente al carrito para completar la compra
+        router.push('/carrito');
+    } catch (error) {
+        alert('Error al procesar la compra');
+        console.error('Error al procesar la compra:', error.response?.data || error);
+    }
+};
+
 const agregar = async () => {
+    if (!verificarAutenticacion()) return;
+    
     if (!producto.value) return; // Ensure product data is available
     try {
         const productoFormateado = {
@@ -115,9 +154,8 @@ onMounted(async () => {
               <p class="text-lg font-bold">{{ formattedFechaLanzamiento }}</p>
             </div>
           </div>
-          
-          <div class="flex space-x-4">
-            <button class="w-full bg-gradient-to-r from-pink-500 via-purple-600 to-blue-500 hover:from-pink-600 hover:via-purple-700 hover:to-blue-600 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-purple-500/50 transform hover:scale-105">
+            <div class="flex space-x-4">
+            <button @click="comprarAhora" class="w-full bg-gradient-to-r from-pink-500 via-purple-600 to-blue-500 hover:from-pink-600 hover:via-purple-700 hover:to-blue-600 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-purple-500/50 transform hover:scale-105">
               <span class="flex items-center justify-center gap-2">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m0 0h8.5"></path>
