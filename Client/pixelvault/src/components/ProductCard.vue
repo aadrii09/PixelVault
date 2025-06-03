@@ -1,7 +1,8 @@
 <script setup>
 import { agregarAlCarrito } from '../api/carrito';
-import { RouterLink } from 'vue-router';
+import { RouterLink, useRouter } from 'vue-router';
 import { useWishlistStore } from '../store/wishlist';
+import { useUserStore } from '../store/user';
 import { inject } from 'vue';
 
 const props = defineProps([
@@ -11,8 +12,25 @@ const props = defineProps([
 
 // Inyectar la función de notificación desde el componente raíz
 const showNotification = inject('showNotification', null);
+const userStore = useUserStore();
+const router = useRouter();
 
 const agregar = async () => {
+  // Verificar si el usuario está logueado
+  if (!userStore.token) {
+    // Usuario no logueado, mostrar notificación y redirigir a login
+    if (showNotification) {
+      showNotification('Primero tienes que iniciar sesión para añadir productos al carrito', 'warning');
+    } else {
+      alert('Primero tienes que iniciar sesión para añadir productos al carrito');
+    }
+    // Redirigir a la página de login después de un breve retraso para que la notificación sea visible
+    setTimeout(() => {
+      router.push('/login');
+    }, 1500);
+    return;
+  }
+
   try {
     const productoFormateado = {
       idProducto: props.producto.idProducto,
@@ -22,21 +40,21 @@ const agregar = async () => {
       precioUnitario: props.producto.precio || 0
     };
 
-    console.log("📦 Producto enviado al backend:", productoFormateado);    
+    console.log("📦 Producto enviado al backend:", productoFormateado);
+
     await agregarAlCarrito(productoFormateado);
     
     // Usar el sistema de notificación si está disponible, sino usa alert como fallback
     if (showNotification) {
       showNotification(`¡${props.producto.nombre} agregado al carrito!`, 'success');
     } else {
-      alert(`${props.producto.nombre} añadido al carrito!`);
-    }
-  } catch (error) {
+      alert(`Producto ${props.producto.nombre} agregado al carrito`);
+    }  } catch (error) {
     // Usar el sistema de notificación si está disponible, sino usa alert como fallback
     if (showNotification) {
-      showNotification('Error al agregar al carrito', 'error');
+      showNotification('Error al agregar al carrito, primero inicia sesión', 'error');
     } else {
-      alert('Error al agregar al carrito');
+      alert('Error al agregar al carrito, primero inicia sesión');
     }
     console.error('Error al agregar al carrito:', error.response?.data || error);
   }

@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, ref, computed, inject } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
 import Footer from '../components/Footer.vue';
@@ -8,10 +8,13 @@ import { useUserStore } from '../store/user';
 
 const route = useRoute();
 const router = useRouter();
-const userStore = useUserStore();
 const producto = ref(null);
 const cargando = ref(true);
 const error = ref('');
+const userStore = useUserStore();
+
+// Inyectar la función de notificación desde el componente raíz
+const showNotification = inject('showNotification', null);
 
 const formattedFechaLanzamiento = computed(() => {
   if (producto.value && producto.value.fechaLanzamiento) {
@@ -24,46 +27,22 @@ const formattedFechaLanzamiento = computed(() => {
   return 'N/A';
 });
 
-// Importar inject para acceder al sistema de notificaciones
-import { inject } from 'vue';
-const showNotification = inject('showNotification');
-
-const verificarAutenticacion = () => {
-    // Verificar si el usuario está autenticado
-    if (!userStore.token) {
-        // Si no está autenticado, mostrar notificación y redirigir a la página de inicio de sesión
-        showNotification('Debes iniciar sesión para agregar productos al carrito', 'info');
-        router.push('/login');
-        return false;
-    }
-    return true;
-};
-
-const comprarAhora = async () => {
-    if (!verificarAutenticacion()) return;
-    
-    if (!producto.value) return; // Ensure product data is available
-    try {
-        const productoFormateado = {
-            idProducto: producto.value.idProducto,
-            nombre: producto.value.nombre || "",
-            imagenUrl: producto.value.imagenUrl || "",
-            cantidad: 1,
-            precioUnitario: producto.value.precio || 0
-        };        // Primero agregamos al carrito
-        await agregarAlCarrito(productoFormateado);
-        showNotification(`¡${producto.value.nombre} agregado al carrito!`, 'success');
-        // Luego redirigimos directamente al carrito para completar la compra
-        router.push('/carrito');
-    } catch (error) {
-        showNotification('Error al procesar la compra', 'error');
-        console.error('Error al procesar la compra:', error.response?.data || error);
-    }
-};
-
 const agregar = async () => {
-    if (!verificarAutenticacion()) return;
-    
+    // Verificar si el usuario está logueado
+    if (!userStore.token) {
+        // Usuario no logueado, mostrar notificación y redirigir a login
+        if (showNotification) {
+            showNotification('Primero tienes que iniciar sesión para añadir productos al carrito', 'warning');
+        } else {
+            alert('Primero tienes que iniciar sesión para añadir productos al carrito');
+        }
+        // Redirigir a la página de login después de un breve retraso para que la notificación sea visible
+        setTimeout(() => {
+            router.push('/login');
+        }, 1500);
+        return;
+    }
+
     if (!producto.value) return; // Ensure product data is available
     try {
         const productoFormateado = {
@@ -72,12 +51,22 @@ const agregar = async () => {
             imagenUrl: producto.value.imagenUrl || "",
             cantidad: 1,
             precioUnitario: producto.value.precio || 0
-        };
+        };        console.log("📦 Producto enviado al backend:", productoFormateado);
 
-        console.log("📦 Producto enviado al backend:", productoFormateado);        await agregarAlCarrito(productoFormateado);
-        showNotification(`¡${producto.value.nombre} agregado al carrito!`, 'success');
-    } catch (error) {
-        showNotification('Error al agregar al carrito', 'error');
+        await agregarAlCarrito(productoFormateado);
+        
+        // Usar el sistema de notificación si está disponible, sino usa alert como fallback
+        if (showNotification) {
+            showNotification(`¡${producto.value.nombre} agregado al carrito!`, 'success');
+        } else {
+            alert(`Producto ${producto.value.nombre} agregado al carrito`);
+        }    } catch (error) {
+        // Usar el sistema de notificación si está disponible, sino usa alert como fallback
+        if (showNotification) {
+            showNotification('Error al agregar al carrito, primero inicia sesión', 'error');
+        } else {
+            alert('Error al agregar al carrito, primero inicia sesión');
+        }
         console.error('Error al agregar al carrito:', error.response?.data || error);
     }
 };
@@ -156,7 +145,7 @@ onMounted(async () => {
             </div>
           </div>
             <div class="flex space-x-4">
-            <button @click="comprarAhora" class="w-full bg-gradient-to-r from-pink-500 via-purple-600 to-blue-500 hover:from-pink-600 hover:via-purple-700 hover:to-blue-600 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-purple-500/50 transform hover:scale-105">
+            <button class="w-full bg-gradient-to-r from-pink-500 via-purple-600 to-blue-500 hover:from-pink-600 hover:via-purple-700 hover:to-blue-600 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-purple-500/50 transform hover:scale-105">
               <span class="flex items-center justify-center gap-2">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m0 0h8.5"></path>
@@ -164,7 +153,12 @@ onMounted(async () => {
                 COMPRAR AHORA
               </span>
             </button>
-            <button @click="agregar" class="bg-green-500 text-white py-2 px-6 rounded hover:bg-green-600">Añadir al Carrito</button>
+            <button @click="agregar" class="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-green-500/30 flex items-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m0 0h8.5"></path>
+              </svg>
+              Añadir al Carrito
+            </button>
           </div>
         </div>
       </div>
@@ -228,7 +222,6 @@ onMounted(async () => {
       </div>
     </div>
   </div>
-  <Footer />
 </template>
 
 <style scoped>

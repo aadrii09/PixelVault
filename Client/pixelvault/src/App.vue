@@ -38,12 +38,11 @@ provide('showNotification', showNotification);
 
 
 <template>
-  <div class="min-h-screen flex flex-col bg-transparent text-gray-900">
-    <Navbar v-if="!['/login', '/register', '/admin'].includes(route.path)" />
+  <div class="min-h-screen flex flex-col bg-transparent text-gray-900">    <Navbar v-if="!['/login', '/register', '/admin'].includes(route.path)" />
     <div class="flex-1">
       <router-view />
     </div>
-    <Footer v-if="route.path === '/'" />
+    <Footer v-if="!['/login', '/register', '/admin', '/carrito', '/about', '/wishlist', '/plataforma/PlayStation', '/plataforma/Xbox', '/plataforma/Nintendo', '/plataforma/PC', ''].includes(route.path)" />
     <!-- El componente de consentimiento de cookies se mostrará en todas las páginas -->
     
     <!-- Sistema de notificaciones -->

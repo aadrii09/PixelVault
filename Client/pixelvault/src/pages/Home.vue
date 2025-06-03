@@ -289,24 +289,15 @@ async function suscribirse() {
 function añadirAlCarrito(producto) {
     try {
         agregarAlCarrito(producto);
-        if (typeof inject === 'function') {
-            const showNotification = inject('showNotification', null);
-            if (showNotification) {
-                showNotification(`¡${producto.nombre} agregado al carrito!`, 'success');
-            } else {
-                alert(`${producto.nombre} añadido al carrito!`);
-            }
+        // Ya tenemos showNotification inyectado desde el script setup
+        if (showNotification) {
+            showNotification(`¡${producto.nombre} agregado al carrito!`, 'success');
         } else {
             alert(`${producto.nombre} añadido al carrito!`);
         }
     } catch (error) {
-        if (typeof inject === 'function') {
-            const showNotification = inject('showNotification', null);
-            if (showNotification) {
-                showNotification('Error al agregar al carrito', 'error');
-            } else {
-                alert('Error al agregar al carrito');
-            }
+        if (showNotification) {
+            showNotification('Error al agregar al carrito', 'error');
         } else {
             alert('Error al agregar al carrito');
         }
