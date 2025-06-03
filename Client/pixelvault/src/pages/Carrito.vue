@@ -365,34 +365,31 @@ const vaciarTodoCarrito = async () => {
 
 </script>
 
-<template>
-  <div class="flex justify-center items-center min-h-screen py-8 carrito-background">
-    <div class="w-full max-w-4xl bg-white p-8 rounded-lg shadow-lg grid grid-cols-1 md:grid-cols-2 gap-8">
+<template>  <div class="flex justify-center items-center min-h-screen py-8 carrito-background">
+    <div class="w-full max-w-4xl bg-gradient-to-br from-[#161630] to-[#10102a] p-8 rounded-lg shadow-[0_0_20px_rgba(0,204,255,0.3)] border border-[rgba(0,204,255,0.2)] backdrop-blur-sm grid grid-cols-1 md:grid-cols-2 gap-8">
 
       <!-- Left Column: CARRITO -->
       <div>
-        <h2 class="text-2xl font-bold mb-6 text-gray-800">CARRITO</h2>
+        <h2 class="text-2xl font-bold mb-6 text-[#00ccff]">CARRITO</h2>
 
         <!-- Mensaje de carga -->
-        <div v-if="cargando" class="text-center text-gray-600">
+        <div v-if="cargando" class="text-center text-gray-300">
           <p>Cargando carrito...</p>
-        </div>
-
-        <!-- Mensaje de error for cart loading -->
+        </div>        <!-- Mensaje de error for cart loading -->
         <div v-if="error && !cargando && (!carrito || !carrito.productos || carrito.productos.length === 0)"
-          class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          class="bg-[rgba(255,70,70,0.15)] border border-[rgba(255,60,60,0.3)] text-red-300 px-4 py-3 rounded mb-4">
           {{ error }}
         </div>
 
         <!-- Mensaje de éxito -->
-        <div v-if="successMessage" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+        <div v-if="successMessage" class="bg-[rgba(0,255,136,0.15)] border border-[rgba(0,255,136,0.3)] text-[#00ff88] px-4 py-3 rounded mb-4">
           {{ successMessage }}
         </div>
 
         <!-- Carrito vacío -->
         <div v-if="!cargando && (!carrito || !carrito.productos || carrito.productos.length === 0)">
-          <p class="text-gray-600">Tu carrito está vacío</p>
-          <router-link to="/" class="text-blue-500 hover:underline mt-4 inline-block">
+          <p class="text-gray-300">Tu carrito está vacío</p>
+          <router-link to="/" class="text-[#00ccff] hover:text-[#00ff88] hover:underline transition-colors mt-4 inline-block">
             Continuar comprando
           </router-link>
         </div>
@@ -400,25 +397,25 @@ const vaciarTodoCarrito = async () => {
         <!-- Lista de productos -->
         <div v-if="carrito && carrito.productos.length > 0" class="space-y-4">
           <div v-for="producto in carrito.productos" :key="producto.idProducto"
-            class="flex items-center justify-between border-b pb-4">
+            class="flex items-center justify-between border-b border-[rgba(0,204,255,0.2)] pb-4">
             <div class="flex items-center">
-              <img :src="producto.imagenUrl" :alt="producto.nombre" class="w-16 h-16 object-contain rounded mr-4">
+              <img :src="producto.imagenUrl" :alt="producto.nombre" class="w-16 h-16 object-contain rounded mr-4 bg-[rgba(255,255,255,0.05)] p-1">
               <div class="flex-1">
-                <h3 class="font-semibold text-gray-800">{{ producto.nombre }}</h3>
+                <h3 class="font-semibold text-white">{{ producto.nombre }}</h3>
                 <!-- Quantity Input -->
                 <div class="flex items-center mt-1">
-                  <label :for="'cantidad-' + producto.idProducto" class="text-gray-600 text-sm mr-2">Cantidad:</label>
+                  <label :for="'cantidad-' + producto.idProducto" class="text-gray-300 text-sm mr-2">Cantidad:</label>
                   <input :id="'cantidad-' + producto.idProducto" type="number" v-model.number="producto.cantidad"
-                    min="1" class="w-12 p-1 border rounded text-center text-gray-800"
+                    min="1" class="w-12 p-1 border border-[rgba(0,204,255,0.3)] bg-[rgba(0,0,30,0.3)] rounded text-center text-white"
                     @change="updateCantidad(producto)">
                 </div>
               </div>
             </div>
             <div class="flex items-center space-x-4">
-              <button @click="eliminarProducto(producto.idProducto)" class="text-red-500 hover:text-red-600">
+              <button @click="eliminarProducto(producto.idProducto)" class="text-red-400 hover:text-red-300 transition-colors">
                 <i class="fas fa-trash"></i>
               </button>
-              <p class="font-semibold text-gray-800">${{ producto.subtotal?.toFixed(2) ?? '0.00' }}</p>
+              <p class="font-semibold text-[#00ff88]">${{ producto.subtotal?.toFixed(2) ?? '0.00' }}</p>
             </div>
           </div>
         </div>
@@ -427,19 +424,19 @@ const vaciarTodoCarrito = async () => {
       <!-- Right Column: COMPRA -->
       <div>
         <div class="flex justify-between items-center mb-6">
-          <h2 class="text-2xl font-bold text-gray-800">COMPRA</h2>
+          <h2 class="text-2xl font-bold text-[#00ccff]">COMPRA</h2>
           <button @click="vaciarTodoCarrito"
-            class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors">
+            class="bg-gradient-to-r from-red-600 to-red-500 text-white px-4 py-2 rounded hover:brightness-110 transition shadow-md shadow-red-900/30">
             Vaciar Carrito
           </button>
         </div>
 
-        <div v-if="!cargando && carrito && carrito.total > 0" class="bg-gray-50 p-6 rounded-lg space-y-4">
+        <div v-if="!cargando && carrito && carrito.total > 0" class="bg-[rgba(0,0,30,0.3)] backdrop-blur-sm border border-[rgba(0,204,255,0.15)] p-6 rounded-lg space-y-4">
           <!-- Método de pago -->
           <div>
-            <label for="payment-method" class="block text-sm font-medium text-gray-700 mb-2">Método de pago</label>
+            <label for="payment-method" class="block text-sm font-medium text-gray-200 mb-2">Método de pago</label>
             <select id="payment-method" v-model="selectedPaymentMethod"
-              class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+              class="mt-1 block w-full pl-3 pr-10 py-2 text-base bg-[rgba(10,10,40,0.8)] border-[rgba(0,204,255,0.3)] text-white focus:outline-none focus:ring-[#00ccff] focus:border-[#00ccff] sm:text-sm rounded-md">
               <option value="paypal">PayPal</option>
               <option value="stripe">Tarjeta de Crédito/Débito</option>
             </select>
@@ -449,38 +446,37 @@ const vaciarTodoCarrito = async () => {
           <div v-if="mostrarFormularioPago">
             <!-- Stripe Card Element Container -->
             <div v-if="selectedPaymentMethod === 'stripe'">
-              <label for="stripe-card-element" class="block text-sm font-medium text-gray-700 mb-2">Detalles de la
-                tarjeta</label>
-              <div id="stripe-card-element" class="p-3 border border-gray-300 rounded-md bg-white"></div>
+              <label for="stripe-card-element" class="block text-sm font-medium text-gray-200 mb-2">Detalles de la tarjeta</label>
+              <div id="stripe-card-element" class="p-3 border border-[rgba(0,204,255,0.3)] rounded-md bg-[rgba(10,10,40,0.8)]"></div>
             </div>
 
             <!-- PayPal Button Container -->
             <div v-if="selectedPaymentMethod === 'paypal'">
-              <label class="block text-sm font-medium text-gray-700 mb-2">Pagar con PayPal</label>
+              <label class="block text-sm font-medium text-gray-200 mb-2">Pagar con PayPal</label>
               <div id="paypal-button-container"></div>
             </div>
           </div>
 
           <!-- Código Descuento -->
           <div>
-            <label for="discount-code" class="block text-sm font-medium text-gray-700 mb-2">CÓDIGO DESCUENTO</label>
+            <label for="discount-code" class="block text-sm font-medium text-gray-200 mb-2">CÓDIGO DESCUENTO</label>
             <input type="text" id="discount-code" placeholder="kkk-kkk-kk"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-gray-800">
+              class="mt-1 block w-full p-2 border border-[rgba(0,204,255,0.3)] bg-[rgba(10,10,40,0.8)] rounded-md shadow-sm focus:outline-none focus:ring-[#00ccff] focus:border-[#00ccff] sm:text-sm text-white">
           </div>
 
           <!-- Total Summary -->
-          <div class="border-t pt-4 mt-4 space-y-2">
-            <div class="flex justify-between text-lg font-semibold text-gray-900">
-              <span>Total:</span>
-              <span>${{ carrito?.total?.toFixed(2) ?? '0.00' }}</span>
+          <div class="border-t border-[rgba(0,204,255,0.3)] pt-4 mt-4 space-y-2">
+            <div class="flex justify-between text-lg font-semibold">
+              <span class="text-white">Total:</span>
+              <span class="text-[#00ff88] text-xl">${{ carrito?.total?.toFixed(2) ?? '0.00' }}</span>
             </div>
           </div>
 
           <!-- COMPRAR Button -->
           <!-- Trigger payment based on selected method -->
           <button @click="handlePayment" :disabled="procesandoPago || (!carrito || carrito.total <= 0)"
-            class="w-full mt-6 bg-blue-600 text-white py-3 px-4 rounded-md font-semibold text-lg hover:bg-blue-700 
-                         disabled:bg-gray-400 disabled:cursor-not-allowed border border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            class="w-full mt-6 bg-gradient-to-r from-[#00ccff] to-[#00ff88] text-white py-3 px-4 rounded-md font-semibold text-lg hover:brightness-110 transition-all shadow-lg shadow-[rgba(0,204,255,0.3)]
+                     disabled:opacity-50 disabled:cursor-not-allowed border border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00ccff]">
             {{ procesandoPago ? 'Procesando...' : 'COMPRAR' }}
           </button>
         </div>
@@ -493,14 +489,14 @@ const vaciarTodoCarrito = async () => {
 <style scoped>
 /* Add any specific styles here if needed */
 
-/* Basic styling for Stripe element, can be customized */
+/* Styling for elements */
 #stripe-card-element {
-  /* Add any basic styles for the Stripe card element here if needed */
+  min-height: 40px;
+  margin-bottom: 1rem;
 }
 
-/* Basic styling for PayPal container, can be customized */
 #paypal-button-container {
-  /* Add any basic styles for the PayPal button container here if needed */
+  margin: 0.5rem 0;
 }
 
 .carrito-background {

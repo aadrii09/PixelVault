@@ -34,7 +34,7 @@ const goTo = (path) => {
     <div class="bg-image-overlay"></div>
     
     <!-- Barra de navegación común para todas las páginas, ahora dentro del contenedor de la homepage -->
-    <nav id="navbar" class="w-full flex justify-between items-center px-6 py-8 z-10 relative">
+    <nav  class="w-full flex justify-between items-center px-6 py-8 z-10 relative">
       <div class="flex space-x-20">
         <router-link to="/" class="font-bold text-white text-xl hover:underline ml-20">Inicio</router-link>
         <router-link to="/about" class="font-bold text-white text-xl hover:underline">Sobre Nosotros</router-link>
@@ -86,7 +86,7 @@ const goTo = (path) => {
     <div class="sobre-nosotros-bg-overlay"></div>
     
     <!-- Navbar para Sobre Nosotros -->
-    <nav id="navbar" class="w-full flex justify-between items-center px-6 py-8 z-10 relative">
+    <nav class="w-full flex justify-between items-center px-6 py-8 z-10 relative">
       <div class="flex space-x-20">
         <router-link to="/" class="font-bold text-white text-xl hover:underline ml-20">Inicio</router-link>
         <router-link to="/about" class="font-bold text-white text-xl hover:underline">Sobre Nosotros</router-link>
@@ -128,7 +128,7 @@ const goTo = (path) => {
     <div class="productos-plataforma-bg-overlay"></div>
     
     <!-- Navbar para ProductosPlataforma -->
-    <nav id="navbar" class="w-full flex justify-between items-center px-6 py-8 z-10 relative">
+    <nav class="w-full flex justify-between items-center px-6 py-8 z-10 relative">
       <div class="flex space-x-20">
         <router-link to="/" class="font-bold text-white text-xl hover:underline ml-20">Inicio</router-link>
         <router-link to="/about" class="font-bold text-white text-xl hover:underline">Sobre Nosotros</router-link>
@@ -170,7 +170,7 @@ const goTo = (path) => {
     <div class="producto-detalle-bg-overlay"></div>
     
     <!-- Navbar para ProductoDetalle -->
-    <nav id="navbar" class="w-full flex justify-between items-center px-6 py-8 z-10 relative">
+    <nav class="w-full flex justify-between items-center px-6 py-8 z-10 relative">
       <div class="flex space-x-20">
         <router-link to="/" class="font-bold text-white text-xl hover:underline ml-20">Inicio</router-link>
         <router-link to="/about" class="font-bold text-white text-xl hover:underline">Sobre Nosotros</router-link>
@@ -207,7 +207,7 @@ const goTo = (path) => {
   </div>
 
   <!-- Navbar para otras páginas que no son la página de inicio, Sobre Nosotros, ProductosPlataforma ni ProductoDetalle -->
-  <nav v-else id="navbar" class="w-full flex justify-between items-center px-6 py-8 ">
+  <nav v-else id="navbar" class="w-full flex justify-between items-center px-6 py-10 ">
     <div class="flex space-x-20">
       <router-link to="/" class="font-bold text-white text-xl hover:underline ml-20">Inicio</router-link>
       <router-link to="/about" class="font-bold text-white text-xl hover:underline">Sobre Nosotros</router-link>
@@ -215,7 +215,7 @@ const goTo = (path) => {
     
     <!-- Logo en el centro -->
     <div class="absolute left-1/2 transform -translate-x-1/2 flex items-center h-full">
-      <img src="/images/logo2.png" alt="PixelVault" id="logo" />
+      <img src="/images/logo2.png" alt="PixelVault" id="logo1" />
     </div>
     
     <div class="flex space-x-20">
@@ -240,8 +240,14 @@ const goTo = (path) => {
 
 <style lang="scss" scoped>
 #logo {
-    height: 7rem !important;
-    width: 8rem !important;
+    height: 10rem !important;
+    width: 11rem !important;
+    margin-top: 4rem !important;
+}
+#logo1 {
+    height: 8.5rem !important;
+    width: 10rem !important;
+    margin-bottom: 0.5rem !important;
 }
 // Estilos para el navbar
 .transparent-bg {
@@ -255,7 +261,28 @@ const goTo = (path) => {
 
 #navbar {
   min-height: 7rem;
-  background-color: #202033;
+  background: linear-gradient(to right, rgba(15, 15, 26, 0.95), rgba(22, 22, 48, 0.95), rgba(16, 16, 42, 0.95));
+  box-shadow: 0 4px 15px rgba(66, 220, 255, 0.2);
+  border-bottom: 1px solid rgba(83, 134, 244, 0.2);
+  backdrop-filter: blur(10px);
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: linear-gradient(to right, 
+      transparent, 
+      rgba(0, 255, 255, 0.5), 
+      rgba(128, 0, 255, 0.5), 
+      rgba(0, 255, 255, 0.5), 
+      transparent
+    );
+    opacity: 0.6;
+  }
 }
 
 // Estilos para elementos de la página de inicio

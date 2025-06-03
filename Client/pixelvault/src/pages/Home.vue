@@ -316,11 +316,9 @@ function añadirAlCarrito(producto) {
 </script>
 
 <template>
-    <div class="home-container">
-
-        <!-- Sección de Productos Destacados -->
-        <div  class="mx-auto px-4 py-6 bg-gradient-primary">
-            <h1 class="text-2xl font-bold mb-6 text-center text-white">Productos Destacados</h1>
+    <div class="home-container">        <!-- Sección de Productos Destacados -->
+        <div class="mx-auto px-8 py-20 bg-gradient-primary">
+            <h1 class="text-5xl text-center mb-12 text-gradient section-title">Productos Destacados</h1>
             <div v-if="cargando" class="text-gray-300 text-center">
                 <p>Cargando productos...</p>
             </div>
