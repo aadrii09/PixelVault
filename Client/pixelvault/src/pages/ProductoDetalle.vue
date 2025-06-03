@@ -24,11 +24,15 @@ const formattedFechaLanzamiento = computed(() => {
   return 'N/A';
 });
 
+// Importar inject para acceder al sistema de notificaciones
+import { inject } from 'vue';
+const showNotification = inject('showNotification');
+
 const verificarAutenticacion = () => {
     // Verificar si el usuario está autenticado
     if (!userStore.token) {
-        // Si no está autenticado, redirigir a la página de inicio de sesión
-        alert('Debes iniciar sesión para agregar productos al carrito');
+        // Si no está autenticado, mostrar notificación y redirigir a la página de inicio de sesión
+        showNotification('Debes iniciar sesión para agregar productos al carrito', 'info');
         router.push('/login');
         return false;
     }
@@ -46,14 +50,13 @@ const comprarAhora = async () => {
             imagenUrl: producto.value.imagenUrl || "",
             cantidad: 1,
             precioUnitario: producto.value.precio || 0
-        };
-
-        // Primero agregamos al carrito
+        };        // Primero agregamos al carrito
         await agregarAlCarrito(productoFormateado);
-          // Luego redirigimos directamente al carrito para completar la compra
+        showNotification(`¡${producto.value.nombre} agregado al carrito!`, 'success');
+        // Luego redirigimos directamente al carrito para completar la compra
         router.push('/carrito');
     } catch (error) {
-        alert('Error al procesar la compra');
+        showNotification('Error al procesar la compra', 'error');
         console.error('Error al procesar la compra:', error.response?.data || error);
     }
 };
@@ -71,12 +74,10 @@ const agregar = async () => {
             precioUnitario: producto.value.precio || 0
         };
 
-        console.log("📦 Producto enviado al backend:", productoFormateado);
-
-        await agregarAlCarrito(productoFormateado);
-        alert(`Producto ${producto.value.nombre} agregado al carrito`);
+        console.log("📦 Producto enviado al backend:", productoFormateado);        await agregarAlCarrito(productoFormateado);
+        showNotification(`¡${producto.value.nombre} agregado al carrito!`, 'success');
     } catch (error) {
-        alert('Error al agregar al carrito');
+        showNotification('Error al agregar al carrito', 'error');
         console.error('Error al agregar al carrito:', error.response?.data || error);
     }
 };

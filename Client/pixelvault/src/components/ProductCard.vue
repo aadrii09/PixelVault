@@ -2,11 +2,15 @@
 import { agregarAlCarrito } from '../api/carrito';
 import { RouterLink } from 'vue-router';
 import { useWishlistStore } from '../store/wishlist';
+import { inject } from 'vue';
 
 const props = defineProps([
   'producto',
   'mostrarBoton',
 ]);
+
+// Inyectar la función de notificación desde el componente raíz
+const showNotification = inject('showNotification', null);
 
 const agregar = async () => {
   try {
@@ -18,12 +22,22 @@ const agregar = async () => {
       precioUnitario: props.producto.precio || 0
     };
 
-    console.log("📦 Producto enviado al backend:", productoFormateado);
-
+    console.log("📦 Producto enviado al backend:", productoFormateado);    
     await agregarAlCarrito(productoFormateado);
-    alert(`Producto ${props.producto.nombre} agregado al carrito`);
+    
+    // Usar el sistema de notificación si está disponible, sino usa alert como fallback
+    if (showNotification) {
+      showNotification(`¡${props.producto.nombre} agregado al carrito!`, 'success');
+    } else {
+      alert(`${props.producto.nombre} añadido al carrito!`);
+    }
   } catch (error) {
-    alert('Error al agregar al carrito');
+    // Usar el sistema de notificación si está disponible, sino usa alert como fallback
+    if (showNotification) {
+      showNotification('Error al agregar al carrito', 'error');
+    } else {
+      alert('Error al agregar al carrito');
+    }
     console.error('Error al agregar al carrito:', error.response?.data || error);
   }
 };

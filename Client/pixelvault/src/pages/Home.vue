@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, inject } from 'vue';
 import { getProductos } from '../api/productos';
 import { agregarAlCarrito } from '../api/carrito';
 import { useUserStore } from '../store/user';
@@ -10,6 +10,8 @@ const cargando = ref(true);
 const userStore = useUserStore();
 const mostrarBoton = computed(() => !!userStore.token);
 const email = ref('');
+// Obtener función de notificación global
+const showNotification = inject('showNotification', null);
 const currentIndex = ref(0);
 const autoScrollInterval = ref(null);
 const carouselRef = ref(null);
@@ -287,9 +289,27 @@ async function suscribirse() {
 function añadirAlCarrito(producto) {
     try {
         agregarAlCarrito(producto);
-        alert(`${producto.nombre} añadido al carrito!`);
+        if (typeof inject === 'function') {
+            const showNotification = inject('showNotification', null);
+            if (showNotification) {
+                showNotification(`¡${producto.nombre} agregado al carrito!`, 'success');
+            } else {
+                alert(`${producto.nombre} añadido al carrito!`);
+            }
+        } else {
+            alert(`${producto.nombre} añadido al carrito!`);
+        }
     } catch (error) {
-        alert('Error al agregar al carrito');
+        if (typeof inject === 'function') {
+            const showNotification = inject('showNotification', null);
+            if (showNotification) {
+                showNotification('Error al agregar al carrito', 'error');
+            } else {
+                alert('Error al agregar al carrito');
+            }
+        } else {
+            alert('Error al agregar al carrito');
+        }
         console.error('Error al agregar al carrito:', error);
     }
 }
