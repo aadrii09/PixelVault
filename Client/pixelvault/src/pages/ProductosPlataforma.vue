@@ -81,14 +81,14 @@ watch(() => route.params.plataforma, (newVal) => {
 </script>
 
 <template>
-  <div class="container mx-auto px-4 py-6 bg-gradient-to-r from-[#16213e] to-[#1a1a2e] min-h-screen text-white">
-    <h1 class="text-3xl font-bold mb-6 text-center">
+  <div class="  px-4 py-6 bg-gradient-to-r from-[#16213e] to-[#1a1a2e] min-h-screen text-white">
+    <h1 class="text-3xl font-bold mb-6 text-center ">
       Productos de {{ plataforma }}
     </h1>
     
     <!-- Search and Filter Section -->
-    <div class="flex justify-between items-center mb-6">
-      <div class="relative flex-1 mr-4">
+    <div class="flex justify-between items-center mb-6 px-20">
+      <div class="flex-1 mr-4">
         <input
           type="text"
           placeholder="Buscar en PixelVault..."
@@ -121,7 +121,7 @@ watch(() => route.params.plataforma, (newVal) => {
         No se encontraron productos que coincidan con los filtros.
       </div>
 
-      <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-10">
         <ProductCard
           v-for="producto in filteredProducts"
           :key="producto.idProducto"
@@ -134,5 +134,5 @@ watch(() => route.params.plataforma, (newVal) => {
 </template>
 
 <style scoped>
-/* Add any specific styles here if needed */
+
 </style>

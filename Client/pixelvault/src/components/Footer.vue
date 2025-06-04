@@ -52,24 +52,22 @@
         <div class="flex-shrink-0 mx-auto flex justify-center mb-4 sm:mb-0 order-1 sm:order-2">
           <img src="/images/logo2.png" alt="PixelVault Logo" class="w-28 h-28 md:w-32 md:h-32 object-contain logo-glow" />
         </div>
-        
-        <!-- Enlaces derecha -->
+          <!-- Enlaces derecha -->
         <div class="flex flex-col space-y-3 text-gray-300 text-base md:text-lg order-3">
           <h3 class="text-[#00ff88] text-lg font-medium mb-1">Cuenta</h3>
           <router-link to="/login" class="hover:text-[#00ccff] transition-all duration-300 transform hover:translate-x-1">Iniciar Sesión</router-link>
           <router-link to="/register" class="hover:text-[#00ccff] transition-all duration-300 transform hover:translate-x-1">Registro</router-link>
-          <router-link to="/wishlist" class="hover:text-[#00ccff] transition-all duration-300 transform hover:translate-x-1">Mis Favoritos</router-link>
+          <a @click="goToWishlist" class="hover:text-[#00ccff] transition-all duration-300 transform hover:translate-x-1 cursor-pointer">Mis Favoritos</a>
         </div>
       </div>
       
       <!-- Separador neón -->
       <div class="w-full max-w-2xl mx-auto my-6 h-px bg-gradient-to-r from-transparent via-[#00ccff]/30 to-transparent"></div>
-      
-      <!-- Copyright -->
+        <!-- Copyright -->
       <div class="mt-4 text-sm text-gray-400">
         <p class="mb-2">© 2025 PixelVault. Todos los derechos reservados.</p>
         <div class="flex flex-wrap justify-center gap-x-4 gap-y-2 mt-2">
-          <router-link to="/cookies" class="hover:text-[#00ccff] transition-colors">Política de Cookies</router-link>
+          <router-link to="/cookies-policy" class="hover:text-[#00ccff] transition-colors">Política de Cookies</router-link>
           <span class="text-gray-600 hidden sm:inline">|</span>
           <router-link to="#" class="hover:text-[#00ccff] transition-colors">Privacidad</router-link>
           <span class="text-gray-600 hidden sm:inline">|</span>
@@ -81,7 +79,20 @@
 </template>
 
 <script setup lang="ts">
-// No additional logic needed
+import { useUserStore } from '../store/user';
+import { useRouter } from 'vue-router';
+
+const userStore = useUserStore();
+const router = useRouter();
+
+// Función para verificar si el usuario está logueado antes de ir a wishlist
+const goToWishlist = () => {
+  if (userStore.token) {
+    router.push('/wishlist');
+  } else {
+    router.push('/login');
+  }
+};
 </script>
 
 <style scoped lang="scss">

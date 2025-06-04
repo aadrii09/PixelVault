@@ -174,10 +174,15 @@
 </script>
 
 <style scoped>
+
+body {
+  background: linear-gradient(135deg, #16213e 0%, #1a1a2e 100%);
+}
+
 .cookies-policy {
-  max-width: 1200px;
+  text-align: justify;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 12rem;
   color: white;
   background: linear-gradient(135deg, #16213e 0%, #1a1a2e 100%);
   min-height: 100vh;
