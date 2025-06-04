@@ -167,8 +167,12 @@ function actualizarVisibleItems() {
 
 function goToItem(index) {
     if (!carouselRef.value) return;
-
-    currentIndex.value = Math.min(Math.max(index, 0), noticias.value.length - 1);
+    
+    // Para carrusel infinito, aseguramos que el índice sea válido
+    if (index < 0) index = noticias.value.length - 1;
+    if (index >= noticias.value.length) index = 0;
+    
+    currentIndex.value = index;
 
     // El ancho del elemento + gap (24px)
     const itemWidth = carouselRef.value.querySelector('.carousel-item').offsetWidth + 24;
@@ -180,13 +184,21 @@ function goToItem(index) {
 }
 
 function prevItem() {
-    const newIndex = Math.max(currentIndex.value - visibleItems.value, 0);
+    let newIndex = currentIndex.value - visibleItems.value;
+    // Carrusel infinito: si llega al principio, saltar al final
+    if (newIndex < 0) {
+        newIndex = noticias.value.length - visibleItems.value;
+    }
     goToItem(newIndex);
     resetAutoScroll();
 }
 
 function nextItem() {
-    const newIndex = Math.min(currentIndex.value + visibleItems.value, noticias.value.length - 1);
+    let newIndex = currentIndex.value + visibleItems.value;
+    // Carrusel infinito: si llega al final, saltar al principio
+    if (newIndex >= noticias.value.length) {
+        newIndex = 0;
+    }
     goToItem(newIndex);
     resetAutoScroll();
 }
@@ -194,8 +206,7 @@ function nextItem() {
 function startAutoScroll() {
     clearInterval(autoScrollInterval.value);
     autoScrollInterval.value = setInterval(() => {
-        const newIndex = (currentIndex.value + visibleItems.value) % noticias.value.length;
-        goToItem(newIndex);
+        nextItem(); // Usar la función nextItem que ya maneja el carrusel infinito
     }, 5000);
 }
 
@@ -213,16 +224,28 @@ function resumeAutoScroll() {
 }
 
 function getDotCount() {
+    // Calculamos cuántos "grupos" de noticias hay en el carrusel
     return Math.ceil(noticias.value.length / Math.max(1, visibleItems.value));
 }
 
 function isDotActive(index) {
-    const activeDotIndex = Math.floor(currentIndex.value / Math.max(1, visibleItems.value));
+    // Para carrusel infinito, necesitamos módulo para que sea cíclico
+    const normalizedIndex = (currentIndex.value % noticias.value.length + noticias.value.length) % noticias.value.length;
+    const activeDotIndex = Math.floor(normalizedIndex / Math.max(1, visibleItems.value));
     return index === activeDotIndex;
 }
 
 function goToDotIndex(index) {
-    goToItem(index * visibleItems.value);
+    // Navegar directamente al primer item del grupo correspondiente
+    let targetIndex = index * visibleItems.value;
+    
+    // Si estamos en el último grupo y no hay suficientes elementos para llenar la vista
+    if (targetIndex + visibleItems.value > noticias.value.length) {
+        // Ajustar para que se vean todos los elementos del último grupo
+        targetIndex = Math.max(0, noticias.value.length - visibleItems.value);
+    }
+    
+    goToItem(targetIndex);
     resetAutoScroll();
 }
 
@@ -377,43 +400,52 @@ function añadirAlCarrito(producto) {
             <div class="max-w-7xl mx-auto">
                 <h2 class="text-5xl text-center mb-12 text-gradient section-title">Últimas Noticias</h2>
 
-                <div class="relative">
-                    <!-- Botones de navegación -->
+                <div class="relative">                    <!-- Botones de navegación -->
                     <button @click="prevItem"
-                        class="carousel-prev absolute top-1/2 -translate-y-1/2 -left-4 z-10 w-10 h-10 rounded-full bg-[rgba(0,204,255,0.3)] backdrop-blur-sm text-white hover:bg-[rgba(0,204,255,0.6)] transition-all flex items-center justify-center">
-                        ❮
+                        class="carousel-prev absolute top-1/2 -translate-y-1/2 -left-2 md:-left-4 z-10 w-10 h-10 rounded-full bg-[rgba(0,204,255,0.3)] backdrop-blur-sm text-white hover:bg-[rgba(0,204,255,0.6)] transition-all flex items-center justify-center shadow-md hover:shadow-[0_0_15px_rgba(0,204,255,0.5)]">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
                     </button>
                     <button @click="nextItem"
-                        class="carousel-next absolute top-1/2 -translate-y-1/2 -right-4 z-10 w-10 h-10 rounded-full bg-[rgba(0,204,255,0.3)] backdrop-blur-sm text-white hover:bg-[rgba(0,204,255,0.6)] transition-all flex items-center justify-center">
-                        ❯
-                    </button>
+                        class="carousel-next absolute top-1/2 -translate-y-1/2 -right-2 md:-right-4 z-10 w-10 h-10 rounded-full bg-[rgba(0,204,255,0.3)] backdrop-blur-sm text-white hover:bg-[rgba(0,204,255,0.6)] transition-all flex items-center justify-center shadow-md hover:shadow-[0_0_15px_rgba(0,204,255,0.5)]">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </button><!-- Carrusel -->
+                    <div class="relative overflow-hidden">
+                        <div ref="carouselRef" @mouseenter="pauseAutoScroll" @mouseleave="resumeAutoScroll"
+                            class="news-carousel flex overflow-x-auto hide-scrollbar gap-6 scroll-snap-x-mandatory scroll-smooth transition-transform duration-300 pb-4">
 
-                    <!-- Carrusel -->
-                    <div ref="carouselRef" @mouseenter="pauseAutoScroll" @mouseleave="resumeAutoScroll"
-                        class="news-carousel flex overflow-x-auto hide-scrollbar gap-6 scroll-snap-x-mandatory scroll-smooth transition-transform duration-300 pb-4">
-
-                        <!-- Items de Noticias -->
-                        <div v-for="noticia in noticias" :key="noticia.id"
-                            class="flex-none w-72 md:w-80 scroll-snap-align-start bg-gradient-to-br from-[rgba(255,255,255,0.1)] to-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.2)] rounded-xl backdrop-blur-sm transition-all hover:-translate-y-2 hover:shadow-[0_15px_30px_rgba(0,204,255,0.2)] hover:border-[#00ccff] carousel-item">
-                            <img :src="noticia.imagen" class="w-full h-48 object-cover rounded-t-lg" :alt="noticia.alt">
-                            <div class="p-6">
-                                <div class="text-[#00ff88] text-sm mb-2">{{ noticia.fecha }}</div>
-                                <h3 class="text-white text-xl mb-3">{{ noticia.titulo }}</h3>
-                                <p class="text-gray-300 text-sm mb-4">{{ noticia.descripcion }}</p>
-                                <a href="#"
-                                    class="text-[#00ccff] font-bold text-sm hover:text-[#00ff88] transition-colors">
-                                    Leer más →
-                                </a>
+                            <!-- Items de Noticias -->
+                            <div v-for="noticia in noticias" :key="noticia.id"
+                                class="flex-none w-72 md:w-80 scroll-snap-align-start bg-gradient-to-br from-[rgba(255,255,255,0.1)] to-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.2)] rounded-xl backdrop-blur-sm transition-all hover:-translate-y-2 hover:shadow-[0_15px_30px_rgba(0,204,255,0.2)] hover:border-[#00ccff] carousel-item">
+                                <img :src="noticia.imagen" class="w-full h-48 object-cover rounded-t-lg" :alt="noticia.alt">
+                                <div class="p-6">
+                                    <div class="text-[#00ff88] text-sm mb-2">{{ noticia.fecha }}</div>
+                                    <h3 class="text-white text-xl mb-3">{{ noticia.titulo }}</h3>
+                                    <p class="text-gray-300 text-sm mb-4">{{ noticia.descripcion }}</p>
+                                    <a href="#"
+                                        class="text-[#00ccff] font-bold text-sm hover:text-[#00ff88] transition-colors inline-flex items-center">
+                                        Leer más 
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                        </svg>
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Puntos de navegación -->
+                    </div>                    <!-- Puntos de navegación -->
                     <div class="flex justify-center gap-4 mt-8 carousel-dots">
-                        <div v-for="index in getDotCount()" :key="index - 1" @click="goToDotIndex(index - 1)" :class="[
-                            'w-3 h-3 rounded-full cursor-pointer transition-all',
-                            isDotActive(index - 1) ? 'bg-[#00ff88] scale-125' : 'bg-[rgba(255,255,255,0.3)]'
-                        ]">
+                        <div v-for="index in getDotCount()" :key="index - 1" @click="goToDotIndex(index - 1)" 
+                            class="group cursor-pointer" role="button" aria-label="Navegar a diapositiva">
+                            <div :class="[
+                                'w-3 h-3 rounded-full transition-all duration-300 transform',
+                                isDotActive(index - 1) 
+                                    ? 'bg-[#00ff88] scale-125 shadow-[0_0_8px_rgba(0,255,136,0.6)]' 
+                                    : 'bg-[rgba(255,255,255,0.3)] group-hover:bg-[rgba(255,255,255,0.6)]'
+                            ]">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -562,6 +594,33 @@ function añadirAlCarrito(producto) {
 
 .scroll-snap-align-start {
     scroll-snap-align: start;
+}
+
+/* Animaciones para el carrusel */
+.carousel-item {
+    backface-visibility: hidden;
+    will-change: transform;
+}
+
+.carousel-prev,
+.carousel-next {
+    opacity: 0.7;
+    transition: opacity 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+
+.carousel-prev:hover,
+.carousel-next:hover {
+    opacity: 1;
+    transform: translateY(-50%) scale(1.1);
+}
+
+/* Animación para los puntos de navegación */
+.carousel-dots > div {
+    transition: transform 0.3s ease;
+}
+
+.carousel-dots > div:hover {
+    transform: scale(1.2);
 }
 
 </style>

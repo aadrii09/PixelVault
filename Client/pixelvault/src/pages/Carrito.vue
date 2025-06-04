@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, nextTick, watch } from 'vue';
+import { ref, onMounted, nextTick, watch, inject } from 'vue';
 import { getCarrito, vaciarCarrito, removeProducto, actualizarCantidad } from '../api/carrito';
 import { processPayment } from '../api/stripe';
 import { loadStripe } from '@stripe/stripe-js';
@@ -17,6 +17,9 @@ const stripe = ref(null);
 const elements = ref(null);
 const selectedPaymentMethod = ref('paypal'); // Default to paypal or stripe based on preference
 const successMessage = ref(''); // New ref for success messages
+
+// Inyectar la función de notificación desde el componente raíz
+const showNotification = inject('showNotification', null);
 
 // Inicializar Stripe
 const initStripe = async () => {
@@ -103,14 +106,14 @@ const handlePayment = async () => {
         error.value = 'Stripe no inicializado correctamente.';
         procesandoPago.value = false;
         return;
-      }
-
-      const success = await processPayment(carrito.value.total, elements.value);
+      }      const success = await processPayment(carrito.value.total, elements.value);
 
       if (success) {
         await vaciarCarrito();
         successMessage.value = '¡Compra finalizada con éxito! Gracias por tu pedido.';
-        alert('¡Compra finalizada con éxito! Gracias por tu pedido.');
+        if (showNotification) {
+          showNotification('¡Compra finalizada con éxito! Gracias por tu pedido.', 'success', 5000);
+        }
         // router.push({ name: 'PagoExitoso' }); // Descomenta si quieres redirigir
       } else {
         error.value = 'El pago con tarjeta no fue exitoso.';
@@ -174,11 +177,11 @@ const renderPayPalButton = () => {
             console.log('✅ Orden verificada exitosamente con PayPal. Vaciar carrito...');
             await vaciarCarrito();
             console.log('✅ Carrito vaciado (backend). Actualizando datos en frontend...');
-            await cargarCarrito();
-
-            successMessage.value = '¡Compra finalizada con éxito! Gracias por tu pedido.';
+            await cargarCarrito();            successMessage.value = '¡Compra finalizada con éxito! Gracias por tu pedido.';
             console.log('✅ Mensaje de éxito actualizado en la vista.');
-            alert('¡Compra finalizada con éxito! Gracias por tu pedido.');
+            if (showNotification) {
+              showNotification('¡Compra finalizada con éxito! Gracias por tu pedido.', 'success', 5000);
+            }
 
           } else {
             error.value = result.message || 'No se pudo verificar el pago con PayPal';
@@ -292,7 +295,6 @@ watch(selectedPaymentMethod, async (newMethod, oldMethod) => {
 }, { immediate: true }); // immediate: true to run on component mount
 
 // Observar cambios en el carrito para mostrar formulario de pago
-// This watcher is simplified now, as the payment method watcher handles UI updates
 watch(carrito, (newVal) => {
   console.log('🔁 Carrito actualizado para mostrar formulario de pago:', newVal);
   // Ensure total is a number before checking
@@ -302,10 +304,48 @@ watch(carrito, (newVal) => {
   // when mostrarFormularioPago becomes true.
 }, { immediate: true }); // Immediate: true to run on initial load
 
+// Observar cambios en mostrarFormularioPago para renderizar el botón de PayPal cuando sea necesario
+watch(mostrarFormularioPago, (isVisible) => {
+  console.log('👀 mostrarFormularioPago cambió a:', isVisible);
+  
+  // Si el formulario de pago es visible y PayPal está seleccionado, renderizar el botón
+  if (isVisible && selectedPaymentMethod.value === 'paypal') {
+    console.log('🔄 Se debe renderizar el botón de PayPal debido al cambio en mostrarFormularioPago');
+    nextTick(() => {
+      renderPayPalButton();
+    });
+  }
+}, { immediate: false }); // No necesitamos que se ejecute inmediatamente ya que el watcher de selectedPaymentMethod ya lo cubre
+
 // Initial load of the cart data
 onMounted(async () => {
-  // The watchers now handle the rest of the setup based on cart data and selected payment method
+  // Load cart data
   await cargarCarrito();
+  
+  // Make sure PayPal loads immediately if it's the default option
+  if (selectedPaymentMethod.value === 'paypal' && mostrarFormularioPago.value) {
+    // If PayPal SDK is already loaded
+    if (window.paypal && window.paypal.Buttons) {
+      console.log('PayPal SDK already loaded on mount, rendering button...');
+      renderPayPalButton();
+    } 
+    // If SDK is not loaded yet, load it
+    else if (!document.getElementById("paypal-sdk")) {
+      console.log('Loading PayPal SDK on mount...');
+      const script = document.createElement("script");
+      script.src = "https://www.paypal.com/sdk/js?client-id=AQiepbT5Qot4jIqhxfcUppb-ogD3WfqkZZpRi7IQvoE-eDsjVaO0aOyEnaWjwC5WxJOHyJHNwveYWddr&currency=USD";
+      script.id = "paypal-sdk";
+      script.onload = () => {
+        console.log('PayPal SDK loaded on mount, rendering button...');
+        renderPayPalButton();
+      };
+      script.onerror = (e) => {
+        console.error('Error loading PayPal SDK:', e);
+        error.value = 'Error al cargar el método de pago de PayPal.';
+      };
+      document.body.appendChild(script);
+    }
+  }
 });
 
 // You will need to implement this method to handle quantity updates
@@ -317,13 +357,28 @@ const updateCantidad = async (producto) => {
     if (success) {
       console.log('✅ Cantidad actualizada en backend. Recargando carrito...');
       await cargarCarrito();
+      
+      // Re-render PayPal button if PayPal is the selected payment method
+      // Usamos nextTick para asegurar que el DOM se actualice antes de renderizar
+      if (selectedPaymentMethod.value === 'paypal' && mostrarFormularioPago.value) {
+        console.log('Re-rendering PayPal button after quantity update');
+        nextTick(() => {
+          renderPayPalButton();
+        });
+      }
     } else {
       error.value = 'No se pudo actualizar la cantidad';
       console.error('❌ No se pudo actualizar la cantidad en el backend.');
+      if (showNotification) {
+        showNotification('No se pudo actualizar la cantidad', 'error', 3000);
+      }
     }
   } catch (err) {
     error.value = 'Error al actualizar la cantidad';
     console.error('❌ Error al actualizar la cantidad:', err);
+    if (showNotification) {
+      showNotification('Error al actualizar la cantidad', 'error', 3000);
+    }
   }
 };
 
@@ -334,12 +389,26 @@ const eliminarProducto = async (productoId) => {
     const success = await removeProducto(productoId);
     if (success) {
       await cargarCarrito(); // Recargar el carrito después de eliminar
+      
+      // Re-render PayPal button if PayPal is the selected payment method
+      if (selectedPaymentMethod.value === 'paypal' && mostrarFormularioPago.value) {
+        console.log('Re-rendering PayPal button after product removal');
+        nextTick(() => {
+          renderPayPalButton();
+        });
+      }
     } else {
       error.value = 'Error al eliminar el producto';
+      if (showNotification) {
+        showNotification('Error al eliminar el producto', 'error', 3000);
+      }
     }
   } catch (err) {
     error.value = 'Error al eliminar el producto';
     console.error(err);
+    if (showNotification) {
+      showNotification('Error al eliminar el producto', 'error', 3000);
+    }
   }
 };
 
@@ -350,16 +419,31 @@ const vaciarTodoCarrito = async () => {
     if (success) {
       await cargarCarrito(); // Recargar el carrito después de vaciar
       successMessage.value = '¡El carrito se vació por completo!';
+      
+      // Mostrar notificación bonita
+      if (showNotification) {
+        showNotification('¡El carrito se vació por completo!', 'success', 5000);
+      }
+      
       // Clear the success message after 5 seconds
       setTimeout(() => {
         successMessage.value = '';
       }, 5000);
+      
+      // No es necesario renderizar el botón PayPal si el carrito está vacío,
+      // ya que mostrarFormularioPago será false y ocultará la sección de pago
     } else {
       error.value = 'Error al vaciar el carrito';
+      if (showNotification) {
+        showNotification('Error al vaciar el carrito', 'error', 5000);
+      }
     }
   } catch (err) {
     error.value = 'Error al vaciar el carrito';
     console.error(err);
+    if (showNotification) {
+      showNotification('Error al vaciar el carrito', 'error', 5000);
+    }
   }
 };
 
@@ -431,8 +515,7 @@ const vaciarTodoCarrito = async () => {
           </button>
         </div>
 
-        <div v-if="!cargando && carrito && carrito.total > 0" class="bg-[rgba(0,0,30,0.3)] backdrop-blur-sm border border-[rgba(0,204,255,0.15)] p-6 rounded-lg space-y-4">
-          <!-- Método de pago -->
+        <div v-if="!cargando && carrito && carrito.total > 0" class="bg-[rgba(0,0,30,0.3)] backdrop-blur-sm border border-[rgba(0,204,255,0.15)] p-6 rounded-lg space-y-4">          <!-- Método de pago -->
           <div>
             <label for="payment-method" class="block text-sm font-medium text-gray-200 mb-2">Método de pago</label>
             <select id="payment-method" v-model="selectedPaymentMethod"
@@ -444,16 +527,30 @@ const vaciarTodoCarrito = async () => {
 
           <!-- Payment Forms (Conditionally rendered) -->
           <div v-if="mostrarFormularioPago">
+            <!-- PayPal Payment Section -->
+            <div v-if="selectedPaymentMethod === 'paypal'">
+              <div class="mb-4">
+                <div class="flex justify-between items-center">
+                  <h3 class="text-md font-medium text-white">Pagar con PayPal</h3>
+                  <img src="/images/paypallogo.png" alt="PayPal" class="h-5 object-contain" />
+                </div>
+                <div id="paypal-button-container" class="mt-2"></div>
+                <p class="text-xs text-gray-400 mt-1 text-center">Desarrollado por <span class="text-blue-400">Pay</span><span class="text-blue-600">Pal</span></p>
+              </div>
+            </div>
+            
             <!-- Stripe Card Element Container -->
             <div v-if="selectedPaymentMethod === 'stripe'">
               <label for="stripe-card-element" class="block text-sm font-medium text-gray-200 mb-2">Detalles de la tarjeta</label>
               <div id="stripe-card-element" class="p-3 border border-[rgba(0,204,255,0.3)] rounded-md bg-[rgba(10,10,40,0.8)]"></div>
-            </div>
-
-            <!-- PayPal Button Container -->
-            <div v-if="selectedPaymentMethod === 'paypal'">
-              <label class="block text-sm font-medium text-gray-200 mb-2">Pagar con PayPal</label>
-              <div id="paypal-button-container"></div>
+              <div class="flex items-center justify-center mt-3">
+                <button class="flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-white py-2 px-4 rounded-md shadow-md transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                  </svg>
+                  Tarjeta de débito o crédito
+                </button>
+              </div>
             </div>
           </div>
 
@@ -470,15 +567,16 @@ const vaciarTodoCarrito = async () => {
               <span class="text-white">Total:</span>
               <span class="text-[#00ff88] text-xl">${{ carrito?.total?.toFixed(2) ?? '0.00' }}</span>
             </div>
-          </div>
-
-          <!-- COMPRAR Button -->
-          <!-- Trigger payment based on selected method -->
-          <button @click="handlePayment" :disabled="procesandoPago || (!carrito || carrito.total <= 0)"
+          </div>          <!-- COMPRAR Button (only shown for Stripe, since PayPal has its own button) -->
+          <button v-if="selectedPaymentMethod === 'stripe'" @click="handlePayment" :disabled="procesandoPago || (!carrito || carrito.total <= 0)"
             class="w-full mt-6 bg-gradient-to-r from-[#00ccff] to-[#00ff88] text-white py-3 px-4 rounded-md font-semibold text-lg hover:brightness-110 transition-all shadow-lg shadow-[rgba(0,204,255,0.3)]
                      disabled:opacity-50 disabled:cursor-not-allowed border border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00ccff]">
             {{ procesandoPago ? 'Procesando...' : 'COMPRAR' }}
           </button>
+          
+          <p v-if="selectedPaymentMethod === 'paypal'" class="text-center text-sm text-gray-400 mt-4">
+            Haz clic en el botón de PayPal para completar tu compra
+          </p>
         </div>
       </div>
     </div>
@@ -497,6 +595,8 @@ const vaciarTodoCarrito = async () => {
 
 #paypal-button-container {
   margin: 0.5rem 0;
+  min-height: 45px;
+  width: 100%;
 }
 
 .carrito-background {
