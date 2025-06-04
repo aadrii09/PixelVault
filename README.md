@@ -27,11 +27,14 @@ PixelVault es un e-commerce especializado en videojuegos para múltiples platafo
   - **Cart**: Carrito de compras con checkout.
   - **About Us**: Información de la empresa.
   - **Sign Up/Login**: Gestión de usuarios.
+  - **WishList**: Gestión de productos favoritos.
 - **Panel de Administración**:
   - **Users**: CRUD de usuarios.
   - **Products**: Gestión de productos (crear, editar, stock).
   - **Brands**: Administración de marcas.
   - **Orders**: Visualización de pedidos.
+  - **Payments**: Visualización de pagos.
+  - **History**: Visualización de acciones de los admins.
 
 ## 📋Requisitos Cumplidos
 - ✅ **Frontend**: 
@@ -57,9 +60,8 @@ PixelVault es un e-commerce especializado en videojuegos para múltiples platafo
 ├── Server/                 # .NET Backend
 │   ├── Controllers/
 │   ├── Models/
-│   └── Migrations/
-├── docs/                   # Project documentation
-├── resources/images        # Images          
+│   └── Migrations/                 
+├── resources/              # Diagrams and Docu         
 └── README.md               # This file
 ```
 ### ⚙️ Installation
