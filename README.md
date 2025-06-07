@@ -1,6 +1,6 @@
 # PixelVault - E-commerce de Videojuegos
 
-![Logo representativo de PixelVault](resources/images/logo.png) 
+![Logo representativo de PixelVault](resources/images/logo/logo.png) 
 
 ## 📜Descripción del Proyecto
 PixelVault es un e-commerce especializado en videojuegos para múltiples plataformas (Xbox, Nintendo, PC, etc.). El proyecto permite a los usuarios explorar productos, gestionar listas de deseos, realizar compras con pasarelas de pago como PayPal y Stripe, y administrar su perfil. Además, incluye un panel de administración para gestionar productos, usuarios y pedidos.
